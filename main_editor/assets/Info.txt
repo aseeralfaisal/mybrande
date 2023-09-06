@@ -1,0 +1,23 @@
+Logo Color:
+Gold   
+Hex c1a247
+RGB 193, 162, 71
+
+Black   
+Hex 1a1a1a
+RGB 26, 26, 26
+
+Grey   
+Hex 4d4e4e
+RGB 77, 78, 78
+
+Font:
+Poppins, ExtraLight
+
+Font Color:
+Hex 333333
+R=51 G=51 B=51
+
+
+
+

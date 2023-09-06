@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mybrande</title>
+  <script src="https://kit.fontawesome.com/c64b631310.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="details.style.css">
+</head>
+
+<body>
+  <header class="header">
+    <div style="display: flex; justify-content: space-between; margin-inline: 100px; align-items: center;">
+      <div>
+        <img src="./assets/Logo Gold.svg" alt="" loading="eager"
+          style="width: 170px; object-fit: contain; margin-top: 10px;">
+      </div>
+      <div class="links">
+        <a class="link" href="#">Learn</a>
+        <a class="link" href="#">About</a>
+      </div>
+    </div>
+  </header>
+  <div>
+    <div style="display: flex; justify-content: space-between;">
+      <div style="margin-top: 40px;">
+        <div style="position: fixed; z-index: -1; opacity: 0.1;">
+          <img src="./assets/abs.png" alt="" width="1200px" height="1200px"
+            style="object-fit: contain; filter: invert(); margin-left: 100px;">
+        </div>
+        <div class="elements__card">
+          <h4>Graphical Elements</h4>
+          <p>What graphic elements appear in your logo? Add relevant tags separated with commas</p>
+          <div class="container">
+            <ul id="tag_list"></ul>
+            <input type="text" id="tag_name" placeholder="Tag Name...">
+          </div>
+        </div>
+        <div class="elements__card">
+          <h4>Industry</h4>
+          <p>Select the industries, that best fit this logo symbol, so it gets seen by relavent buyers</p>
+          <div id="modal_business_tags_parent">
+            <div class="container" style="width: 95%; margin-bottom: 20px;">
+              <ul id="business_type_list_1"></ul>
+              <input type="text" id="business_type" placeholder="Industry Type..." disabled>
+            </div>
+          </div>
+
+          <div class="container" id="industry-type" style="background: none;">
+            <span style="text-decoration: underline; font-size: 14px; font-weight: 500; cursor: pointer;">Browser
+              Industries</span>
+
+            <div id="industry-modal" class="industry-modal">
+              <div class="industry-modal-content">
+                <h4>Select Relavent industries</h4>
+                <p>Highly relavent and specific industries can lead to higher relevancy to the buyers brief, which means
+                  higher chances for exposure and conversion</p>
+                <div id="modal_business_tags">
+                  <div class="container" style="width: 95%; margin-bottom: 20px;">
+                    <ul id="business_type_list"></ul>
+                    <input type="text" id="business_type" placeholder="Industry Type...">
+                  </div>
+                </div>
+                <div class="tag_categories">
+                  <div id="category_title" class="category_title"></div>
+                  <div id="category_types" class="category_types"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="elements__card">
+          <h4>Logo Type</h4>
+          <p>What type of logo best represents logo symbol</p>
+          <div id="logo-type" style="display: flex; justify-content: flex-start; gap: 20px">
+          </div>
+        </div>
+        <div class="elements__card">
+          <h4>Logo Style</h4>
+          <p>What logo style best represents logo symbol</p>
+          <div id="logo-style" style="display: flex; justify-content: flex-start; gap: 20px;">
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 80px; margin-right: 400px;">
+        <h3 style="position: absolute; margin-left: 20px;">Logo Symbol</h3>
+        <img id="logo-file" class="logo-file" alt="" style="object-fit: cover;">
+      </div>
+    </div>
+
+  </div>
+  <script type="module" src="/details.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mybrande</title>
+    <script src="https://kit.fontawesome.com/c64b631310.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./styles/index.style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div style="display: flex; justify-content: space-between; margin-inline: 100px; align-items: center;">
+            <div>
+                <img src="./assets/Logo Gold.svg" alt="" loading="eager"
+                    style="width: 170px; object-fit: contain; margin-top: 10px;">
+            </div>
+            <div class="links">
+                <a class="link" href="#">Logo Ideas</a>
+                <a class="link" href="#">Learn</a>
+                <a class="link" href="#">About</a>
+            </div>
+        </div>
+    </header>
+    <div id="app" class="start-template-body">
+        <div style="display: flex;">
+            <div id="input_phase" style="margin: 100px;">
+                <h1>Mybrande</h1>
+                <p>Make a professional logo in a few clicks</p>
+                <div class="input-box-primary">
+                    <input id="logo_name_input-primary" class="form-control" type="text" value=""
+                        placeholder="Type Your Logo Name">
+                    <input id="logo_name_input-secondary" class="form-control" type="text" value=""
+                        placeholder="Type Your Slogan Name">
+                </div>
+                <div style="margin-block: 40px;">
+                    <button id="back_btn" class="btn-main">Back </button>
+                    <button id="next_btn" class="btn-main">Next ></button>
+                </div>
+            </div>
+            <div id="darg-drop-parent" style="display: grid; justify-items: flex-start;">
+                <div id="drag-drop" class="drag_drop">
+                    <div id="drag-drop-child" style="display: grid; align-items: center;">
+                        <div class="icon-container">
+                            <i class="fa-solid fa-images" style="font-size: 80px; color: #4d4e4e;"></i>
+                        </div>
+                        <div>
+                            <h2 style="color: #4d4e4e;">Drag & Drop</h2>
+                            <p style="color: #4d4e4e; font-size: 20px;">SVG to make your logo</p>
+                        </div>
+                    </div>
+                    <div id="img-view-container" style="display: flex; justify-content: center; align-items: center;">
+                        <img id="img-view" style="width: 300px; height: 300px; object-fit: contain;"></img>
+                    </div>
+                </div>
+                <button id="d_next_btn" class="btn-main" style="margin-inline: 50px; margin-block: -80px;">Next ></button>
+            </div>
+            <div>
+                <img src="./assets/abs.png" alt="" width="600px" height="600px" style="object-fit: cover;">
+            </div>
+        </div>
+    </div>
+    <script src="main.js" type="module"></script>
+</body>
+
+</html>

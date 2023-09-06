@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('../style.css');
+
+* {
+  font-family: Poppins;
+}
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--white);
+  z-index: 9;
+  height: 65px;
+  box-shadow: 0 0 10.5px 0 rgba(76, 144, 238, 0.27);
+}
+
+.start-template-body {
+  margin: 100px;
+  display: grid;
+  gap: 100px;
+}
+
+.links {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 10px;
+}
+
+.link {
+  color: #555;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.2s ease-in-out all;
+}
+
+.link:hover {
+  color: var(--gold-darker);
+  text-decoration: underline;
+}
+
+.input-box-primary {
+  width: 350px;
+  display: inline-block;
+  position: relative;
+  display: block;
+}
+
+.input-box-primary > input {
+  height: 40px;
+  outline: none;
+  background-color: var(--white);
+  padding: 7px 26px 4px 39px;
+  border-width: 0 0 2px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--gray-dark);
+  transition: 0.1s ease-out all;
+}
+
+.input-box-primary::before {
+  content: '\f044';
+  font-family: 'Font Awesome 5 Free';
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray);
+}
+
+.input-box-primary input:hover,
+input:focus {
+  border-width: 0 0 2px;
+  border-color: var(--gold);
+  outline: none;
+  outline: none;
+}
+
+.btn-main {
+  background-color: var(--gold);
+  outline: none;
+  border: none;
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 500;
+  height: 40px;
+  min-width: 130px;
+  width: max-content;
+  padding: 8px;
+  border-radius: 3.5px;
+  transition: 0.2s ease-in-out all;
+}
+
+.btn-main:hover {
+  background-color: var(--gold-darker);
+}
+
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.drag_drop {
+  height: 400px;
+  width: 444px;
+  border-radius: 15px;
+  display: grid;
+  margin: 50px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-width: 3px;
+  border-style: dotted;
+  border-color: #4d4e4e55;
+  background-color: #fff;
+  transition: ease-out 0.2s all;
+}
+
