@@ -177,7 +177,6 @@ const businessTypeRender = () => {
     const listItem = document.createElement('li');
     listItem.innerHTML = `<span class="tag_name_text">${item}</span><a id="item_${index}">X</a>`;
     businessTypeList.appendChild(listItem);
-    console.log(modal_business_tags.cloneNode(true).innerHTML);
     modal_business_tags_parent.innerHTML = modal_business_tags.cloneNode(true).innerHTML;
 
     const anchor = listItem.querySelector(`#item_${index}`);
@@ -189,6 +188,9 @@ const businessTypeRender = () => {
 
 const businessTypeDelete = (item) => {
   newTypes = newTypes.filter((i) => !item.includes(i));
+  if (newTypes.length === 0) {
+    modal_business_tags_parent.innerHTML = '';
+  }
   businessTypeRender();
 };
 
