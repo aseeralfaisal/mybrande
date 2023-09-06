@@ -1,9 +1,7 @@
 const logoFile = localStorage.getItem('saved_logo');
-console.log(logoFile)
 
 if (logoFile) {
   const imgElement = document.getElementById('logo-file');
-  // const dataURI = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(logoFile)}`;
   imgElement.src = logoFile;
 }
 
@@ -168,18 +166,19 @@ categoryTitle.addEventListener('click', (event) => {
 
 let businessType = document.getElementById('business_type');
 let businessTypeList = document.getElementById('business_type_list');
-let businessTypeList1 = document.getElementById('business_type_list_1');
 let newTypes = [];
+
+const modal_business_tags_parent = document.querySelector('#modal_business_tags_parent')
+const modal_business_tags = document.querySelector('#modal_business_tags')
 
 const businessTypeRender = () => {
   businessTypeList.innerHTML = '';
-  businessTypeList1.innerHTML = '';
   newTypes.forEach((item, index) => {
     const listItem = document.createElement('li');
     listItem.innerHTML = `<span class="tag_name_text">${item}</span><a id="item_${index}">X</a>`;
     businessTypeList.appendChild(listItem);
-    const listItemClone = listItem.cloneNode(true);
-    businessTypeList1.appendChild(listItemClone);
+    console.log(modal_business_tags.cloneNode(true).innerHTML)
+    modal_business_tags_parent.innerHTML = modal_business_tags.cloneNode(true).innerHTML
 
     const anchor = listItem.querySelector(`#item_${index}`);
     anchor.addEventListener('click', () => {
