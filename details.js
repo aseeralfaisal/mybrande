@@ -216,8 +216,8 @@ document.addEventListener('click', (event) => {
 
 const toggleIndustryModal = () => (document.querySelector('#industry-modal').style.display = 'block');
 
-document.getElementById('modal_business_tags_parent').addEventListener('click', () => toggleIndustryModal);
-document.getElementById('industry-type').addEventListener('click', () => toggleIndustryModal);
+document.getElementById('modal_business_tags_parent').addEventListener('click', toggleIndustryModal);
+document.getElementById('industry-type').addEventListener('click', toggleIndustryModal);
 
 const newLogoType = [];
 const newLogoStyle = [];
