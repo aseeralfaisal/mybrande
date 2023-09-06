@@ -282,7 +282,7 @@ input:focus {
 }
 
 .round__chip:hover {
-  background-color: var(--gray-dark);
+  background-color: var(--gold);
   border-radius: 10px;
   font-size: 14px;
   color: var(--white);

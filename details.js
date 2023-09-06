@@ -269,7 +269,7 @@ document.getElementById('logo-type').addEventListener('click', (e) => {
   }
   document.querySelectorAll('#logotype').forEach((item) => {
     if (newLogoType.includes(item.innerText)) {
-      item.style.background = '#000';
+      item.style.background = 'var(--gold)';
     } else {
       item.style.background = '';
     }
@@ -285,7 +285,7 @@ document.getElementById('logo-style').addEventListener('click', (e) => {
   }
   document.querySelectorAll('#logostyle').forEach((item) => {
     if (newLogoStyle.includes(item.innerText)) {
-      item.style.background = '#000';
+      item.style.background = 'var(--gold)';
     } else {
       item.style.background = '';
     }
