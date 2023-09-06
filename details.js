@@ -168,8 +168,8 @@ let businessType = document.getElementById('business_type');
 let businessTypeList = document.getElementById('business_type_list');
 let newTypes = [];
 
-const modal_business_tags_parent = document.querySelector('#modal_business_tags_parent')
-const modal_business_tags = document.querySelector('#modal_business_tags')
+const modal_business_tags_parent = document.querySelector('#modal_business_tags_parent');
+const modal_business_tags = document.querySelector('#modal_business_tags');
 
 const businessTypeRender = () => {
   businessTypeList.innerHTML = '';
@@ -177,8 +177,8 @@ const businessTypeRender = () => {
     const listItem = document.createElement('li');
     listItem.innerHTML = `<span class="tag_name_text">${item}</span><a id="item_${index}">X</a>`;
     businessTypeList.appendChild(listItem);
-    console.log(modal_business_tags.cloneNode(true).innerHTML)
-    modal_business_tags_parent.innerHTML = modal_business_tags.cloneNode(true).innerHTML
+    console.log(modal_business_tags.cloneNode(true).innerHTML);
+    modal_business_tags_parent.innerHTML = modal_business_tags.cloneNode(true).innerHTML;
 
     const anchor = listItem.querySelector(`#item_${index}`);
     anchor.addEventListener('click', () => {
@@ -214,9 +214,10 @@ document.addEventListener('click', (event) => {
   }
 });
 
-document.getElementById('industry-type').addEventListener('click', () => {
-  document.querySelector('#industry-modal').style.display = 'block';
-});
+const toggleIndustryModal = () => (document.querySelector('#industry-modal').style.display = 'block');
+
+document.getElementById('modal_business_tags_parent').addEventListener('click', () => toggleIndustryModal);
+document.getElementById('industry-type').addEventListener('click', () => toggleIndustryModal);
 
 const newLogoType = [];
 const newLogoStyle = [];
@@ -227,7 +228,7 @@ const logotype = ['Monogram', 'Mascot', 'Emblem', 'Abstract', 'Pictorial'];
 
 logotype.forEach((logo) => {
   const div = document.createElement('div');
-  div.innerText = logo; 
+  div.innerText = logo;
   div.className = 'round__chip';
   div.setAttribute('id', 'logotype');
   document.getElementById('logo-type').append(div);
@@ -235,7 +236,7 @@ logotype.forEach((logo) => {
 
 logostyle.forEach((logo) => {
   const div = document.createElement('div');
-  div.innerText = logo; 
+  div.innerText = logo;
   div.className = 'round__chip';
   div.setAttribute('id', 'logostyle');
   document.getElementById('logo-style').append(div);
@@ -245,7 +246,7 @@ document.querySelectorAll('#logotype').forEach((item) => {
   if (newLogoType.includes(item.innerText)) {
     item.style.background = '#000';
   } else {
-    item.style.background = ''; 
+    item.style.background = '';
   }
 });
 
@@ -253,7 +254,7 @@ document.querySelectorAll('#logostyle').forEach((item) => {
   if (newLogoStyle.includes(item.innerText)) {
     item.style.background = '#000';
   } else {
-    item.style.background = ''; 
+    item.style.background = '';
   }
 });
 
@@ -262,30 +263,29 @@ document.getElementById('logo-type').addEventListener('click', (e) => {
   if (!newLogoType.includes(type)) {
     newLogoType.push(type);
   } else {
-    newLogoType.splice(newLogoType.indexOf(type), 1); 
+    newLogoType.splice(newLogoType.indexOf(type), 1);
   }
   document.querySelectorAll('#logotype').forEach((item) => {
     if (newLogoType.includes(item.innerText)) {
       item.style.background = '#000';
     } else {
-      item.style.background = ''; 
+      item.style.background = '';
     }
   });
 });
 
-document.getElementById('logo-style').addEventListener('click', (e) => {     
+document.getElementById('logo-style').addEventListener('click', (e) => {
   const type = e.target.innerText;
   if (!newLogoStyle.includes(type)) {
     newLogoStyle.push(type);
   } else {
-    newLogoStyle.splice(newLogoStyle.indexOf(type), 1); 
+    newLogoStyle.splice(newLogoStyle.indexOf(type), 1);
   }
   document.querySelectorAll('#logostyle').forEach((item) => {
     if (newLogoStyle.includes(item.innerText)) {
       item.style.background = '#000';
     } else {
-      item.style.background = ''; 
+      item.style.background = '';
     }
   });
 });
-
