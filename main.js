@@ -1,7 +1,9 @@
+import Cropper from 'cropperjs';
+import 'cropperjs/dist/cropper.css';
 import './style.css';
 
 const imgViewContainer = document.querySelector('#img-view-container');
-const imgView = document.querySelector('#img-view');
+const imgView = document.getElementById('img-view');
 const dragDrop = document.querySelector('#drag-drop');
 const dragDropChild = document.querySelector('#drag-drop-child');
 
@@ -62,3 +64,16 @@ const nextBtn = document.querySelector('#next_btn');
 nextBtn.addEventListener('click', () => {
   location.href = './main_editor/pages/editor.html?logo_name=Brand Name&slogan_name=Slogan goes here';
 });
+
+let cropper;
+imgView.onload = () => {
+  cropper = new Cropper(imgView, {
+    aspectRatio: 1 / 1,
+  });
+};
+
+// document.getElementById('crop').addEventListener('click', () => {
+//   const croppedImage = cropper.getCroppedCanvas().toDataURL('image/png');
+//   console.log(croppedImage);
+//   document.querySelector('#imger').src = croppedImage;
+// });
