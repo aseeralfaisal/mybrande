@@ -1,12 +1,9 @@
 import { fabric } from 'fabric';
-import { CreateLayerSection } from './events/createLayer';
-import { DownloadImg } from './events/downloadimg';
-import { renderSVGForMug } from './previews/mug.preview';
-import { renderSVGForCard } from './previews/card.preview';
-import { wallPreview } from './previews/wall.preview';
-import { shirtPreview } from './previews/shirt.preview';
-import clipIcons from '../assets/icons/clipIcons';
-import { DeleteLayer } from './events/handleDeleteLayer';
+import { CreateLayerSection } from './createLayer';
+import { renderSVGForMug } from './mug.preview';
+import { wallPreview } from './wall.preview';
+import clipIcons from './assets/icons/clipIcons';
+import { DeleteLayer } from './handleDeleteLayer';
 
 const $ = (id) => document.querySelector(id);
 
@@ -23,8 +20,10 @@ class EditorScreen {
     this.previewMode = $('.nav-item[data-name="preview"]');
     this.galleryMode = $('.nav-item[data-name="gallery"]');
     this.urlParams = new URLSearchParams(document.location.search);
-    this.logoName = this.urlParams.get('logo_name');
-    this.sloganName = this.urlParams.get('slogan_name');
+    // this.logoName = this.urlParams.get('logo_name');
+    // this.sloganName = this.urlParams.get('slogan_name');
+    this.logoName = "MyBrande";
+    this.sloganName = "Slogan goes here";
     this.rotateRange = $('#rotate-bar');
     this.downloadBtn = $('#save-btn');
     this.scaleRange = $('#progress-bar');
@@ -265,7 +264,11 @@ class EditorScreen {
         multiplier: 3,
       });
       localStorage.setItem('saved_logo', savedLogo);
-      location.href = '../../details.html'
+      setTimeout(() => {
+        document.getElementById('drag_drop_view').style.display = 'none';
+        document.getElementById('main_editor_view').style.display = 'none';
+        document.getElementById('details_view').style.display = 'block';
+      }, 50);
     });
 
     this.scaleElement.textContent = this.scaleValue;

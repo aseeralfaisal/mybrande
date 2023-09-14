@@ -2,6 +2,7 @@ import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
 import './style.css';
 
+document.getElementById('main_editor_view').style.display = 'none';
 const imgViewContainer = document.querySelector('#img-view-container');
 const imgView = document.getElementById('img-view');
 const dragDrop = document.querySelector('#drag-drop');
@@ -62,7 +63,15 @@ dragDrop.addEventListener('dragleave', (event) => {
 
 const nextBtn = document.querySelector('#next_btn');
 nextBtn.addEventListener('click', () => {
-  location.href = './main_editor/pages/editor.html?logo_name=Brand Name&slogan_name=Slogan goes here';
+  document.getElementById('drag_drop_view').style.display = 'none';
+  document.getElementById('main_editor_view').style.display = 'block';
+  document.getElementById('details_view').style.display = 'none';
+});
+const backBtn = document.querySelector('#back-main');
+backBtn.addEventListener('click', () => {
+  document.getElementById('drag_drop_view').style.display = 'block';
+  document.getElementById('main_editor_view').style.display = 'none';
+  document.getElementById('details_view').style.display = 'none';
 });
 
 let cropper;
@@ -71,9 +80,11 @@ imgView.onload = () => {
     aspectRatio: 1 / 1,
   });
 };
+const cropElem = document.getElementById('crop');
+cropElem &&
+  cropElem?.addEventListener('click', () => {
+    const croppedImage = cropper.getCroppedCanvas().toDataURL('image/png');
+    console.log(croppedImage);
+    document.querySelector('#imger').src = croppedImage;
+  });
 
-// document.getElementById('crop').addEventListener('click', () => {
-//   const croppedImage = cropper.getCroppedCanvas().toDataURL('image/png');
-//   console.log(croppedImage);
-//   document.querySelector('#imger').src = croppedImage;
-// });

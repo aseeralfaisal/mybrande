@@ -22,7 +22,7 @@ export const renderSVGForMug = (fabric, previewCanvas, canvas) => {
     previewCanvas.discardActiveObject();
   });
 
-  const backgroundImageUrl = '../static/mug.png';
+  const backgroundImageUrl = '/static/mug.png';
   fabric.Image.fromURL(backgroundImageUrl, (backgroundImage) => {
     previewCanvas.setBackgroundImage(backgroundImage, previewCanvas.renderAll.bind(previewCanvas));
   });
