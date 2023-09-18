@@ -122,6 +122,7 @@ class EditorScreen {
   }
 
   initialize() {
+
     this.updateActiveNavbar = () => {
       document.querySelectorAll('.nav-item').forEach((item) => {
         if (this.activeNavbarSetting.includes(item.innerText.toLowerCase())) {
