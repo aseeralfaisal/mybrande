@@ -15,9 +15,9 @@ const paletteMarkup = /*html*/ `
     <div id="gradient-panel" style="margin-top: 60px;  display: none;">
         <input type="color" value="#000" class="color-picker" id="grad-1">
         <input type="color" value="#000" class="color-picker" id="grad-2">
-    </div>
-
-    <div id="solid-panel" style="margin-top: 60px;">
+      </div>
+      
+      <div id="solid-panel" style="margin-top: 60px;">
         <input type="color" value="#000" class="color-picker" id="grad-solid">
     </div>
 

@@ -1137,6 +1137,7 @@ input:checked + .switch-slider:before {
   background-color: #fff;
   padding: 5px 10px;
   border: 1px solid #ddd;
+  overflow-y: scroll;
 }
 
 canvas {

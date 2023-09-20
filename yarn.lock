@@ -172,6 +172,11 @@ agent-base@6:
   dependencies:
     debug "4"
 
+alwan@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/alwan/-/alwan-1.3.1.tgz#166e253df04fc89b8cafc7cbd9cf28909becd41c"
+  integrity sha512-r3DQW37w7ju+2DNGGHNAc4cfgTVOUswicf8uf6TmdfQlq9CGNtsV2YsKLxJ4XKEjB+TqfaEMZaoiQw65OccwrA==
+
 ansi-regex@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-5.0.1.tgz#082cb2c89c9fe8659a311a53bd6a4dc5301db304"

@@ -3,18 +3,25 @@ import 'cropperjs/dist/cropper.css';
 import './style.css';
 
 const $ = (id) => document.querySelector(id);
-
-$('#details_view').style.display = 'none';
-$('#main_editor_view').style.display = 'none';
-const imgViewContainer = $('#img-view-container');
-const imgView = $('#img-view');
-const dragDrop = $('#drag-drop');
-const dragDropChild = $('#drag-drop-child');
-const cropElement = $('#crop');
-const nextBtn = $('#next_btn');
-const backBtn = $('#back-main');
-
 const fileReader = new FileReader();
+
+const elements = {
+  detailsView: $('#details_view'),
+  mainEditorView: $('#main_editor_view'),
+  imgViewContainer: $('#img-view-container'),
+  imgView: $('#img-view'),
+  dragDrop: $('#drag-drop'),
+  dragDropChild: $('#drag-drop-child'),
+  cropElement: $('#crop'),
+  dragDropView: $('#drag_drop_view'),
+  nextBtn: $('#next_btn'),
+  backBtn: $('#back-main'),
+  uploadFileBtn: $('#upload_file_btn'),
+  imger: $('#imger'),
+};
+
+elements.mainEditorView.style.display = 'none'
+elements.detailsView.style.display = 'none'
 
 const preventEvents = (event) => {
   event.preventDefault();
@@ -22,13 +29,14 @@ const preventEvents = (event) => {
 };
 
 const uploadLocalFile = (file) => {
-  
-  imgViewContainer.style.display = 'block';
-  imgView.style.display = 'block';
+  elements.imgViewContainer.style.display = 'block';
+  elements.imgView.style.display = 'block';
+
   if (file.type !== 'image/svg+xml') {
     file = null;
     alert('Please use an SVG file instead');
-    imgViewContainer.style.display = 'none';
+    elements.imgViewContainer.style.display = 'none';
+    return;
   }
 
   fileReader.readAsText(file);
@@ -37,64 +45,64 @@ const uploadLocalFile = (file) => {
     localStorage.setItem('logo-file', svgContent);
   };
 
-  dragDropChild.style.display = 'none';
+  elements.dragDropChild.style.display = 'none';
   const fileURL = URL.createObjectURL(file);
-  imgView.src = fileURL;
+  elements.imgView.src = fileURL;
 };
 
-dragDrop.addEventListener('dragover', preventEvents);
+elements.dragDrop.addEventListener('dragover', preventEvents);
 
-dragDrop.addEventListener('drop', (event) => {
+elements.dragDrop.addEventListener('drop', (event) => {
   preventEvents(event);
   uploadLocalFile(event.dataTransfer.files[0]);
 });
 
-$('#upload_file_btn').addEventListener('change', (event) => {
+elements.uploadFileBtn.addEventListener('change', (event) => {
   preventEvents(event);
   uploadLocalFile(event.target.files[0]);
 });
 
-imgViewContainer.style.display = 'none';
-imgView.style.display = 'none';
+elements.imgViewContainer.style.display = 'none';
+elements.imgView.style.display = 'none';
 
 const dragDropEvent = (event, background, borderColor, borderWidth, height, width) => {
-  preventEvents(event)
-  dragDrop.style.background = background;
-  dragDrop.style.borderColor = borderColor;
-  dragDrop.style.borderWidth = borderWidth;
-  dragDrop.style.height = height;
-  dragDrop.style.width = width;
+  preventEvents(event);
+  elements.dragDrop.style.background = background;
+  elements.dragDrop.style.borderColor = borderColor;
+  elements.dragDrop.style.borderWidth = borderWidth;
+  elements.dragDrop.style.height = height;
+  elements.dragDrop.style.width = width;
 };
 
-dragDrop.addEventListener('dragover', (event) => {
-  return dragDropEvent(event, '#eeeeee77', '#4d4e4eaa', '6px', '500px', '550px');
+elements.dragDrop.addEventListener('dragover', (event) => {
+  dragDropEvent(event, '#eeeeee77', '#4d4e4eaa', '6px', '500px', '550px');
 });
 
-dragDrop.addEventListener('dragleave', (event) => {
-  return dragDropEvent(event, '#ffffff', '#4d4e4e55', '3px', '500px', '550px');
+elements.dragDrop.addEventListener('dragleave', (event) => {
+  dragDropEvent(event, '#ffffff', '#4d4e4e55', '3px', '500px', '550px');
 });
 
-nextBtn.addEventListener('click', () => {
-  $('#drag_drop_view').style.display = 'none';
-  $('#main_editor_view').style.display = 'block';
-  $('#details_view').style.display = 'none';
+elements.nextBtn.addEventListener('click', () => {
+  elements.detailsView.style.display = 'none';
+  elements.mainEditorView.style.display = 'block';
+  elements.dragDropView.style.display = 'none';
 });
 
-backBtn.addEventListener('click', () => {
-  $('#drag_drop_view').style.display = 'block';
-  $('#main_editor_view').style.display = 'none';
-  $('#details_view').style.display = 'none';
+elements.backBtn.addEventListener('click', () => {
+  elements.detailsView.style.display = 'block';
+  elements.mainEditorView.style.display = 'none';
+  elements.dragDropView.style.display = 'none';
 });
 
 let cropper;
-imgView.onload = () => {
-  cropper = new Cropper(imgView, {
+elements.imgView.onload = () => {
+  cropper = new Cropper(elements.imgView, {
     aspectRatio: 1 / 1,
   });
 };
 
-cropElement &&
-  cropElement?.addEventListener('click', () => {
-    const croppedImage = cropper.getCroppedCanvas().toDataURL('image/png');
-    $('#imger').src = croppedImage;
-  });
+elements.cropElement?.addEventListener('click', () => {
+  const croppedImage = cropper.getCroppedCanvas().toDataURL('image/png');
+  elements.imger.src = croppedImage;
+});
+
