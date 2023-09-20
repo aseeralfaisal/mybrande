@@ -418,22 +418,22 @@ input:checked + .switch-slider:before {
   background: none;
   outline: none;
   border: none;
-  width: 32px;
-  height: 32px;
+  width: 42px;
+  height: 42px;
   padding: 0;
   cursor: pointer;
 }
 
 .color-picker::-webkit-color-swatch {
   padding: 0;
-  border: 2px solid var(--white);
+  /* border: 2px solid var(--white); */
   border-radius: 5px;
   transition: 0.15s ease-out all;
 }
 
-.color-picker::-webkit-color-swatch:hover {
+/* .color-picker::-webkit-color-swatch:hover {
   border: 0px transparent;
-}
+} */
 
 .color-picker::-webkit-color-swatch-wrapper {
   padding: 0;
@@ -1156,4 +1156,30 @@ canvas {
 
 #back-main:hover {
   color: var(--gold);
+}
+
+.solid_color_section{
+  width: 28px;
+  height: 28px;
+}
+
+.solid_color_section:last-child {
+  border-radius: 0 5px 5px 0;
+}
+.solid_color_section:first-child {
+  border-radius: 5px 0 0 5px;
+}
+
+.category {
+  font-weight: 500; font-size: 14px; color: var(--gray-light);
+  cursor: pointer;
+}
+
+.category:hover {
+  color: var(--gray-dark);
+}
+
+.category_selected {
+  color: var(--gold);
+  padding-bottom: 9px; border-bottom: 2.5px solid var(--gold);
 }

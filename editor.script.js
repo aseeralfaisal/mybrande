@@ -4,6 +4,8 @@ import { renderSVGForMug } from './mug.preview';
 import { wallPreview } from './wall.preview';
 import clipIcons from './assets/icons/clipIcons';
 import { DeleteLayer } from './handleDeleteLayer';
+import Alwan from 'alwan';
+import 'alwan/dist/css/alwan.min.css';
 
 const $ = (id) => document.querySelector(id);
 
@@ -22,8 +24,8 @@ class EditorScreen {
     this.urlParams = new URLSearchParams(document.location.search);
     // this.logoName = this.urlParams.get('logo_name');
     // this.sloganName = this.urlParams.get('slogan_name');
-    this.logoName = "MyBrande";
-    this.sloganName = "Slogan goes here";
+    this.logoName = 'MyBrande';
+    this.sloganName = 'Slogan goes here';
     this.rotateRange = $('#rotate-bar');
     this.downloadBtn = $('#save-btn');
     this.scaleRange = $('#progress-bar');
@@ -122,7 +124,6 @@ class EditorScreen {
   }
 
   initialize() {
-
     this.updateActiveNavbar = () => {
       document.querySelectorAll('.nav-item').forEach((item) => {
         if (this.activeNavbarSetting.includes(item.innerText.toLowerCase())) {
@@ -1032,33 +1033,33 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    const logoPalleteComponent = $('#logo-pallete');
-    logoPalleteComponent.addEventListener('colorChange', (e) => {
-      const selectedObject = this.canvas.getActiveObject();
-      const { colorMode, grad1Value, grad2Value, solidValue } = e.detail;
+    // const logoPalleteComponent = $('#logo-pallete');
+    // logoPalleteComponent.addEventListener('colorChange', (e) => {
+    //   const selectedObject = this.canvas.getActiveObject();
+    //   const { colorMode, grad1Value, grad2Value, solidValue } = e.detail;
 
-      let color = null;
-      if (colorMode !== 'Solid') {
-        color = new fabric.Gradient({
-          type: 'linear',
-          coords: {
-            x1: 0,
-            y1: 0,
-            x2: selectedObject.width,
-            y2: selectedObject.height,
-          },
-          colorStops: [
-            { offset: 0, color: grad1Value },
-            { offset: 1, color: grad2Value },
-          ],
-        });
-      } else {
-        color = solidValue;
-      }
+    //   let color = null;
+    //   if (colorMode !== 'Solid') {
+    //     color = new fabric.Gradient({
+    //       type: 'linear',
+    //       coords: {
+    //         x1: 0,
+    //         y1: 0,
+    //         x2: selectedObject.width,
+    //         y2: selectedObject.height,
+    //       },
+    //       colorStops: [
+    //         { offset: 0, color: grad1Value },
+    //         { offset: 1, color: grad2Value },
+    //       ],
+    //     });
+    //   } else {
+    //     color = solidValue;
+    //   }
 
-      selectedObject.set('fill', color);
-      this.canvas.requestRenderAll();
-    });
+    //   selectedObject.set('fill', color);
+    //   this.canvas.requestRenderAll();
+    // });
 
     const textPalleteComponent = $('#text-pallete');
     textPalleteComponent.addEventListener('colorChange', (e) => {
@@ -1281,6 +1282,84 @@ class EditorScreen {
         $('#shadow-offsetY').style.display = 'none';
       }
     });
+
+    // Helper function to convert a single color channel to hexadecimal
+    function ColorChannelToHex(channel) {
+      const hex = channel.toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    }
+
+    // Helper function to convert RGB values to hexadecimal color
+    function ConvertRGBtoHex(red, green, blue) {
+      const redHex = ColorChannelToHex(red);
+      const greenHex = ColorChannelToHex(green);
+      const blueHex = ColorChannelToHex(blue);
+      return `#${redHex}${greenHex}${blueHex}`;
+    }
+
+    const canvasObjects = this.canvas.getObjects();
+    const colorPalette = $('#logo_colors_pallete');
+    const textPalette = $('#logo_text_colors_pallete');
+
+    canvasObjects.forEach((item) => {
+      const itemFill = item.get('fill');
+
+      const colorPicker = document.createElement('input');
+      colorPicker.setAttribute('type', 'color');
+
+      if (typeof itemFill === 'string') {
+        colorPicker.setAttribute('value', itemFill);
+      } else {
+        const gradientColor = itemFill.colorStops[0].color;
+        const rgbValues = gradientColor.match(/\d+/g);
+        if (rgbValues && rgbValues.length === 3) {
+          const hexColor = ConvertRGBtoHex(
+            parseInt(rgbValues[0]),
+            parseInt(rgbValues[1]),
+            parseInt(rgbValues[2])
+          );
+          colorPicker.setAttribute('value', hexColor);
+        }
+      }
+
+      colorPicker.className = 'color-picker';
+      colorPicker.style.borderRadius = '5px';
+
+      colorPicker.addEventListener('input', (event) => {
+        const color = event.target.value;
+        item.set('fill', color);
+        this.canvas.requestRenderAll();
+      });
+
+      if (item && item.text) {
+        textPalette.appendChild(colorPicker);
+      } else {
+        colorPalette.appendChild(colorPicker);
+      }
+    });
+
+    const solidColorMode = $('#solid_color_mode');
+    const pickerColorMode = $('#picker_color_mode');
+
+    const solidColorEvent = () => {
+      $('#picker_color_mode').classList.remove('category_selected');
+      $('#solid_color_mode').classList.add('category_selected');
+      $('#solid_color_items').style.display = 'flex';
+      $('#picker_color_items').style.display = 'none';
+    };
+
+    const pickerColorEvent = () => {
+      $('#solid_color_items').style.display = 'none';
+      $('#picker_color_items').style.display = 'flex';
+      $('#solid_color_mode').classList.remove('category_selected');
+      $('#picker_color_mode').classList.add('category_selected');
+    };
+
+    solidColorEvent();
+
+    solidColorMode.addEventListener('click', solidColorEvent);
+
+    pickerColorMode.addEventListener('click', pickerColorEvent);
 
     const centerAndResizeElements = (type, logoSize, sloganSize, textPosition) => {
       (logoNameElement.fontSize = logoSize), sloganSize;

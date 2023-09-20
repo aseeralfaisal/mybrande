@@ -116,21 +116,21 @@ class Palette extends HTMLElement {
       );
     };
 
-    grad1.addEventListener('input', (e) => {
+    grad1.addEventListener('input', () => {
       this.querySelector(
         '#color-palette-gradient'
       ).style.background = `linear-gradient(0deg, ${grad1.value}, ${grad2.value})`;
       dispatchChangeEvent();
     });
 
-    grad2.addEventListener('input', (e) => {
+    grad2.addEventListener('input', () => {
       this.querySelector(
         '#color-palette-gradient'
       ).style.background = `linear-gradient(0deg, ${grad1.value}, ${grad2.value})`;
       dispatchChangeEvent();
     });
 
-    solid.addEventListener('input', (e) => {
+    solid.addEventListener('input', () => {
       this.querySelector('#color-palette-gradient').style.background = solid.value;
       dispatchChangeEvent();
     });
