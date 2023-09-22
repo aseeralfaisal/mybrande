@@ -1361,6 +1361,46 @@ class EditorScreen {
 
     pickerColorMode.addEventListener('click', pickerColorEvent);
 
+    $('#custom_color_generator').addEventListener('change', (e) => {
+      const color = e.target.value;
+
+      const newColor = document.createElement('input');
+      newColor.setAttribute('type', 'color');
+      newColor.setAttribute('value', color);
+      newColor.className = 'color-picker';
+      newColor.style.width = '32px';
+      newColor.style.height = '32px';
+      newColor.style.borderColor = color;
+
+      newColor.addEventListener('input', () => {
+        const activeObj = this.canvas.getActiveObject();
+        activeObj.set('fill', color);
+        this.canvas.requestRenderAll();
+      });
+
+      $('#custom_colors_wrapper').append(newColor);
+    });
+
+    document.querySelectorAll('#solid_color').forEach((item) => {
+      item.addEventListener('cahnge', (event) => {
+        if (this.canvas) {
+          const activeObj = this.canvas.getActiveObject();
+          if (activeObj) {
+            const bgColor = event.target.style.backgroundColor;
+            const match = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/.exec(bgColor);
+            if (match) {
+              const red = parseInt(match[1]);
+              const green = parseInt(match[2]);
+              const blue = parseInt(match[3]);
+              const hexColor = ConvertRGBtoHex(red, green, blue);
+              activeObj.set('fill', hexColor);
+              this.canvas.requestRenderAllrenderAll();
+            }
+          }
+        }
+      });
+    });
+
     const centerAndResizeElements = (type, logoSize, sloganSize, textPosition) => {
       (logoNameElement.fontSize = logoSize), sloganSize;
       (sloganNameElement.fontSize = logoSize), sloganSize;

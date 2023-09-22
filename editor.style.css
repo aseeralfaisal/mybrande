@@ -1158,9 +1158,13 @@ canvas {
   color: var(--gold);
 }
 
-.solid_color_section{
+.solid_color_section {
   width: 28px;
   height: 28px;
+}
+
+.solid_color_section:hover {
+  opacity: 0.7;
 }
 
 .solid_color_section:last-child {
@@ -1171,7 +1175,9 @@ canvas {
 }
 
 .category {
-  font-weight: 500; font-size: 14px; color: var(--gray-light);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--gray-light);
   cursor: pointer;
 }
 
@@ -1181,5 +1187,6 @@ canvas {
 
 .category_selected {
   color: var(--gold);
-  padding-bottom: 9px; border-bottom: 2.5px solid var(--gold);
+  padding-bottom: 9px;
+  border-bottom: 2.5px solid var(--gold);
 }
