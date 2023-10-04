@@ -27,5 +27,10 @@ export const wallPreview = (fabric, previewCanvas, canvas) => {
     previewCanvas.setBackgroundImage(backgroundImage, previewCanvas.renderAll.bind(previewCanvas));
   });
 
+  const canvasWidth = canvas.getWidth();
+  const canvasHeight = canvas.getHeight();
+  previewCanvas.setWidth(canvasWidth);
+  previewCanvas.setHeight(canvasHeight);
+
   previewCanvas.requestRenderAll();
 };

@@ -353,7 +353,7 @@ input:checked + .switch-slider:before {
   gap: 10px;
   margin-block: 10px;
   cursor: pointer;
-  transition: 0.4s ease-in-out all;
+  transition: 0.2s ease-in-out all;
 }
 
 .layer-container:hover .layer-img {
@@ -361,11 +361,17 @@ input:checked + .switch-slider:before {
 }
 
 .layer-container:hover .layer-span {
-  color: var(--gold);
+  color: var(--lighter);
+  background: var(--gold-light);
+  padding: 14px;
+  border-radius: 3px;
 }
 
 .layer-span.selected {
-  color: var(--gold);
+  color: var(--lighter);
+  background: var(--gold);
+  padding: 14px;
+  border-radius: 3px;
 }
 
 .layer-span {
@@ -373,6 +379,10 @@ input:checked + .switch-slider:before {
   color: var(--gray);
   width: 90px;
   transition: 0.2s ease-out all;
+}
+
+.layer-span {
+  font-weight: 500;
 }
 
 .layer-img {

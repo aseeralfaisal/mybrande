@@ -85,6 +85,7 @@ class EditorScreen {
     this.zoomSlider = $('#zoom-slider');
     this.colorMode = 'Solid';
     this.activeNavbarSetting = 'logo';
+    let isLoading = false;
 
     this.rotateObject = () => {
       const selectedObject = this.canvas.getActiveObject();
@@ -121,6 +122,203 @@ class EditorScreen {
       scaleX: 0.3,
       scaleY: 0.3,
     });
+
+    (function (fabric) {
+      fabric.TextCurved = fabric.util.createClass(fabric.Object, {
+        type: 'text-curved',
+        diameter: 250,
+        kerning: 0,
+        text: '',
+        flipped: false,
+        fill: '#000',
+        fontFamily: 'Times New Roman',
+        fontSize: 24,
+        fontWeight: 'normal',
+        fontStyle: '',
+        cacheProperties: fabric.Object.prototype.cacheProperties.concat(
+          'diameter',
+          'kerning',
+          'flipped',
+          'fill',
+          'fontFamily',
+          'fontSize',
+          'fontWeight',
+          'fontStyle',
+          'strokeStyle',
+          'strokeWidth'
+        ),
+        strokeStyle: null,
+        strokeWidth: 0,
+
+        initialize: function (text, options) {
+          options || (options = {});
+          this.text = text;
+          this.callSuper('initialize', options);
+          this.set('lockUniScaling', true);
+          var canvas = this.getCircularText();
+          this._trimCanvas(canvas);
+          this.set('width', canvas.width);
+          this.set('height', canvas.height);
+        },
+
+        _getFontDeclaration: function () {
+          return [
+            fabric.isLikelyNode ? this.fontWeight : this.fontStyle,
+            fabric.isLikelyNode ? this.fontStyle : this.fontWeight,
+            this.fontSize + 'px',
+            fabric.isLikelyNode ? '"' + this.fontFamily + '"' : this.fontFamily,
+          ].join(' ');
+        },
+
+        _trimCanvas: function (canvas) {
+          var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            pix = { x: [], y: [] },
+            n,
+            imageData = ctx.getImageData(0, 0, w, h),
+            fn = function (a, b) {
+              return a - b;
+            };
+
+          for (var y = 0; y < h; y++) {
+            for (var x = 0; x < w; x++) {
+              if (imageData.data[(y * w + x) * 4 + 3] > 0) {
+                pix.x.push(x);
+                pix.y.push(y);
+              }
+            }
+          }
+          pix.x.sort(fn);
+          pix.y.sort(fn);
+          n = pix.x.length - 1;
+          w = pix.x[n] - pix.x[0];
+          h = pix.y[n] - pix.y[0];
+          var cut = ctx.getImageData(pix.x[0], pix.y[0], w, h);
+          canvas.width = w;
+          canvas.height = h;
+          ctx.putImageData(cut, 0, 0);
+        },
+
+        getCircularText: function () {
+          var text = this.text,
+            diameter = this.diameter,
+            flipped = this.flipped,
+            kerning = this.kerning,
+            fill = this.fill,
+            inwardFacing = true,
+            startAngle = 0,
+            canvas = fabric.util.createCanvasElement(),
+            ctx = canvas.getContext('2d'),
+            cw,
+            x,
+            clockwise = -1;
+          if (flipped) {
+            startAngle = 180;
+            inwardFacing = false;
+          }
+          startAngle *= Math.PI / 180;
+          var d = document.createElement('div');
+          d.style.fontFamily = this.fontFamily;
+          d.style.whiteSpace = 'nowrap';
+          d.style.fontSize = this.fontSize + 'px';
+          d.style.fontWeight = this.fontWeight;
+          d.style.fontStyle = this.fontStyle;
+          d.textContent = text;
+          document.body.appendChild(d);
+          var textHeight = d.offsetHeight;
+          document.body.removeChild(d);
+          canvas.width = canvas.height = diameter;
+          ctx.font = this._getFontDeclaration();
+          if (inwardFacing) {
+            text = text.split('').reverse().join('');
+          }
+          ctx.translate(diameter / 2, diameter / 2);
+          startAngle += Math.PI * !inwardFacing;
+          ctx.textBaseline = 'middle';
+          ctx.textAlign = 'center';
+          for (x = 0; x < text.length; x++) {
+            cw = ctx.measureText(text[x]).width;
+            startAngle +=
+              ((cw + (x == text.length - 1 ? 0 : kerning)) / (diameter / 2 - textHeight) / 2) * -clockwise;
+          }
+          ctx.rotate(startAngle);
+          for (x = 0; x < text.length; x++) {
+            cw = ctx.measureText(text[x]).width;
+            ctx.rotate((cw / 2 / (diameter / 2 - textHeight)) * clockwise);
+            if (this.strokeStyle && this.strokeWidth) {
+              ctx.strokeStyle = this.strokeStyle;
+              ctx.lineWidth = this.strokeWidth;
+              ctx.miterLimit = 2;
+              ctx.strokeText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
+            }
+            ctx.fillStyle = fill;
+            ctx.fillText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
+            ctx.rotate(((cw / 2 + kerning) / (diameter / 2 - textHeight)) * clockwise);
+          }
+          return canvas;
+        },
+
+        _set: function (key, value) {
+          switch (key) {
+            case 'scaleX':
+              this.fontSize *= value;
+              this.diameter *= value;
+              this.width *= value;
+              this.scaleX = 1;
+              if (this.width < 1) {
+                this.width = 1;
+              }
+              break;
+            case 'scaleY':
+              this.height *= value;
+              this.scaleY = 1;
+              if (this.height < 1) {
+                this.height = 1;
+              }
+              break;
+            default:
+              this.callSuper('_set', key, value);
+              break;
+          }
+        },
+
+        _render: function (ctx) {
+          var canvas = this.getCircularText();
+          this._trimCanvas(canvas);
+          this.set('width', canvas.width);
+          this.set('height', canvas.height);
+          ctx.drawImage(canvas, -this.width / 2, -this.height / 2, this.width, this.height);
+          this.setCoords();
+        },
+
+        toObject: function (propertiesToInclude) {
+          return this.callSuper(
+            'toObject',
+            [
+              'text',
+              'diameter',
+              'kerning',
+              'flipped',
+              'fill',
+              'fontFamily',
+              'fontSize',
+              'fontWeight',
+              'fontStyle',
+              'strokeStyle',
+              'strokeWidth',
+              'styles',
+            ].concat(propertiesToInclude)
+          );
+        },
+      });
+
+      fabric.TextCurved.fromObject = function (object, callback) {
+        return fabric.util.enlivenObjects([object], function (enlivenedObjects) {
+          callback && callback(enlivenedObjects[0]);
+        });
+      };
+    })(typeof fabric !== 'undefined' ? fabric : require('fabric').fabric);
   }
 
   initialize() {
@@ -133,6 +331,7 @@ class EditorScreen {
         }
       });
     };
+
     this.updateActiveNavbar();
 
     this.settingsListTitle.addEventListener('click', () => {
@@ -355,14 +554,19 @@ class EditorScreen {
           }
         });
       }
-      this.canvas.renderAll();
+      this.canvas.requestRenderAll();
     };
 
     this.canvas.on('selection:created', onSelect);
     this.canvas.on('selection:updated', onSelect);
 
     const textMain = ({ text, fontFamily = 'Poppins', fontSize = 32, fill = '#000' }) => {
-      return new fabric.Text(text, { fontFamily, fontSize, fill, selectable: true, hasRotatingPoint: true });
+      return new fabric.TextCurved(text, { fontFamily, fontSize, fill, selectable: true, hasRotatingPoint: true, 
+        diameter: 720,
+        left: 50,
+        top: 50,
+        flipped: true,
+       });
     };
 
     const logoNameElement = textMain({ text: this.logoName });
@@ -794,10 +998,99 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    this.canvas.on('object:added', updatePreview);
-    this.canvas.on('object:removed', updatePreview);
-    this.canvas.on('object:modified', updatePreview);
-    this.canvas.on('object:moving', updatePreview);
+    // this.canvas.on('object:added', updatePreview);
+    // this.canvas.on('object:removed', updatePreview);
+    this.canvas.on('object:modified', () => {
+      updatePreview();
+      this.canvas.remove(horizontalLine);
+      this.canvas.remove(verticalLine);
+    });
+
+    let verticalLine, horizontalLine;
+
+    const canvasWidth = this.canvas.width;
+    const canvasHeight = this.canvas.height;
+
+    const gridSize = 12.255;
+    const snappingThreshold = gridSize / 2;
+
+    // for (var i = 0; i < this.canvas.width / gridSize; i++) {
+    //   this.canvas.add(
+    //     new fabric.Line([i * gridSize, 0, i * gridSize, this.canvas.width], {
+    //       stroke: '#ccc',
+    //       selectable: false,
+    //     })
+    //   );
+    //   this.canvas.add(
+    //     new fabric.Line([0, i * gridSize, this.canvas.width, i * gridSize], {
+    //       stroke: '#ccc',
+    //       selectable: false,
+    //     })
+    //   );
+    // }
+
+    this.canvas.on('object:moving', (e) => {
+      const obj = e.target;
+
+      const snappedLeft = Math.round(obj.left / gridSize) * gridSize;
+      const snappedTop = Math.round(obj.top / gridSize) * gridSize;
+
+      const deltaX = Math.abs(obj.left - snappedLeft);
+      const deltaY = Math.abs(obj.top - snappedTop);
+
+      if (deltaX < snappingThreshold && deltaY < snappingThreshold) {
+        obj.set({ left: snappedLeft, top: snappedTop });
+
+        drawVerticalLine.call(this, snappedLeft);
+        drawHorizontalLine.call(this, snappedTop);
+      } else {
+        obj.setCoords();
+        removeVerticalLine.call(this);
+        removeHorizontalLine.call(this);
+      }
+
+      this.canvas.requestRenderAll();
+    });
+
+    function drawVerticalLine(x) {
+      if (verticalLine) {
+        this.canvas.remove(verticalLine);
+      }
+
+      verticalLine = new fabric.Line([x, 0, x, canvasHeight], {
+        stroke: '#0307fcaa',
+        selectable: false,
+      });
+
+      this.canvas.add(verticalLine);
+    }
+
+    function drawHorizontalLine(y) {
+      if (horizontalLine) {
+        this.canvas.remove(horizontalLine);
+      }
+
+      horizontalLine = new fabric.Line([0, y, canvasWidth, y], {
+        stroke: '#0307fcaa',
+        selectable: false,
+      });
+
+      this.canvas.add(horizontalLine);
+    }
+
+    function removeVerticalLine() {
+      if (verticalLine) {
+        this.canvas.remove(verticalLine);
+        verticalLine = null;
+      }
+    }
+
+    function removeHorizontalLine() {
+      if (horizontalLine) {
+        this.canvas.remove(horizontalLine);
+        horizontalLine = null;
+      }
+    }
 
     const setCanvasBackground = () => {
       this.canvas.setBackgroundImage('/static/pattern.png', this.canvas.renderAll.bind(this.canvas), {
@@ -812,27 +1105,27 @@ class EditorScreen {
     };
 
     const undoHistory = [];
-    let currIndex = undoHistory.length - 1;
+    let currIndex = -1;
     let captureTimeout = null;
 
     const captureCanvasState = () => {
       clearTimeout(captureTimeout);
 
-      if (undoHistory.length < 4) {
+      if (undoHistory.length < 10) {
         captureTimeout = setTimeout(() => {
-          undoHistory.push(JSON.stringify(this.canvas.toDatalessJSON()));
+          undoHistory.push(JSON.stringify(this.canvas.toJSON()));
           currIndex = undoHistory.length - 1;
         }, 500);
       } else if (undoHistory.length > 10) {
+        cur;
         undoHistory.splice(0, undoHistory.length);
       }
     };
 
     const undo = () => {
-      setCanvasBackground();
       if (currIndex > 0) {
+        setCanvasBackground();
         currIndex -= 1;
-        console.log({ currIndex });
         const stateToRestore = JSON.parse(undoHistory[currIndex]);
         this.canvas.clear();
         this.canvas.loadFromJSON(stateToRestore, () => {
@@ -845,7 +1138,6 @@ class EditorScreen {
       if (undoHistory.length > 0) {
         setCanvasBackground();
         currIndex += 1;
-        console.log({ currIndex });
         const stateToRestore = JSON.parse(undoHistory[currIndex]);
         this.canvas.clear();
         this.canvas.loadFromJSON(stateToRestore, () => {
@@ -1283,13 +1575,11 @@ class EditorScreen {
       }
     });
 
-    // Helper function to convert a single color channel to hexadecimal
     function ColorChannelToHex(channel) {
       const hex = channel.toString(16);
       return hex.length === 1 ? '0' + hex : hex;
     }
 
-    // Helper function to convert RGB values to hexadecimal color
     function ConvertRGBtoHex(red, green, blue) {
       const redHex = ColorChannelToHex(red);
       const greenHex = ColorChannelToHex(green);
@@ -1382,7 +1672,7 @@ class EditorScreen {
     });
 
     document.querySelectorAll('#solid_color').forEach((item) => {
-      item.addEventListener('cahnge', (event) => {
+      item.addEventListener('click', (event) => {
         if (this.canvas) {
           const activeObj = this.canvas.getActiveObject();
           if (activeObj) {
@@ -1394,7 +1684,7 @@ class EditorScreen {
               const blue = parseInt(match[3]);
               const hexColor = ConvertRGBtoHex(red, green, blue);
               activeObj.set('fill', hexColor);
-              this.canvas.requestRenderAllrenderAll();
+              this.canvas.requestRenderAll();
             }
           }
         }
@@ -1404,50 +1694,59 @@ class EditorScreen {
     const centerAndResizeElements = (type, logoSize, sloganSize, textPosition) => {
       (logoNameElement.fontSize = logoSize), sloganSize;
       (sloganNameElement.fontSize = logoSize), sloganSize;
-
-      const logoMain = new fabric.ActiveSelection(
-        this.canvas.getObjects().filter((i) => !i.text),
-        { canvas: this.canvas }
-      );
+      const logoMain = this.canvas.getObjects().filter((i) => typeof i !== i.text);
 
       const timeout = 5;
-      const texts = this.canvas.getObjects().filter((i) => i.text);
-
       switch (type) {
         case 'topBottom':
           setTimeout(() => {
-            logoNameElement.set('top', 360);
-            sloganNameElement.set('top', 400);
+            const logoNameElement = this.canvas
+              .getObjects()
+              .find((obj) => obj.type === 'text' && obj.text === 'MyBrande');
+            const sloganNameElement = this.canvas
+              .getObjects()
+              .find((obj) => obj.type === 'text' && obj.text === 'Slogan goes here');
 
-            logoNameElement.viewportCenterH();
-            sloganNameElement.viewportCenterH();
+            logoNameElement.set('top', this.canvas.height / 1.5);
+            sloganNameElement.set('top', this.canvas.height / 1.4);
 
-            logoMain.center();
-            logoMain.set('top', (logoMain.top -= 40));
+            logoNameElement.centerH();
+            sloganNameElement.centerH();
           }, timeout);
           break;
         case 'bottomTop':
           setTimeout(() => {
-            logoNameElement.set('top', 160);
-            sloganNameElement.set('top', 200);
+            const logoNameElement = this.canvas
+              .getObjects()
+              .find((obj) => obj.type === 'text' && obj.text === 'MyBrande');
+            const sloganNameElement = this.canvas
+              .getObjects()
+              .find((obj) => obj.type === 'text' && obj.text === 'Slogan goes here');
 
-            logoNameElement.viewportCenterH();
-            sloganNameElement.viewportCenterH();
+            logoNameElement.set('top', this.canvas.height / 5);
+            sloganNameElement.set('top', this.canvas.height / 3.8);
 
-            logoMain.center();
-            logoMain.set('top', (logoMain.top += 40));
+            logoNameElement.centerH();
+            sloganNameElement.centerH();
           }, timeout);
           break;
         case 'leftRight':
           setTimeout(() => {
+            const logoNameElement = this.canvas
+              .getObjects()
+              .find((obj) => obj.type === 'text' && obj.text === 'MyBrande');
+            const sloganNameElement = this.canvas
+              .getObjects()
+              .find((obj) => obj.type === 'text' && obj.text === 'Slogan goes here');
+
             logoNameElement.center();
             sloganNameElement.center();
-            logoNameElement.set('top', 260);
-            sloganNameElement.set('top', 300);
+            logoNameElement.set('top', this.canvas.height / 2.3);
+            sloganNameElement.set('top', this.canvas.height / 1.9);
 
             if (textPosition === 'left') {
-              logoNameElement.set('left', 520);
-              sloganNameElement.set('left', 520);
+              logoNameElement.set('left', (logoNameElement.left += 350));
+              sloganNameElement.set('left', (sloganNameElement.left += 350));
 
               logoNameElement.set('textAlign', 'left');
               sloganNameElement.set('textAlign', 'left');
@@ -1455,42 +1754,52 @@ class EditorScreen {
               logoNameElement.viewportCenterH();
               sloganNameElement.viewportCenterH();
 
-              logoNameElement.set('left', (logoNameElement.left += 150));
-              sloganNameElement.set('left', (sloganNameElement.left += 150));
+              logoNameElement.set('left', (logoNameElement.left += 250));
+              sloganNameElement.set('left', (sloganNameElement.left += 250));
             }
 
-            logoMain.center();
-            logoMain.set('left', (logoMain.left -= 60));
+            logoMain.forEach((i) => (i.left -= 200));
           }, timeout);
           break;
         case 'rightLeft':
           setTimeout(() => {
+            const logoNameElement = this.canvas
+              .getObjects()
+              .find((obj) => obj.type === 'text' && obj.text === 'MyBrande');
+            const sloganNameElement = this.canvas
+              .getObjects()
+              .find((obj) => obj.type === 'text' && obj.text === 'Slogan goes here');
+
             logoNameElement.center();
             sloganNameElement.center();
 
-            logoNameElement.set('top', 260);
-            sloganNameElement.set('top', 300);
+            logoNameElement.set('top', this.canvas.height / 2.3);
+            sloganNameElement.set('top', this.canvas.height / 1.9);
 
             if (textPosition === 'left') {
-              logoNameElement.set('left', 200);
-              sloganNameElement.set('left', 200);
+              logoNameElement.set('left', this.canvas.width / 1.55);
+              sloganNameElement.set('left', this.canvas.width / 1.55);
 
               logoNameElement.set('textAlign', 'right');
               sloganNameElement.set('textAlign', 'right');
             } else {
-              logoNameElement.viewportCenterH();
-              sloganNameElement.viewportCenterH();
+              logoNameElement.viewportCenter();
+              sloganNameElement.viewportCenter();
 
-              logoNameElement.set('left', (logoNameElement.left -= 150));
-              sloganNameElement.set('left', (sloganNameElement.left -= 150));
+              logoNameElement.set('left', this.canvas.width / 1.55);
+              sloganNameElement.set('left', this.canvas.width / 1.55);
+
+              logoNameElement.set('top', this.canvas.height / 2.3);
+              sloganNameElement.set('top', this.canvas.height / 1.9);
             }
 
-            logoMain.center();
-            logoMain.set('left', (logoMain.left += 60));
+            logoMain.forEach((i) => (i.left -= 200));
           }, timeout);
           break;
       }
-      this.canvas.requestRenderAll();
+      updatePreview();
+      captureCanvasState();
+      this.canvas.renderAll();
     };
 
     const scaleLogo = (scaleSize) => {
@@ -1505,45 +1814,91 @@ class EditorScreen {
       const scaleFactor = Math.min(scaleSize / width, scaleSize / height);
       selection.scale(scaleFactor);
 
-      selection.centerH();
+      selection.center();
       this.canvas.setActiveObject(selection);
       this.canvas.discardActiveObject(selection);
       this.canvas.requestRenderAll();
     };
 
+    // /*
+
+
+    function createCurvedText(text, options) {
+      return new fabric.TextCurved(text, options);
+    }
+
+    function addCurvedTextToCanvas(canvas, text, options) {
+      const curvedText = createCurvedText(logoNameElement.text, options);
+      // canvas.add(curvedText);
+    }
+
+    addCurvedTextToCanvas(this.canvas, 'It feels so nice to be able to draw', {
+      diameter: 720,
+      fontSize: 32,
+      fontFamily: 'Arial',
+      left: 50,
+      top: 50,
+      fill: 'red',
+      flipped: true,
+    });
+
+    // addCurvedTextToCanvas(this.canvas, 'any text around a circular path', {
+    //   diameter: 360,
+    //   fontSize: 32,
+    //   fontFamily: 'Arial',
+    //   left: 395,
+    //   top: 405,
+    //   fill: 'black',
+    //   angle: -180,
+    //   flipped: false,
+    // });
+
+    // */
+
+    const ttt1 = new fabric.TextCurved('Aseer is the real deal', {
+      diameter: 720,
+      fontSize: 32,
+      fontFamily: 'Arial',
+      left: 50,
+      top: 50,
+      fill: 'red',
+      flipped: true,
+    });
+    this.canvas.add(ttt1);
+
     $('#top_bottom_1').addEventListener('click', () => {
       scaleLogo(180);
-      centerAndResizeElements('topBottom', 29, 23);
+      centerAndResizeElements('topBottom', 29, 23, 'center');
     });
 
     $('#top_bottom_2').addEventListener('click', () => {
       scaleLogo(150);
-      centerAndResizeElements('topBottom', 26, 21);
+      centerAndResizeElements('topBottom', 26, 21, 'center');
     });
 
     $('#top_bottom_3').addEventListener('click', () => {
       scaleLogo(180);
-      centerAndResizeElements('topBottom', 29, 23);
+      centerAndResizeElements('topBottom', 29, 23, 'center');
     });
 
     $('#bottom_top_1').addEventListener('click', () => {
       scaleLogo(180);
-      centerAndResizeElements('bottomTop', 32, 25);
+      centerAndResizeElements('bottomTop', 32, 25, 'center');
     });
 
     $('#bottom_top_2').addEventListener('click', () => {
       scaleLogo(150);
-      centerAndResizeElements('bottomTop', 26, 21);
+      centerAndResizeElements('bottomTop', 26, 21, 'center');
     });
 
     $('#bottom_top_3').addEventListener('click', () => {
       scaleLogo(180);
-      centerAndResizeElements('bottomTop', 29, 23);
+      centerAndResizeElements('bottomTop', 29, 23, 'center');
     });
 
     $('#left_right_1').addEventListener('click', () => {
       scaleLogo(180);
-      centerAndResizeElements('leftRight', 32, 25);
+      centerAndResizeElements('leftRight', 32, 25, 'center');
     });
 
     $('#left_right_2').addEventListener('click', () => {
@@ -1557,7 +1912,6 @@ class EditorScreen {
     });
 
     $('#right_left_1').addEventListener('click', () => {
-      console.log('right_left_1');
       scaleLogo(180);
       centerAndResizeElements('rightLeft', 32, 25, 'center');
     });
@@ -1571,8 +1925,6 @@ class EditorScreen {
       scaleLogo(150);
       centerAndResizeElements('rightLeft', 32, 25, 'left');
     });
-
-    this.canvas.requestRenderAll();
   }
 }
 

@@ -11,7 +11,7 @@ export const renderSVGForMug = (fabric, previewCanvas, canvas) => {
 
     const selectedObjects = previewCanvas.getActiveObject();
     if (selectedObjects) {
-      selectedObjects.set('top', selectedObjects.top + 130);
+      selectedObjects.set('top', selectedObjects.top + 90);
       selectedObjects.set('left', selectedObjects.left + 20);
       selectedObjects.set('shadow', {
         offsetX: 20,
@@ -26,6 +26,11 @@ export const renderSVGForMug = (fabric, previewCanvas, canvas) => {
   fabric.Image.fromURL(backgroundImageUrl, (backgroundImage) => {
     previewCanvas.setBackgroundImage(backgroundImage, previewCanvas.renderAll.bind(previewCanvas));
   });
+
+  const canvasWidth = canvas.getWidth();
+  const canvasHeight = canvas.getHeight();
+  previewCanvas.setWidth(canvasWidth);
+  previewCanvas.setHeight(canvasHeight);
 
   previewCanvas.requestRenderAll();
 };
