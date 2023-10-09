@@ -4,8 +4,8 @@ import { renderSVGForMug } from './mug.preview';
 import { wallPreview } from './wall.preview';
 import clipIcons from './assets/icons/clipIcons';
 import { DeleteLayer } from './handleDeleteLayer';
-import Alwan from 'alwan';
 import 'alwan/dist/css/alwan.min.css';
+import iro from '@jaames/iro';
 
 const $ = (id) => document.querySelector(id);
 
@@ -561,12 +561,17 @@ class EditorScreen {
     this.canvas.on('selection:updated', onSelect);
 
     const textMain = ({ text, fontFamily = 'Poppins', fontSize = 32, fill = '#000' }) => {
-      return new fabric.TextCurved(text, { fontFamily, fontSize, fill, selectable: true, hasRotatingPoint: true, 
-        diameter: 720,
+      return new fabric.Text(text, {
+        fontFamily,
+        fontSize,
+        fill,
+        selectable: true,
+        hasRotatingPoint: false,
+        diameter: 5000,
         left: 50,
         top: 50,
         flipped: true,
-       });
+      });
     };
 
     const logoNameElement = textMain({ text: this.logoName });
@@ -729,9 +734,10 @@ class EditorScreen {
       this.sloganNameInput.style.display = 'none';
       this.logoNameInput.style.display = 'block';
     });
-    fabric.CurvedText = fabric.util.createClass(fabric.Object, {
-      type: 'curved-text',
-    });
+
+    // fabric.CurvedText = fabric.util.createClass(fabric.Object, {
+    //   type: 'curved-text',
+    // });
 
     sloganNameElement.on('mousedown', () => {
       this.fontSizeListTitle.innerText = sloganNameElement.fontSize + ' px';
@@ -1621,21 +1627,46 @@ class EditorScreen {
         this.canvas.requestRenderAll();
       });
 
-      if (item && item.text) {
-        textPalette.appendChild(colorPicker);
+      if (item && item?.text) {
+        textPalette?.appendChild(colorPicker);
       } else {
-        colorPalette.appendChild(colorPicker);
+        colorPalette?.appendChild(colorPicker);
       }
     });
 
     const solidColorMode = $('#solid_color_mode');
     const pickerColorMode = $('#picker_color_mode');
 
+    let openPickerView = 'block';
+    new iro.ColorPicker('#open_picker', {
+      display: openPickerView,
+      width: 180,
+      marginTop: 20,
+      layout: [
+        {
+          component: iro.ui.Wheel,
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'saturation'
+          }
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'alpha'
+          }
+        },
+      ],
+    });
+
     const solidColorEvent = () => {
       $('#picker_color_mode').classList.remove('category_selected');
       $('#solid_color_mode').classList.add('category_selected');
       $('#solid_color_items').style.display = 'flex';
       $('#picker_color_items').style.display = 'none';
+      openPickerView = 'none';
     };
 
     const pickerColorEvent = () => {
@@ -1643,6 +1674,8 @@ class EditorScreen {
       $('#picker_color_items').style.display = 'flex';
       $('#solid_color_mode').classList.remove('category_selected');
       $('#picker_color_mode').classList.add('category_selected');
+      $('#picker_color_items').style.marginTop = '8px';
+      openPickerView = 'block';
     };
 
     solidColorEvent();
@@ -1822,7 +1855,6 @@ class EditorScreen {
 
     // /*
 
-
     function createCurvedText(text, options) {
       return new fabric.TextCurved(text, options);
     }
@@ -1855,16 +1887,16 @@ class EditorScreen {
 
     // */
 
-    const ttt1 = new fabric.TextCurved('Aseer is the real deal', {
-      diameter: 720,
-      fontSize: 32,
-      fontFamily: 'Arial',
-      left: 50,
-      top: 50,
-      fill: 'red',
-      flipped: true,
-    });
-    this.canvas.add(ttt1);
+    // const ttt1 = new fabric.TextCurved('Aseer is the real deal', {
+    //   diameter: 720,
+    //   fontSize: 32,
+    //   fontFamily: 'Arial',
+    //   left: 50,
+    //   top: 50,
+    //   fill: 'red',
+    //   flipped: true,
+    // });
+    // this.canvas.add(ttt1);
 
     $('#top_bottom_1').addEventListener('click', () => {
       scaleLogo(180);
