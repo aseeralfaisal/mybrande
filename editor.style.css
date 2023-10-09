@@ -1200,3 +1200,11 @@ canvas {
   padding-bottom: 9px;
   border-bottom: 2.5px solid var(--gold);
 }
+
+.hslPalette {
+  width: 100%;
+  border: 1.5px solid #ddd;
+  text-align: center;
+  font-weight: 600;
+  color: #555;
+}

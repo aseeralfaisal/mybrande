@@ -65,7 +65,8 @@
                     <button class="btn-main" style="margin-left: 50px;">
                         <label for="upload_file_btn">Upload file</label>
                     </button>
-                    <img id="imger" alt="">
+                    <!-- <button id="crop">Crop</button>
+                    <img id="imger" alt=""> -->
                 </div>
 
             </div>
@@ -437,16 +438,34 @@
                     </div>
                 </div>
 
-                <!-- <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Layer</h4>
-                <div id="logo_colors_pallete"
-                    style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-                </div>
-                <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Text</h4>
-                <div id="logo_text_colors_pallete"
-                    style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div> -->
                 <div id="picker_color_items" style="display: flex; flex-direction: column; margin-top: -40px;">
+                    <!-- <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Layer</h4>
+                    <div id="logo_colors_pallete"
+                        style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                    </div>
+                    <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Text</h4>
+                    <div id="logo_text_colors_pallete"
+                        style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div> -->
 
                     <div id="open_picker"></div>
+                    <div style="display: grid; gap: 10px; margin: 20px 0;">
+                        <span style="color: #555; font-size: 14px; font-weight: bold;">HSL</span>
+                        <div style="display: flex; width: 200px;">
+                            <input id="H" class="hslPalette" type="text" placeholder="H">
+                            <input id="S" class="hslPalette" type="text" placeholder="S">
+                            <input id="L" class="hslPalette" type="text" placeholder="L">
+                        </div>
+                        <span style="color: #555; font-size: 14px; font-weight: bold;">RGB</span>
+                        <div style="display: flex; width: 200px;">
+                            <input id="R" class="hslPalette" type="text" placeholder="R">
+                            <input id="G" class="hslPalette" type="text" placeholder="G">
+                            <input id="B" class="hslPalette" type="text" placeholder="B">
+                        </div>
+                        <span style="color: #555; font-size: 14px; font-weight: bold;">HEX</span>
+                        <div style="display: flex; width: 200px;">
+                            <input id="HEX" class="hslPalette" type="text" placeholder="HEX">
+                        </div>
+                    </div>
                 </div>
 
                 <div class="setting-switch">

@@ -1638,10 +1638,14 @@ class EditorScreen {
     const pickerColorMode = $('#picker_color_mode');
 
     let openPickerView = 'block';
-    new iro.ColorPicker('#open_picker', {
+
+    let pickerDefaultColor = '#fff';
+
+    const colorPicker = new iro.ColorPicker('#open_picker', {
       display: openPickerView,
       width: 180,
       marginTop: 20,
+      color: pickerDefaultColor,
       layout: [
         {
           component: iro.ui.Wheel,
@@ -1649,16 +1653,66 @@ class EditorScreen {
         {
           component: iro.ui.Slider,
           options: {
-            sliderType: 'saturation'
-          }
+            sliderType: 'hue',
+          },
         },
         {
           component: iro.ui.Slider,
           options: {
-            sliderType: 'alpha'
-          }
+            sliderType: 'saturation',
+          },
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'alpha',
+          },
         },
       ],
+    });
+
+    colorPicker.on('color:init', function (color) {
+      color.set(pickerDefaultColor);
+    });
+
+    colorPicker.on('input:move', function (color) {
+      pickerDefaultColor = color.hexString;
+      if (color.index === 0) {
+        const hsl = color.hsl;
+        const rgb = color.rgb;
+
+        $('#H').value = hsl.h;
+        $('#S').value = hsl.s;
+        $('#L').value = hsl.l;
+        $('#R').value = rgb.r;
+        $('#G').value = rgb.g;
+        $('#B').value = rgb.b;
+
+        $('#HEX').value = color.hexString;
+      }
+    });
+
+    ['R', 'G', 'B'].forEach((id) => {
+      $(`#${id}`).addEventListener('input', () => {
+        let r = $('#R').value;
+        let g = $('#G').value;
+        let b = $('#B').value;
+        colorPicker.color.rgb = { r, g, b };
+      });
+    });
+
+    ['H', 'S', 'L'].forEach((id) => {
+      $(`#${id}`).addEventListener('input', () => {
+        let h = $('#H').value;
+        let s = $('#S').value;
+        let l = $('#L').value;
+        colorPicker.color.hsl = { h, s, l };
+      });
+    });
+
+    $('#HEX').addEventListener('input', () => {
+      let hex = $('#HEX').value;
+      colorPicker.color.hexString = hex;
     });
 
     const solidColorEvent = () => {

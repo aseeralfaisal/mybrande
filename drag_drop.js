@@ -12,16 +12,23 @@ const elements = {
   imgView: $('#img-view'),
   dragDrop: $('#drag-drop'),
   dragDropChild: $('#drag-drop-child'),
-  cropElement: $('#crop'),
+  // cropElement: $('#crop'),
   dragDropView: $('#drag_drop_view'),
   nextBtn: $('#next_btn'),
   backBtn: $('#back-main'),
   uploadFileBtn: $('#upload_file_btn'),
-  imger: $('#imger'),
+  // imger: $('#imger'),
 };
 
-elements.mainEditorView.style.display = 'none'
-elements.detailsView.style.display = 'none'
+let editCounterLocal = localStorage.getItem('mainEditorCounter');
+if (editCounterLocal > 0) {
+  elements.detailsView.style.display = 'none';
+  elements.mainEditorView.style.display = 'block';
+  elements.dragDropView.style.display = 'none';
+} else {
+  elements.mainEditorView.style.display = 'none';
+  elements.detailsView.style.display = 'none';
+}
 
 const preventEvents = (event) => {
   event.preventDefault();
@@ -43,6 +50,7 @@ const uploadLocalFile = (file) => {
   fileReader.onloadend = () => {
     const svgContent = fileReader.result;
     localStorage.setItem('logo-file', svgContent);
+    localStorage.setItem('mainEditorCounter', 0);
   };
 
   elements.dragDropChild.style.display = 'none';
@@ -83,26 +91,43 @@ elements.dragDrop.addEventListener('dragleave', (event) => {
 });
 
 elements.nextBtn.addEventListener('click', () => {
-  elements.detailsView.style.display = 'none';
-  elements.mainEditorView.style.display = 'block';
-  elements.dragDropView.style.display = 'none';
+  localStorage.setItem('mainEditorCounter', 1);
+  location.reload();
 });
 
 elements.backBtn.addEventListener('click', () => {
-  elements.detailsView.style.display = 'block';
+  elements.detailsView.style.display = 'none';
   elements.mainEditorView.style.display = 'none';
-  elements.dragDropView.style.display = 'none';
+  elements.dragDropView.style.display = 'block';
 });
 
-let cropper;
-elements.imgView.onload = () => {
-  cropper = new Cropper(elements.imgView, {
-    aspectRatio: 1 / 1,
-  });
-};
+// let cropper;
+// elements.imgView.onload = () => {
+//   cropper = new Cropper(elements.imgView, {
+//     aspectRatio: 1 / 1,
+//   });
+// };
 
-elements.cropElement?.addEventListener('click', () => {
-  const croppedImage = cropper.getCroppedCanvas().toDataURL('image/png');
-  elements.imger.src = croppedImage;
-});
+// function convertPngToSvg(dataUrl) {
+//   const svgNS = 'http://www.w3.org/2000/svg';
 
+//   const svg = document.createElementNS(svgNS, 'svg');
+
+//   const svgImage = document.createElementNS(svgNS, 'image');
+
+//   svgImage.setAttributeNS('http://www.w3.org/1999/xlink', 'href', dataUrl);
+
+//   svg.appendChild(svgImage);
+
+//   const serializer = new XMLSerializer();
+//   const svgString = serializer.serializeToString(svg);
+
+//   return svgString;
+// }
+
+// elements.cropElement?.addEventListener('click', () => {
+//   const croppedImage = cropper.getCroppedCanvas().toDataURL('image/png');
+//   const svgContent = convertPngToSvg(croppedImage)
+//   localStorage.setItem('logo-file', svgContent);
+//   elements.imger.src = croppedImage;
+// });
