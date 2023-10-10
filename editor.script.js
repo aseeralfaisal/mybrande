@@ -1675,6 +1675,7 @@ class EditorScreen {
       color.set(pickerDefaultColor);
     });
 
+    const CanvasColorPicker = this.canvas;
     colorPicker.on('input:move', function (color) {
       pickerDefaultColor = color.hexString;
       if (color.index === 0) {
@@ -1690,6 +1691,9 @@ class EditorScreen {
 
         $('#HEX').value = color.hexString;
       }
+      const active = CanvasColorPicker.getActiveObject();
+      active.set('fill', color.hexString);
+      CanvasColorPicker.requestRenderAll();
     });
 
     ['R', 'G', 'B'].forEach((id) => {
@@ -1794,8 +1798,8 @@ class EditorScreen {
               .getObjects()
               .find((obj) => obj.type === 'text' && obj.text === 'Slogan goes here');
 
-            logoNameElement.set('top', this.canvas.height / 1.5);
-            sloganNameElement.set('top', this.canvas.height / 1.4);
+            logoNameElement.set('top', this.canvas.height / 1.4);
+            sloganNameElement.set('top', this.canvas.height / 1.5);
 
             logoNameElement.centerH();
             sloganNameElement.centerH();
@@ -1832,11 +1836,14 @@ class EditorScreen {
             sloganNameElement.set('top', this.canvas.height / 1.9);
 
             if (textPosition === 'left') {
-              logoNameElement.set('left', (logoNameElement.left += 350));
-              sloganNameElement.set('left', (sloganNameElement.left += 350));
+              logoNameElement.viewportCenter();
+              sloganNameElement.viewportCenter();
 
-              logoNameElement.set('textAlign', 'left');
-              sloganNameElement.set('textAlign', 'left');
+              logoNameElement.set('left', this.canvas.width / 1.55);
+              sloganNameElement.set('left', this.canvas.width / 1.55);
+
+              logoNameElement.set('top', this.canvas.height / 2.3);
+              sloganNameElement.set('top', this.canvas.height / 1.9);
             } else {
               logoNameElement.viewportCenterH();
               sloganNameElement.viewportCenterH();
@@ -1873,14 +1880,17 @@ class EditorScreen {
               logoNameElement.viewportCenter();
               sloganNameElement.viewportCenter();
 
-              logoNameElement.set('left', this.canvas.width / 1.55);
-              sloganNameElement.set('left', this.canvas.width / 1.55);
+              logoNameElement.set('left', 80);
+              sloganNameElement.set('left', 80);
+
+              logoNameElement.set('textAlign', 'center');
+              sloganNameElement.set('textAlign', 'center');
 
               logoNameElement.set('top', this.canvas.height / 2.3);
               sloganNameElement.set('top', this.canvas.height / 1.9);
             }
 
-            logoMain.forEach((i) => (i.left -= 200));
+            logoMain.forEach((i) => (i.left += 200));
           }, timeout);
           break;
       }
@@ -1998,18 +2008,18 @@ class EditorScreen {
     });
 
     $('#right_left_1').addEventListener('click', () => {
-      scaleLogo(180);
+      scaleLogo(150);
       centerAndResizeElements('rightLeft', 32, 25, 'center');
     });
 
     $('#right_left_2').addEventListener('click', () => {
       scaleLogo(180);
-      centerAndResizeElements('rightLeft', 32, 25, 'left');
+      centerAndResizeElements('rightLeft', 32, 25, 'center');
     });
 
     $('#right_left_3').addEventListener('click', () => {
       scaleLogo(150);
-      centerAndResizeElements('rightLeft', 32, 25, 'left');
+      centerAndResizeElements('rightLeft', 32, 25, 'center');
     });
   }
 }
