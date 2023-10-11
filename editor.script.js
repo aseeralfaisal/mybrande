@@ -123,202 +123,202 @@ class EditorScreen {
       scaleY: 0.3,
     });
 
-    (function (fabric) {
-      fabric.TextCurved = fabric.util.createClass(fabric.Object, {
-        type: 'text-curved',
-        diameter: 250,
-        kerning: 0,
-        text: '',
-        flipped: false,
-        fill: '#000',
-        fontFamily: 'Times New Roman',
-        fontSize: 24,
-        fontWeight: 'normal',
-        fontStyle: '',
-        cacheProperties: fabric.Object.prototype.cacheProperties.concat(
-          'diameter',
-          'kerning',
-          'flipped',
-          'fill',
-          'fontFamily',
-          'fontSize',
-          'fontWeight',
-          'fontStyle',
-          'strokeStyle',
-          'strokeWidth'
-        ),
-        strokeStyle: null,
-        strokeWidth: 0,
+    // (function (fabric) {
+    //   fabric.TextCurved = fabric.util.createClass(fabric.Object, {
+    //     type: 'text-curved',
+    //     diameter: 250,
+    //     kerning: 0,
+    //     text: '',
+    //     flipped: false,
+    //     fill: '#000',
+    //     fontFamily: 'Times New Roman',
+    //     fontSize: 24,
+    //     fontWeight: 'normal',
+    //     fontStyle: '',
+    //     cacheProperties: fabric.Object.prototype.cacheProperties.concat(
+    //       'diameter',
+    //       'kerning',
+    //       'flipped',
+    //       'fill',
+    //       'fontFamily',
+    //       'fontSize',
+    //       'fontWeight',
+    //       'fontStyle',
+    //       'strokeStyle',
+    //       'strokeWidth'
+    //     ),
+    //     strokeStyle: null,
+    //     strokeWidth: 0,
 
-        initialize: function (text, options) {
-          options || (options = {});
-          this.text = text;
-          this.callSuper('initialize', options);
-          this.set('lockUniScaling', true);
-          var canvas = this.getCircularText();
-          this._trimCanvas(canvas);
-          this.set('width', canvas.width);
-          this.set('height', canvas.height);
-        },
+    //     initialize: function (text, options) {
+    //       options || (options = {});
+    //       this.text = text;
+    //       this.callSuper('initialize', options);
+    //       this.set('lockUniScaling', true);
+    //       var canvas = this.getCircularText();
+    //       this._trimCanvas(canvas);
+    //       this.set('width', canvas.width);
+    //       this.set('height', canvas.height);
+    //     },
 
-        _getFontDeclaration: function () {
-          return [
-            fabric.isLikelyNode ? this.fontWeight : this.fontStyle,
-            fabric.isLikelyNode ? this.fontStyle : this.fontWeight,
-            this.fontSize + 'px',
-            fabric.isLikelyNode ? '"' + this.fontFamily + '"' : this.fontFamily,
-          ].join(' ');
-        },
+    //     _getFontDeclaration: function () {
+    //       return [
+    //         fabric.isLikelyNode ? this.fontWeight : this.fontStyle,
+    //         fabric.isLikelyNode ? this.fontStyle : this.fontWeight,
+    //         this.fontSize + 'px',
+    //         fabric.isLikelyNode ? '"' + this.fontFamily + '"' : this.fontFamily,
+    //       ].join(' ');
+    //     },
 
-        _trimCanvas: function (canvas) {
-          var ctx = canvas.getContext('2d'),
-            w = canvas.width,
-            h = canvas.height,
-            pix = { x: [], y: [] },
-            n,
-            imageData = ctx.getImageData(0, 0, w, h),
-            fn = function (a, b) {
-              return a - b;
-            };
+    //     _trimCanvas: function (canvas) {
+    //       var ctx = canvas.getContext('2d'),
+    //         w = canvas.width,
+    //         h = canvas.height,
+    //         pix = { x: [], y: [] },
+    //         n,
+    //         imageData = ctx.getImageData(0, 0, w, h),
+    //         fn = function (a, b) {
+    //           return a - b;
+    //         };
 
-          for (var y = 0; y < h; y++) {
-            for (var x = 0; x < w; x++) {
-              if (imageData.data[(y * w + x) * 4 + 3] > 0) {
-                pix.x.push(x);
-                pix.y.push(y);
-              }
-            }
-          }
-          pix.x.sort(fn);
-          pix.y.sort(fn);
-          n = pix.x.length - 1;
-          w = pix.x[n] - pix.x[0];
-          h = pix.y[n] - pix.y[0];
-          var cut = ctx.getImageData(pix.x[0], pix.y[0], w, h);
-          canvas.width = w;
-          canvas.height = h;
-          ctx.putImageData(cut, 0, 0);
-        },
+    //       for (var y = 0; y < h; y++) {
+    //         for (var x = 0; x < w; x++) {
+    //           if (imageData.data[(y * w + x) * 4 + 3] > 0) {
+    //             pix.x.push(x);
+    //             pix.y.push(y);
+    //           }
+    //         }
+    //       }
+    //       pix.x.sort(fn);
+    //       pix.y.sort(fn);
+    //       n = pix.x.length - 1;
+    //       w = pix.x[n] - pix.x[0];
+    //       h = pix.y[n] - pix.y[0];
+    //       var cut = ctx.getImageData(pix.x[0], pix.y[0], w, h);
+    //       canvas.width = w;
+    //       canvas.height = h;
+    //       ctx.putImageData(cut, 0, 0);
+    //     },
 
-        getCircularText: function () {
-          var text = this.text,
-            diameter = this.diameter,
-            flipped = this.flipped,
-            kerning = this.kerning,
-            fill = this.fill,
-            inwardFacing = true,
-            startAngle = 0,
-            canvas = fabric.util.createCanvasElement(),
-            ctx = canvas.getContext('2d'),
-            cw,
-            x,
-            clockwise = -1;
-          if (flipped) {
-            startAngle = 180;
-            inwardFacing = false;
-          }
-          startAngle *= Math.PI / 180;
-          var d = document.createElement('div');
-          d.style.fontFamily = this.fontFamily;
-          d.style.whiteSpace = 'nowrap';
-          d.style.fontSize = this.fontSize + 'px';
-          d.style.fontWeight = this.fontWeight;
-          d.style.fontStyle = this.fontStyle;
-          d.textContent = text;
-          document.body.appendChild(d);
-          var textHeight = d.offsetHeight;
-          document.body.removeChild(d);
-          canvas.width = canvas.height = diameter;
-          ctx.font = this._getFontDeclaration();
-          if (inwardFacing) {
-            text = text.split('').reverse().join('');
-          }
-          ctx.translate(diameter / 2, diameter / 2);
-          startAngle += Math.PI * !inwardFacing;
-          ctx.textBaseline = 'middle';
-          ctx.textAlign = 'center';
-          for (x = 0; x < text.length; x++) {
-            cw = ctx.measureText(text[x]).width;
-            startAngle +=
-              ((cw + (x == text.length - 1 ? 0 : kerning)) / (diameter / 2 - textHeight) / 2) * -clockwise;
-          }
-          ctx.rotate(startAngle);
-          for (x = 0; x < text.length; x++) {
-            cw = ctx.measureText(text[x]).width;
-            ctx.rotate((cw / 2 / (diameter / 2 - textHeight)) * clockwise);
-            if (this.strokeStyle && this.strokeWidth) {
-              ctx.strokeStyle = this.strokeStyle;
-              ctx.lineWidth = this.strokeWidth;
-              ctx.miterLimit = 2;
-              ctx.strokeText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
-            }
-            ctx.fillStyle = fill;
-            ctx.fillText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
-            ctx.rotate(((cw / 2 + kerning) / (diameter / 2 - textHeight)) * clockwise);
-          }
-          return canvas;
-        },
+    //     getCircularText: function () {
+    //       var text = this.text,
+    //         diameter = this.diameter,
+    //         flipped = this.flipped,
+    //         kerning = this.kerning,
+    //         fill = this.fill,
+    //         inwardFacing = true,
+    //         startAngle = 0,
+    //         canvas = fabric.util.createCanvasElement(),
+    //         ctx = canvas.getContext('2d'),
+    //         cw,
+    //         x,
+    //         clockwise = -1;
+    //       if (flipped) {
+    //         startAngle = 180;
+    //         inwardFacing = false;
+    //       }
+    //       startAngle *= Math.PI / 180;
+    //       var d = document.createElement('div');
+    //       d.style.fontFamily = this.fontFamily;
+    //       d.style.whiteSpace = 'nowrap';
+    //       d.style.fontSize = this.fontSize + 'px';
+    //       d.style.fontWeight = this.fontWeight;
+    //       d.style.fontStyle = this.fontStyle;
+    //       d.textContent = text;
+    //       document.body.appendChild(d);
+    //       var textHeight = d.offsetHeight;
+    //       document.body.removeChild(d);
+    //       canvas.width = canvas.height = diameter;
+    //       ctx.font = this._getFontDeclaration();
+    //       if (inwardFacing) {
+    //         text = text.split('').reverse().join('');
+    //       }
+    //       ctx.translate(diameter / 2, diameter / 2);
+    //       startAngle += Math.PI * !inwardFacing;
+    //       ctx.textBaseline = 'middle';
+    //       ctx.textAlign = 'center';
+    //       for (x = 0; x < text.length; x++) {
+    //         cw = ctx.measureText(text[x]).width;
+    //         startAngle +=
+    //           ((cw + (x == text.length - 1 ? 0 : kerning)) / (diameter / 2 - textHeight) / 2) * -clockwise;
+    //       }
+    //       ctx.rotate(startAngle);
+    //       for (x = 0; x < text.length; x++) {
+    //         cw = ctx.measureText(text[x]).width;
+    //         ctx.rotate((cw / 2 / (diameter / 2 - textHeight)) * clockwise);
+    //         if (this.strokeStyle && this.strokeWidth) {
+    //           ctx.strokeStyle = this.strokeStyle;
+    //           ctx.lineWidth = this.strokeWidth;
+    //           ctx.miterLimit = 2;
+    //           ctx.strokeText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
+    //         }
+    //         ctx.fillStyle = fill;
+    //         ctx.fillText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
+    //         ctx.rotate(((cw / 2 + kerning) / (diameter / 2 - textHeight)) * clockwise);
+    //       }
+    //       return canvas;
+    //     },
 
-        _set: function (key, value) {
-          switch (key) {
-            case 'scaleX':
-              this.fontSize *= value;
-              this.diameter *= value;
-              this.width *= value;
-              this.scaleX = 1;
-              if (this.width < 1) {
-                this.width = 1;
-              }
-              break;
-            case 'scaleY':
-              this.height *= value;
-              this.scaleY = 1;
-              if (this.height < 1) {
-                this.height = 1;
-              }
-              break;
-            default:
-              this.callSuper('_set', key, value);
-              break;
-          }
-        },
+    //     _set: function (key, value) {
+    //       switch (key) {
+    //         case 'scaleX':
+    //           this.fontSize *= value;
+    //           this.diameter *= value;
+    //           this.width *= value;
+    //           this.scaleX = 1;
+    //           if (this.width < 1) {
+    //             this.width = 1;
+    //           }
+    //           break;
+    //         case 'scaleY':
+    //           this.height *= value;
+    //           this.scaleY = 1;
+    //           if (this.height < 1) {
+    //             this.height = 1;
+    //           }
+    //           break;
+    //         default:
+    //           this.callSuper('_set', key, value);
+    //           break;
+    //       }
+    //     },
 
-        _render: function (ctx) {
-          var canvas = this.getCircularText();
-          this._trimCanvas(canvas);
-          this.set('width', canvas.width);
-          this.set('height', canvas.height);
-          ctx.drawImage(canvas, -this.width / 2, -this.height / 2, this.width, this.height);
-          this.setCoords();
-        },
+    //     _render: function (ctx) {
+    //       var canvas = this.getCircularText();
+    //       this._trimCanvas(canvas);
+    //       this.set('width', canvas.width);
+    //       this.set('height', canvas.height);
+    //       ctx.drawImage(canvas, -this.width / 2, -this.height / 2, this.width, this.height);
+    //       this.setCoords();
+    //     },
 
-        toObject: function (propertiesToInclude) {
-          return this.callSuper(
-            'toObject',
-            [
-              'text',
-              'diameter',
-              'kerning',
-              'flipped',
-              'fill',
-              'fontFamily',
-              'fontSize',
-              'fontWeight',
-              'fontStyle',
-              'strokeStyle',
-              'strokeWidth',
-              'styles',
-            ].concat(propertiesToInclude)
-          );
-        },
-      });
+    //     toObject: function (propertiesToInclude) {
+    //       return this.callSuper(
+    //         'toObject',
+    //         [
+    //           'text',
+    //           'diameter',
+    //           'kerning',
+    //           'flipped',
+    //           'fill',
+    //           'fontFamily',
+    //           'fontSize',
+    //           'fontWeight',
+    //           'fontStyle',
+    //           'strokeStyle',
+    //           'strokeWidth',
+    //           'styles',
+    //         ].concat(propertiesToInclude)
+    //       );
+    //     },
+    //   });
 
-      fabric.TextCurved.fromObject = function (object, callback) {
-        return fabric.util.enlivenObjects([object], function (enlivenedObjects) {
-          callback && callback(enlivenedObjects[0]);
-        });
-      };
-    })(typeof fabric !== 'undefined' ? fabric : require('fabric').fabric);
+    //   fabric.TextCurved.fromObject = function (object, callback) {
+    //     return fabric.util.enlivenObjects([object], function (enlivenedObjects) {
+    //       callback && callback(enlivenedObjects[0]);
+    //     });
+    //   };
+    // })(typeof fabric !== 'undefined' ? fabric : require('fabric').fabric);
   }
 
   initialize() {
@@ -530,10 +530,10 @@ class EditorScreen {
 
     const updatePreview = () => {
       const imageURL = this.canvas.toDataURL({
-        format: 'png',
-        multiplier: 0.5,
+        format: 'jpg',
+        multiplier: 0.3,
       });
-      document.getElementById('magnifier_img').src = imageURL;
+      $('#magnifier_img').src = imageURL;
     };
 
     const onSelect = () => {
@@ -1002,11 +1002,11 @@ class EditorScreen {
 
     // this.canvas.on('object:added', updatePreview);
     // this.canvas.on('object:removed', updatePreview);
-    this.canvas.on('object:modified', () => {
-      updatePreview();
-      this.canvas.remove(horizontalLine);
-      this.canvas.remove(verticalLine);
-    });
+    // this.canvas.on('object:modified', () => {
+    //   updatePreview();
+    //   this.canvas.remove(horizontalLine);
+    //   this.canvas.remove(verticalLine);
+    // });
 
     let verticalLine, horizontalLine;
 
@@ -1031,68 +1031,68 @@ class EditorScreen {
     //   );
     // }
 
-    this.canvas.on('object:moving', (e) => {
-      const obj = e.target;
+    // this.canvas.on('object:moving', (e) => {
+    //   const obj = e.target;
 
-      const snappedLeft = Math.round(obj.left / gridSize) * gridSize;
-      const snappedTop = Math.round(obj.top / gridSize) * gridSize;
+    //   const snappedLeft = Math.round(obj.left / gridSize) * gridSize;
+    //   const snappedTop = Math.round(obj.top / gridSize) * gridSize;
 
-      const deltaX = Math.abs(obj.left - snappedLeft);
-      const deltaY = Math.abs(obj.top - snappedTop);
+    //   const deltaX = Math.abs(obj.left - snappedLeft);
+    //   const deltaY = Math.abs(obj.top - snappedTop);
 
-      if (deltaX < snappingThreshold && deltaY < snappingThreshold) {
-        obj.set({ left: snappedLeft, top: snappedTop });
+    //   if (deltaX < snappingThreshold && deltaY < snappingThreshold) {
+    //     obj.set({ left: snappedLeft, top: snappedTop });
 
-        drawVerticalLine.call(this, snappedLeft);
-        drawHorizontalLine.call(this, snappedTop);
-      } else {
-        obj.setCoords();
-        removeVerticalLine.call(this);
-        removeHorizontalLine.call(this);
-      }
+    //     drawVerticalLine.call(this, snappedLeft);
+    //     drawHorizontalLine.call(this, snappedTop);
+    //   } else {
+    //     obj.setCoords();
+    //     removeVerticalLine.call(this);
+    //     removeHorizontalLine.call(this);
+    //   }
 
-      this.canvas.requestRenderAll();
-    });
+    //   this.canvas.requestRenderAll();
+    // });
 
-    function drawVerticalLine(x) {
-      if (verticalLine) {
-        this.canvas.remove(verticalLine);
-      }
+    // function drawVerticalLine(x) {
+    //   if (verticalLine) {
+    //     this.canvas.remove(verticalLine);
+    //   }
 
-      verticalLine = new fabric.Line([x, 0, x, canvasHeight], {
-        stroke: '#0307fcaa',
-        selectable: false,
-      });
+    //   verticalLine = new fabric.Line([x, 0, x, canvasHeight], {
+    //     stroke: '#0307fcaa',
+    //     selectable: false,
+    //   });
 
-      this.canvas.add(verticalLine);
-    }
+    //   this.canvas.add(verticalLine);
+    // }
 
-    function drawHorizontalLine(y) {
-      if (horizontalLine) {
-        this.canvas.remove(horizontalLine);
-      }
+    // function drawHorizontalLine(y) {
+    //   if (horizontalLine) {
+    //     this.canvas.remove(horizontalLine);
+    //   }
 
-      horizontalLine = new fabric.Line([0, y, canvasWidth, y], {
-        stroke: '#0307fcaa',
-        selectable: false,
-      });
+    //   horizontalLine = new fabric.Line([0, y, canvasWidth, y], {
+    //     stroke: '#0307fcaa',
+    //     selectable: false,
+    //   });
 
-      this.canvas.add(horizontalLine);
-    }
+    //   this.canvas.add(horizontalLine);
+    // }
 
-    function removeVerticalLine() {
-      if (verticalLine) {
-        this.canvas.remove(verticalLine);
-        verticalLine = null;
-      }
-    }
+    // function removeVerticalLine() {
+    //   if (verticalLine) {
+    //     this.canvas.remove(verticalLine);
+    //     verticalLine = null;
+    //   }
+    // }
 
-    function removeHorizontalLine() {
-      if (horizontalLine) {
-        this.canvas.remove(horizontalLine);
-        horizontalLine = null;
-      }
-    }
+    // function removeHorizontalLine() {
+    //   if (horizontalLine) {
+    //     this.canvas.remove(horizontalLine);
+    //     horizontalLine = null;
+    //   }
+    // }
 
     const setCanvasBackground = () => {
       this.canvas.setBackgroundImage('/static/pattern.png', this.canvas.renderAll.bind(this.canvas), {
@@ -1803,6 +1803,7 @@ class EditorScreen {
             newGrp.set('top', this.canvas.height / 4);
             newGrp.ungroupOnCanvas();
           }, timeout);
+
           break;
         case 'bottomTop':
           setTimeout(() => {
@@ -1916,50 +1917,58 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     };
 
-    // /*
+    const canvasCenter = {
+      x: this.canvas.width / 2,
+      y: this.canvas.height / 2,
+    };
 
-    function createCurvedText(text, options) {
-      return new fabric.TextCurved(text, options);
-    }
-
-    function addCurvedTextToCanvas(canvas, text, options) {
-      const curvedText = createCurvedText(logoNameElement.text, options);
-      // canvas.add(curvedText);
-    }
-
-    addCurvedTextToCanvas(this.canvas, 'It feels so nice to be able to draw', {
-      diameter: 720,
-      fontSize: 32,
-      fontFamily: 'Arial',
-      left: 50,
-      top: 50,
-      fill: 'red',
-      flipped: true,
+    const line1 = new fabric.Line([0, canvasCenter.y, this.canvas.getWidth(), canvasCenter.y], {
+      stroke: 'blue',
+      selectable: false,
+      visible: false,
     });
 
-    // addCurvedTextToCanvas(this.canvas, 'any text around a circular path', {
-    //   diameter: 360,
-    //   fontSize: 32,
-    //   fontFamily: 'Arial',
-    //   left: 395,
-    //   top: 405,
-    //   fill: 'black',
-    //   angle: -180,
-    //   flipped: false,
-    // });
+    const line2 = new fabric.Line([canvasCenter.x, 0, canvasCenter.x, this.canvas.getHeight()], {
+      stroke: 'blue',
+      selectable: false,
+      visible: false,
+    });
 
-    // */
+    this.canvas.add(line1, line2);
 
-    // const ttt1 = new fabric.TextCurved('Aseer is the real deal', {
-    //   diameter: 720,
-    //   fontSize: 32,
-    //   fontFamily: 'Arial',
-    //   left: 50,
-    //   top: 50,
-    //   fill: 'red',
-    //   flipped: true,
-    // });
-    // this.canvas.add(ttt1);
+    this.canvas.on('object:moving', (e) => {
+      const obj = e.target;
+
+      const snappedLeft = Math.round(obj.left / gridSize) * gridSize;
+      const snappedTop = Math.round(obj.top / gridSize) * gridSize;
+
+      const objectCenter = {
+        x: snappedLeft + (obj.width * obj.scaleX) / 2,
+        y: snappedTop + (obj.height * obj.scaleY) / 2,
+      };
+
+      if (
+        Math.abs(canvasCenter.x - objectCenter.x) <= snappingThreshold ||
+        Math.abs(canvasCenter.y - objectCenter.y) <= snappingThreshold
+      ) {
+        obj.set({ left: snappedLeft, top: snappedTop });
+
+        line1.set('visible', true);
+        line2.set('visible', true);
+      } else {
+        obj.setCoords();
+        line1.set('visible', false);
+        line2.set('visible', false);
+      }
+
+      this.canvas.requestRenderAll();
+    });
+
+    this.canvas.on('object:modified', () => {
+      updatePreview();
+      line1.set('visible', false);
+      line2.set('visible', false);
+    });
 
     $('#top_bottom_1').addEventListener('click', () => {
       scaleLogo(180);
