@@ -567,7 +567,7 @@ class EditorScreen {
         fill,
         selectable: true,
         hasRotatingPoint: false,
-        diameter: 5000,
+        diameter: 500,
         left: 50,
         top: 50,
         flipped: true,
@@ -734,10 +734,6 @@ class EditorScreen {
       this.sloganNameInput.style.display = 'none';
       this.logoNameInput.style.display = 'block';
     });
-
-    // fabric.CurvedText = fabric.util.createClass(fabric.Object, {
-    //   type: 'curved-text',
-    // });
 
     sloganNameElement.on('mousedown', () => {
       this.fontSizeListTitle.innerText = sloganNameElement.fontSize + ' px';
@@ -1693,6 +1689,7 @@ class EditorScreen {
       }
       const active = CanvasColorPicker.getActiveObject();
       active.set('fill', color.hexString);
+      captureCanvasState();
       CanvasColorPicker.requestRenderAll();
     });
 
@@ -1785,24 +1782,26 @@ class EditorScreen {
     const centerAndResizeElements = (type, logoSize, sloganSize, textPosition) => {
       (logoNameElement.fontSize = logoSize), sloganSize;
       (sloganNameElement.fontSize = logoSize), sloganSize;
-      const logoMain = this.canvas.getObjects().filter((i) => typeof i !== i.text);
 
       const timeout = 5;
       switch (type) {
         case 'topBottom':
           setTimeout(() => {
-            const logoNameElement = this.canvas
-              .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text === 'MyBrande');
-            const sloganNameElement = this.canvas
-              .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text === 'Slogan goes here');
+            const objects = this.canvas.getObjects();
+            const logoNameElement = objects.find((obj) => obj.type === 'text' && obj.text === 'MyBrande');
+            const sloganNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text === 'Slogan goes here'
+            );
 
-            logoNameElement.set('top', this.canvas.height / 1.4);
-            sloganNameElement.set('top', this.canvas.height / 1.5);
+            logoNameElement.set('top', this.canvas.height / 1.3);
+            sloganNameElement.set('top', this.canvas.height / 1.45);
 
             logoNameElement.centerH();
             sloganNameElement.centerH();
+
+            const newGrp = new fabric.Group(objects);
+            newGrp.set('top', this.canvas.height / 4);
+            newGrp.ungroupOnCanvas();
           }, timeout);
           break;
         case 'bottomTop':
