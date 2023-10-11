@@ -123,202 +123,202 @@ class EditorScreen {
       scaleY: 0.3,
     });
 
-    // (function (fabric) {
-    //   fabric.TextCurved = fabric.util.createClass(fabric.Object, {
-    //     type: 'text-curved',
-    //     diameter: 250,
-    //     kerning: 0,
-    //     text: '',
-    //     flipped: false,
-    //     fill: '#000',
-    //     fontFamily: 'Times New Roman',
-    //     fontSize: 24,
-    //     fontWeight: 'normal',
-    //     fontStyle: '',
-    //     cacheProperties: fabric.Object.prototype.cacheProperties.concat(
-    //       'diameter',
-    //       'kerning',
-    //       'flipped',
-    //       'fill',
-    //       'fontFamily',
-    //       'fontSize',
-    //       'fontWeight',
-    //       'fontStyle',
-    //       'strokeStyle',
-    //       'strokeWidth'
-    //     ),
-    //     strokeStyle: null,
-    //     strokeWidth: 0,
+    (function (fabric) {
+      fabric.TextCurved = fabric.util.createClass(fabric.Object, {
+        type: 'text-curved',
+        diameter: 250,
+        kerning: 0,
+        text: '',
+        flipped: false,
+        fill: '#000',
+        fontFamily: 'Times New Roman',
+        fontSize: 24,
+        fontWeight: 'normal',
+        fontStyle: '',
+        cacheProperties: fabric.Object.prototype.cacheProperties.concat(
+          'diameter',
+          'kerning',
+          'flipped',
+          'fill',
+          'fontFamily',
+          'fontSize',
+          'fontWeight',
+          'fontStyle',
+          'strokeStyle',
+          'strokeWidth'
+        ),
+        strokeStyle: null,
+        strokeWidth: 0,
 
-    //     initialize: function (text, options) {
-    //       options || (options = {});
-    //       this.text = text;
-    //       this.callSuper('initialize', options);
-    //       this.set('lockUniScaling', true);
-    //       var canvas = this.getCircularText();
-    //       this._trimCanvas(canvas);
-    //       this.set('width', canvas.width);
-    //       this.set('height', canvas.height);
-    //     },
+        initialize: function (text, options) {
+          options || (options = {});
+          this.text = text;
+          this.callSuper('initialize', options);
+          this.set('lockUniScaling', true);
+          var canvas = this.getCircularText();
+          this._trimCanvas(canvas);
+          this.set('width', canvas.width);
+          this.set('height', canvas.height);
+        },
 
-    //     _getFontDeclaration: function () {
-    //       return [
-    //         fabric.isLikelyNode ? this.fontWeight : this.fontStyle,
-    //         fabric.isLikelyNode ? this.fontStyle : this.fontWeight,
-    //         this.fontSize + 'px',
-    //         fabric.isLikelyNode ? '"' + this.fontFamily + '"' : this.fontFamily,
-    //       ].join(' ');
-    //     },
+        _getFontDeclaration: function () {
+          return [
+            fabric.isLikelyNode ? this.fontWeight : this.fontStyle,
+            fabric.isLikelyNode ? this.fontStyle : this.fontWeight,
+            this.fontSize + 'px',
+            fabric.isLikelyNode ? '"' + this.fontFamily + '"' : this.fontFamily,
+          ].join(' ');
+        },
 
-    //     _trimCanvas: function (canvas) {
-    //       var ctx = canvas.getContext('2d'),
-    //         w = canvas.width,
-    //         h = canvas.height,
-    //         pix = { x: [], y: [] },
-    //         n,
-    //         imageData = ctx.getImageData(0, 0, w, h),
-    //         fn = function (a, b) {
-    //           return a - b;
-    //         };
+        _trimCanvas: function (canvas) {
+          var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            pix = { x: [], y: [] },
+            n,
+            imageData = ctx.getImageData(0, 0, w, h),
+            fn = function (a, b) {
+              return a - b;
+            };
 
-    //       for (var y = 0; y < h; y++) {
-    //         for (var x = 0; x < w; x++) {
-    //           if (imageData.data[(y * w + x) * 4 + 3] > 0) {
-    //             pix.x.push(x);
-    //             pix.y.push(y);
-    //           }
-    //         }
-    //       }
-    //       pix.x.sort(fn);
-    //       pix.y.sort(fn);
-    //       n = pix.x.length - 1;
-    //       w = pix.x[n] - pix.x[0];
-    //       h = pix.y[n] - pix.y[0];
-    //       var cut = ctx.getImageData(pix.x[0], pix.y[0], w, h);
-    //       canvas.width = w;
-    //       canvas.height = h;
-    //       ctx.putImageData(cut, 0, 0);
-    //     },
+          for (var y = 0; y < h; y++) {
+            for (var x = 0; x < w; x++) {
+              if (imageData.data[(y * w + x) * 4 + 3] > 0) {
+                pix.x.push(x);
+                pix.y.push(y);
+              }
+            }
+          }
+          pix.x.sort(fn);
+          pix.y.sort(fn);
+          n = pix.x.length - 1;
+          w = pix.x[n] - pix.x[0];
+          h = pix.y[n] - pix.y[0];
+          var cut = ctx.getImageData(pix.x[0], pix.y[0], w, h);
+          canvas.width = w;
+          canvas.height = h;
+          ctx.putImageData(cut, 0, 0);
+        },
 
-    //     getCircularText: function () {
-    //       var text = this.text,
-    //         diameter = this.diameter,
-    //         flipped = this.flipped,
-    //         kerning = this.kerning,
-    //         fill = this.fill,
-    //         inwardFacing = true,
-    //         startAngle = 0,
-    //         canvas = fabric.util.createCanvasElement(),
-    //         ctx = canvas.getContext('2d'),
-    //         cw,
-    //         x,
-    //         clockwise = -1;
-    //       if (flipped) {
-    //         startAngle = 180;
-    //         inwardFacing = false;
-    //       }
-    //       startAngle *= Math.PI / 180;
-    //       var d = document.createElement('div');
-    //       d.style.fontFamily = this.fontFamily;
-    //       d.style.whiteSpace = 'nowrap';
-    //       d.style.fontSize = this.fontSize + 'px';
-    //       d.style.fontWeight = this.fontWeight;
-    //       d.style.fontStyle = this.fontStyle;
-    //       d.textContent = text;
-    //       document.body.appendChild(d);
-    //       var textHeight = d.offsetHeight;
-    //       document.body.removeChild(d);
-    //       canvas.width = canvas.height = diameter;
-    //       ctx.font = this._getFontDeclaration();
-    //       if (inwardFacing) {
-    //         text = text.split('').reverse().join('');
-    //       }
-    //       ctx.translate(diameter / 2, diameter / 2);
-    //       startAngle += Math.PI * !inwardFacing;
-    //       ctx.textBaseline = 'middle';
-    //       ctx.textAlign = 'center';
-    //       for (x = 0; x < text.length; x++) {
-    //         cw = ctx.measureText(text[x]).width;
-    //         startAngle +=
-    //           ((cw + (x == text.length - 1 ? 0 : kerning)) / (diameter / 2 - textHeight) / 2) * -clockwise;
-    //       }
-    //       ctx.rotate(startAngle);
-    //       for (x = 0; x < text.length; x++) {
-    //         cw = ctx.measureText(text[x]).width;
-    //         ctx.rotate((cw / 2 / (diameter / 2 - textHeight)) * clockwise);
-    //         if (this.strokeStyle && this.strokeWidth) {
-    //           ctx.strokeStyle = this.strokeStyle;
-    //           ctx.lineWidth = this.strokeWidth;
-    //           ctx.miterLimit = 2;
-    //           ctx.strokeText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
-    //         }
-    //         ctx.fillStyle = fill;
-    //         ctx.fillText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
-    //         ctx.rotate(((cw / 2 + kerning) / (diameter / 2 - textHeight)) * clockwise);
-    //       }
-    //       return canvas;
-    //     },
+        getCircularText: function () {
+          var text = this.text,
+            diameter = this.diameter,
+            flipped = this.flipped,
+            kerning = this.kerning,
+            fill = this.fill,
+            inwardFacing = true,
+            startAngle = 0,
+            canvas = fabric.util.createCanvasElement(),
+            ctx = canvas.getContext('2d'),
+            cw,
+            x,
+            clockwise = -1;
+          if (flipped) {
+            startAngle = 180;
+            inwardFacing = false;
+          }
+          startAngle *= Math.PI / 180;
+          var d = document.createElement('div');
+          d.style.fontFamily = this.fontFamily;
+          d.style.whiteSpace = 'nowrap';
+          d.style.fontSize = this.fontSize + 'px';
+          d.style.fontWeight = this.fontWeight;
+          d.style.fontStyle = this.fontStyle;
+          d.textContent = text;
+          document.body.appendChild(d);
+          var textHeight = d.offsetHeight;
+          document.body.removeChild(d);
+          canvas.width = canvas.height = diameter;
+          ctx.font = this._getFontDeclaration();
+          if (inwardFacing) {
+            text = text.split('').reverse().join('');
+          }
+          ctx.translate(diameter / 2, diameter / 2);
+          startAngle += Math.PI * !inwardFacing;
+          ctx.textBaseline = 'middle';
+          ctx.textAlign = 'center';
+          for (x = 0; x < text.length; x++) {
+            cw = ctx.measureText(text[x]).width;
+            startAngle +=
+              ((cw + (x == text.length - 1 ? 0 : kerning)) / (diameter / 2 - textHeight) / 2) * -clockwise;
+          }
+          ctx.rotate(startAngle);
+          for (x = 0; x < text.length; x++) {
+            cw = ctx.measureText(text[x]).width;
+            ctx.rotate((cw / 2 / (diameter / 2 - textHeight)) * clockwise);
+            if (this.strokeStyle && this.strokeWidth) {
+              ctx.strokeStyle = this.strokeStyle;
+              ctx.lineWidth = this.strokeWidth;
+              ctx.miterLimit = 2;
+              ctx.strokeText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
+            }
+            ctx.fillStyle = fill;
+            ctx.fillText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
+            ctx.rotate(((cw / 2 + kerning) / (diameter / 2 - textHeight)) * clockwise);
+          }
+          return canvas;
+        },
 
-    //     _set: function (key, value) {
-    //       switch (key) {
-    //         case 'scaleX':
-    //           this.fontSize *= value;
-    //           this.diameter *= value;
-    //           this.width *= value;
-    //           this.scaleX = 1;
-    //           if (this.width < 1) {
-    //             this.width = 1;
-    //           }
-    //           break;
-    //         case 'scaleY':
-    //           this.height *= value;
-    //           this.scaleY = 1;
-    //           if (this.height < 1) {
-    //             this.height = 1;
-    //           }
-    //           break;
-    //         default:
-    //           this.callSuper('_set', key, value);
-    //           break;
-    //       }
-    //     },
+        _set: function (key, value) {
+          switch (key) {
+            case 'scaleX':
+              this.fontSize *= value;
+              this.diameter *= value;
+              this.width *= value;
+              this.scaleX = 1;
+              if (this.width < 1) {
+                this.width = 1;
+              }
+              break;
+            case 'scaleY':
+              this.height *= value;
+              this.scaleY = 1;
+              if (this.height < 1) {
+                this.height = 1;
+              }
+              break;
+            default:
+              this.callSuper('_set', key, value);
+              break;
+          }
+        },
 
-    //     _render: function (ctx) {
-    //       var canvas = this.getCircularText();
-    //       this._trimCanvas(canvas);
-    //       this.set('width', canvas.width);
-    //       this.set('height', canvas.height);
-    //       ctx.drawImage(canvas, -this.width / 2, -this.height / 2, this.width, this.height);
-    //       this.setCoords();
-    //     },
+        _render: function (ctx) {
+          var canvas = this.getCircularText();
+          this._trimCanvas(canvas);
+          this.set('width', canvas.width);
+          this.set('height', canvas.height);
+          ctx.drawImage(canvas, -this.width / 2, -this.height / 2, this.width, this.height);
+          this.setCoords();
+        },
 
-    //     toObject: function (propertiesToInclude) {
-    //       return this.callSuper(
-    //         'toObject',
-    //         [
-    //           'text',
-    //           'diameter',
-    //           'kerning',
-    //           'flipped',
-    //           'fill',
-    //           'fontFamily',
-    //           'fontSize',
-    //           'fontWeight',
-    //           'fontStyle',
-    //           'strokeStyle',
-    //           'strokeWidth',
-    //           'styles',
-    //         ].concat(propertiesToInclude)
-    //       );
-    //     },
-    //   });
+        toObject: function (propertiesToInclude) {
+          return this.callSuper(
+            'toObject',
+            [
+              'text',
+              'diameter',
+              'kerning',
+              'flipped',
+              'fill',
+              'fontFamily',
+              'fontSize',
+              'fontWeight',
+              'fontStyle',
+              'strokeStyle',
+              'strokeWidth',
+              'styles',
+            ].concat(propertiesToInclude)
+          );
+        },
+      });
 
-    //   fabric.TextCurved.fromObject = function (object, callback) {
-    //     return fabric.util.enlivenObjects([object], function (enlivenedObjects) {
-    //       callback && callback(enlivenedObjects[0]);
-    //     });
-    //   };
-    // })(typeof fabric !== 'undefined' ? fabric : require('fabric').fabric);
+      fabric.TextCurved.fromObject = function (object, callback) {
+        return fabric.util.enlivenObjects([object], function (enlivenedObjects) {
+          callback && callback(enlivenedObjects[0]);
+        });
+      };
+    })(typeof fabric !== 'undefined' ? fabric : require('fabric').fabric);
   }
 
   initialize() {
@@ -530,10 +530,10 @@ class EditorScreen {
 
     const updatePreview = () => {
       const imageURL = this.canvas.toDataURL({
-        format: 'jpg',
-        multiplier: 0.3,
+        format: 'png',
+        multiplier: 0.5,
       });
-      $('#magnifier_img').src = imageURL;
+      document.getElementById('magnifier_img').src = imageURL;
     };
 
     const onSelect = () => {
@@ -1000,13 +1000,9 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    // this.canvas.on('object:added', updatePreview);
-    // this.canvas.on('object:removed', updatePreview);
-    // this.canvas.on('object:modified', () => {
-    //   updatePreview();
-    //   this.canvas.remove(horizontalLine);
-    //   this.canvas.remove(verticalLine);
-    // });
+    this.canvas.on('object:added', updatePreview);
+    this.canvas.on('object:removed', updatePreview);
+    this.canvas.on('object:modified', () => updatePreview);
 
     let verticalLine, horizontalLine;
 
@@ -1031,68 +1027,59 @@ class EditorScreen {
     //   );
     // }
 
-    // this.canvas.on('object:moving', (e) => {
-    //   const obj = e.target;
+    const canvasCenter = {
+      x: this.canvas.width / 2,
+      y: this.canvas.height / 2,
+    };
 
-    //   const snappedLeft = Math.round(obj.left / gridSize) * gridSize;
-    //   const snappedTop = Math.round(obj.top / gridSize) * gridSize;
+    const line1 = new fabric.Line([0, canvasCenter.y, this.canvas.getWidth(), canvasCenter.y], {
+      stroke: 'blue',
+      selectable: false,
+      visible: false,
+    });
 
-    //   const deltaX = Math.abs(obj.left - snappedLeft);
-    //   const deltaY = Math.abs(obj.top - snappedTop);
+    const line2 = new fabric.Line([canvasCenter.x, 0, canvasCenter.x, this.canvas.getHeight()], {
+      stroke: 'blue',
+      selectable: false,
+      visible: false,
+    });
 
-    //   if (deltaX < snappingThreshold && deltaY < snappingThreshold) {
-    //     obj.set({ left: snappedLeft, top: snappedTop });
+    this.canvas.add(line1, line2);
 
-    //     drawVerticalLine.call(this, snappedLeft);
-    //     drawHorizontalLine.call(this, snappedTop);
-    //   } else {
-    //     obj.setCoords();
-    //     removeVerticalLine.call(this);
-    //     removeHorizontalLine.call(this);
-    //   }
+    this.canvas.on('object:moving', (e) => {
+      const obj = e.target;
 
-    //   this.canvas.requestRenderAll();
-    // });
+      const snappedLeft = Math.round(obj.left / gridSize) * gridSize;
+      const snappedTop = Math.round(obj.top / gridSize) * gridSize;
 
-    // function drawVerticalLine(x) {
-    //   if (verticalLine) {
-    //     this.canvas.remove(verticalLine);
-    //   }
+      const objectCenter = {
+        x: snappedLeft + (obj.width * obj.scaleX) / 2,
+        y: snappedTop + (obj.height * obj.scaleY) / 2,
+      };
 
-    //   verticalLine = new fabric.Line([x, 0, x, canvasHeight], {
-    //     stroke: '#0307fcaa',
-    //     selectable: false,
-    //   });
+      if (
+        Math.abs(canvasCenter.x - objectCenter.x) <= snappingThreshold ||
+        Math.abs(canvasCenter.y - objectCenter.y) <= snappingThreshold
+      ) {
+        obj.set({ left: snappedLeft, top: snappedTop });
 
-    //   this.canvas.add(verticalLine);
-    // }
+        line1.set('visible', true);
+        line2.set('visible', true);
+      } else {
+        obj.setCoords();
+        line1.set('visible', false);
+        line2.set('visible', false);
+      }
 
-    // function drawHorizontalLine(y) {
-    //   if (horizontalLine) {
-    //     this.canvas.remove(horizontalLine);
-    //   }
+      this.canvas.requestRenderAll();
+    });
 
-    //   horizontalLine = new fabric.Line([0, y, canvasWidth, y], {
-    //     stroke: '#0307fcaa',
-    //     selectable: false,
-    //   });
-
-    //   this.canvas.add(horizontalLine);
-    // }
-
-    // function removeVerticalLine() {
-    //   if (verticalLine) {
-    //     this.canvas.remove(verticalLine);
-    //     verticalLine = null;
-    //   }
-    // }
-
-    // function removeHorizontalLine() {
-    //   if (horizontalLine) {
-    //     this.canvas.remove(horizontalLine);
-    //     horizontalLine = null;
-    //   }
-    // }
+    this.canvas.on('object:modified', () => {
+      captureCanvasState();
+      updatePreview();
+      line1.set('visible', false);
+      line2.set('visible', false);
+    });
 
     const setCanvasBackground = () => {
       this.canvas.setBackgroundImage('/static/pattern.png', this.canvas.renderAll.bind(this.canvas), {
@@ -1387,23 +1374,11 @@ class EditorScreen {
 
     const renderPreview = () => {
       this.previewCanvas.setBackgroundImage(previewPaths[previewIdx], () => {
-        // if (previewIdx === 0) {
-        //   renderSVGForMug(fabric, this.previewCanvas, this.canvas);
-        // } else
         if (previewIdx === 0) {
-          // renderSVGForCard(
-          //   fabric,
-          //   logoNameElement,
-          //   sloganNameElement,
-          //   this.previewCanvas,
-          //   this.logoFile,
-          //   25,
-          //   65
-          // );
-
           renderSVGForMug(fabric, this.previewCanvas, this.canvas);
         } else if (previewIdx === 1) {
-          // wallPreview(fabric, logoNameElement, sloganNameElement, this.previewCanvas, this.logoFile, 0, -165);
+          wallPreview(fabric, this.previewCanvas, this.canvas);
+        } else if (previewIdx === 2) {
           wallPreview(fabric, this.previewCanvas, this.canvas);
         }
         this.previewCanvas.requestRenderAll();
@@ -1412,11 +1387,10 @@ class EditorScreen {
 
     renderSVGForMug(fabric, this.previewCanvas, this.canvas);
 
-    // const previewPaths = ['/static/mug.png', '/static/card.png', '/static/wall.png'];
-    const previewPaths = ['/static/mug.png', '/static/wall.png'];
+    const previewPaths = ['/static/mug.png', '/static/wall.png', '/static/wall.png'];
     let previewIdx = 0;
 
-    document.querySelector('#left-arrow').addEventListener('click', () => {
+    $('#left-arrow').addEventListener('click', () => {
       this.previewCanvas.clear();
       if (previewIdx < 0) {
         previewIdx = 0;
@@ -1779,9 +1753,11 @@ class EditorScreen {
       });
     });
 
-    const centerAndResizeElements = (type, logoSize, sloganSize, textPosition) => {
+    const centerAndResizeElements = (type, logoSize, sloganSize, textPosition, mainTop = -100) => {
       (logoNameElement.fontSize = logoSize), sloganSize;
       (sloganNameElement.fontSize = logoSize), sloganSize;
+      const objects = this.canvas.getObjects();
+      const logoMain = objects.filter((i) => !i.text);
 
       const timeout = 5;
       switch (type) {
@@ -1793,17 +1769,16 @@ class EditorScreen {
               (obj) => obj.type === 'text' && obj.text === 'Slogan goes here'
             );
 
-            logoNameElement.set('top', this.canvas.height / 1.3);
-            sloganNameElement.set('top', this.canvas.height / 1.45);
+            logoNameElement.set('top', this.canvas.height / 2.1);
+            sloganNameElement.set('top', this.canvas.height / 1.85);
 
             logoNameElement.centerH();
             sloganNameElement.centerH();
 
             const newGrp = new fabric.Group(objects);
-            newGrp.set('top', this.canvas.height / 4);
+            newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
           }, timeout);
-
           break;
         case 'bottomTop':
           setTimeout(() => {
@@ -1814,11 +1789,14 @@ class EditorScreen {
               .getObjects()
               .find((obj) => obj.type === 'text' && obj.text === 'Slogan goes here');
 
-            logoNameElement.set('top', this.canvas.height / 5);
-            sloganNameElement.set('top', this.canvas.height / 3.8);
+            logoNameElement.set('top', this.canvas.height / 30);
+            sloganNameElement.set('top', this.canvas.height / 12);
 
             logoNameElement.centerH();
             sloganNameElement.centerH();
+            const newGrp = new fabric.Group(objects);
+            newGrp.set('top', mainTop);
+            newGrp.ungroupOnCanvas();
           }, timeout);
           break;
         case 'leftRight':
@@ -1832,27 +1810,33 @@ class EditorScreen {
 
             logoNameElement.center();
             sloganNameElement.center();
-            logoNameElement.set('top', this.canvas.height / 2.3);
-            sloganNameElement.set('top', this.canvas.height / 1.9);
+            logoNameElement.set('top', this.canvas.height / 4);
+            sloganNameElement.set('top', this.canvas.height / 3);
 
             if (textPosition === 'left') {
               logoNameElement.viewportCenter();
               sloganNameElement.viewportCenter();
 
-              logoNameElement.set('left', this.canvas.width / 1.55);
-              sloganNameElement.set('left', this.canvas.width / 1.55);
+              logoNameElement.set('top', this.canvas.height / 4);
+              sloganNameElement.set('top', this.canvas.height / 3);
 
-              logoNameElement.set('top', this.canvas.height / 2.3);
-              sloganNameElement.set('top', this.canvas.height / 1.9);
+              logoNameElement.set('left', this.canvas.width / 2.25);
+              sloganNameElement.set('left', this.canvas.width / 2.25);
             } else {
               logoNameElement.viewportCenterH();
               sloganNameElement.viewportCenterH();
 
-              logoNameElement.set('left', (logoNameElement.left += 250));
-              sloganNameElement.set('left', (sloganNameElement.left += 250));
+              logoNameElement.set('top', this.canvas.height / 4);
+              sloganNameElement.set('top', this.canvas.height / 3);
+
+              logoNameElement.set('left', (logoNameElement.left += 100));
+              sloganNameElement.set('left', (sloganNameElement.left += 100));
             }
 
             logoMain.forEach((i) => (i.left -= 200));
+            const newGrp = new fabric.Group(objects);
+            newGrp.set('top', mainTop);
+            newGrp.ungroupOnCanvas();
           }, timeout);
           break;
         case 'rightLeft':
@@ -1866,31 +1850,33 @@ class EditorScreen {
 
             logoNameElement.center();
             sloganNameElement.center();
-
-            logoNameElement.set('top', this.canvas.height / 2.3);
-            sloganNameElement.set('top', this.canvas.height / 1.9);
+            logoNameElement.set('top', this.canvas.height / 4);
+            sloganNameElement.set('top', this.canvas.height / 3);
 
             if (textPosition === 'left') {
-              logoNameElement.set('left', this.canvas.width / 1.55);
-              sloganNameElement.set('left', this.canvas.width / 1.55);
-
-              logoNameElement.set('textAlign', 'right');
-              sloganNameElement.set('textAlign', 'right');
-            } else {
               logoNameElement.viewportCenter();
               sloganNameElement.viewportCenter();
 
-              logoNameElement.set('left', 80);
-              sloganNameElement.set('left', 80);
+              logoNameElement.set('top', this.canvas.height / 4);
+              sloganNameElement.set('top', this.canvas.height / 3);
 
-              logoNameElement.set('textAlign', 'center');
-              sloganNameElement.set('textAlign', 'center');
+              logoNameElement.set('left', this.canvas.width / 2.25);
+              sloganNameElement.set('left', this.canvas.width / 2.25);
+            } else {
+              logoNameElement.viewportCenterH();
+              sloganNameElement.viewportCenterH();
 
-              logoNameElement.set('top', this.canvas.height / 2.3);
-              sloganNameElement.set('top', this.canvas.height / 1.9);
+              logoNameElement.set('top', this.canvas.height / 4);
+              sloganNameElement.set('top', this.canvas.height / 3);
+
+              logoNameElement.set('left', (logoNameElement.left -= 100));
+              sloganNameElement.set('left', (sloganNameElement.left -= 100));
             }
 
             logoMain.forEach((i) => (i.left += 200));
+            const newGrp = new fabric.Group(objects);
+            newGrp.set('top', mainTop);
+            newGrp.ungroupOnCanvas();
           }, timeout);
           break;
       }
@@ -1917,117 +1903,64 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     };
 
-    const canvasCenter = {
-      x: this.canvas.width / 2,
-      y: this.canvas.height / 2,
-    };
-
-    const line1 = new fabric.Line([0, canvasCenter.y, this.canvas.getWidth(), canvasCenter.y], {
-      stroke: 'blue',
-      selectable: false,
-      visible: false,
-    });
-
-    const line2 = new fabric.Line([canvasCenter.x, 0, canvasCenter.x, this.canvas.getHeight()], {
-      stroke: 'blue',
-      selectable: false,
-      visible: false,
-    });
-
-    this.canvas.add(line1, line2);
-
-    this.canvas.on('object:moving', (e) => {
-      const obj = e.target;
-
-      const snappedLeft = Math.round(obj.left / gridSize) * gridSize;
-      const snappedTop = Math.round(obj.top / gridSize) * gridSize;
-
-      const objectCenter = {
-        x: snappedLeft + (obj.width * obj.scaleX) / 2,
-        y: snappedTop + (obj.height * obj.scaleY) / 2,
-      };
-
-      if (
-        Math.abs(canvasCenter.x - objectCenter.x) <= snappingThreshold ||
-        Math.abs(canvasCenter.y - objectCenter.y) <= snappingThreshold
-      ) {
-        obj.set({ left: snappedLeft, top: snappedTop });
-
-        line1.set('visible', true);
-        line2.set('visible', true);
-      } else {
-        obj.setCoords();
-        line1.set('visible', false);
-        line2.set('visible', false);
-      }
-
-      this.canvas.requestRenderAll();
-    });
-
-    this.canvas.on('object:modified', () => {
-      updatePreview();
-      line1.set('visible', false);
-      line2.set('visible', false);
-    });
-
     $('#top_bottom_1').addEventListener('click', () => {
-      scaleLogo(180);
+      scaleLogo(1500);
       centerAndResizeElements('topBottom', 29, 23, 'center');
     });
 
     $('#top_bottom_2').addEventListener('click', () => {
-      scaleLogo(150);
+      scaleLogo(1500);
       centerAndResizeElements('topBottom', 26, 21, 'center');
     });
 
     $('#top_bottom_3').addEventListener('click', () => {
-      scaleLogo(180);
-      centerAndResizeElements('topBottom', 29, 23, 'center');
+      scaleLogo(1800);
+      centerAndResizeElements('topBottom', 29, 23, 'center', -200);
     });
 
     $('#bottom_top_1').addEventListener('click', () => {
-      scaleLogo(180);
-      centerAndResizeElements('bottomTop', 32, 25, 'center');
+      scaleLogo(1800);
+      centerAndResizeElements('bottomTop', 32, 25, 'center', -100);
     });
 
     $('#bottom_top_2').addEventListener('click', () => {
-      scaleLogo(150);
+      scaleLogo(1500);
       centerAndResizeElements('bottomTop', 26, 21, 'center');
     });
 
     $('#bottom_top_3').addEventListener('click', () => {
-      scaleLogo(180);
+      scaleLogo(1800);
       centerAndResizeElements('bottomTop', 29, 23, 'center');
     });
 
     $('#left_right_1').addEventListener('click', () => {
-      scaleLogo(180);
-      centerAndResizeElements('leftRight', 32, 25, 'center');
+      scaleLogo(1800);
+      centerAndResizeElements('leftRight', 32, 25, 'center', -100);
     });
 
     $('#left_right_2').addEventListener('click', () => {
-      scaleLogo(180);
-      centerAndResizeElements('leftRight', 32, 25, 'left');
+      scaleLogo(1800);
+      centerAndResizeElements('leftRight', 32, 25, 'left', -100);
     });
 
     $('#left_right_3').addEventListener('click', () => {
-      scaleLogo(150);
-      centerAndResizeElements('leftRight', 32, 25, 'center');
+      scaleLogo(1500);
+      centerAndResizeElements('leftRight', 32, 25, 'center', -100);
     });
 
     $('#right_left_1').addEventListener('click', () => {
-      scaleLogo(150);
-      centerAndResizeElements('rightLeft', 32, 25, 'center');
+      scaleLogo(1500);
+      centerAndResizeElements('rightLeft', 32, 25, 'center', -100);
     });
 
     $('#right_left_2').addEventListener('click', () => {
-      scaleLogo(180);
-      centerAndResizeElements('rightLeft', 32, 25, 'center');
+      scaleLogo(1800);
+      centerAndResizeElements('rightLeft', 32, 25, 'center', -100);
     });
 
     $('#right_left_3').addEventListener('click', () => {
-      scaleLogo(150);
-      centerAndResizeElements('rightLeft', 32, 25, 'center');
+      scaleLogo(1500);
+      centerAndResizeElements('rightLeft', 32, 25, 'center', -100);
     });
   }
 }
