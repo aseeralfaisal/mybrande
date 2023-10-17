@@ -21,11 +21,17 @@ const elements = {
 };
 
 let editCounterLocal = localStorage.getItem('mainEditorCounter');
-if (editCounterLocal > 0) {
+if (editCounterLocal === '1') {
   elements.detailsView.style.display = 'none';
   elements.mainEditorView.style.display = 'block';
   elements.dragDropView.style.display = 'none';
+} else if (editCounterLocal === '3') {
+  console.log(true);
+  elements.dragDropView.style.display = 'none';
+  elements.mainEditorView.style.display = 'none';
+  elements.detailsView.style.display = 'block';
 } else {
+  elements.dragDropView.style.display = 'block';
   elements.mainEditorView.style.display = 'none';
   elements.detailsView.style.display = 'none';
 }
@@ -33,6 +39,27 @@ if (editCounterLocal > 0) {
 const preventEvents = (event) => {
   event.preventDefault();
   event.stopPropagation();
+};
+
+const resizeSVG = (svgContent, width, height) => {
+  const parser = new DOMParser();
+  const svgDOM = parser.parseFromString(svgContent, 'image/svg+xml');
+  const svgElement = svgDOM.documentElement;
+
+  svgElement.setAttribute('width', width);
+  svgElement.setAttribute('height', height);
+
+  let viewBox = svgElement.getAttribute('viewBox').split(' ').map(Number);
+  if (viewBox[2] > viewBox[3]) {
+    viewBox[3] = (viewBox[2] / width) * height;
+  } else {
+    viewBox[2] = (viewBox[3] / height) * width;
+  }
+  svgElement.setAttribute('viewBox', viewBox.join(' '));
+
+  const serializer = new XMLSerializer();
+  const resizedSVGContent = serializer.serializeToString(svgElement);
+  return resizedSVGContent;
 };
 
 const uploadLocalFile = (file) => {
@@ -49,7 +76,8 @@ const uploadLocalFile = (file) => {
   fileReader.readAsText(file);
   fileReader.onloadend = () => {
     const svgContent = fileReader.result;
-    localStorage.setItem('logo-file', svgContent);
+    const resizedSVGContent = resizeSVG(svgContent, 1000, 1000);
+    localStorage.setItem('logo-file', resizedSVGContent);
     localStorage.setItem('mainEditorCounter', 0);
   };
 
@@ -91,7 +119,7 @@ elements.dragDrop.addEventListener('dragleave', (event) => {
 });
 
 elements.nextBtn.addEventListener('click', () => {
-  localStorage.setItem('mainEditorCounter', 1);
+  localStorage.setItem('mainEditorCounter', '1');
   location.reload();
 });
 

@@ -1,7 +1,5 @@
 import { fabric } from 'fabric';
 import { CreateLayerSection } from './createLayer';
-import { renderSVGForMug } from './mug.preview';
-import { wallPreview } from './wall.preview';
 import clipIcons from './assets/icons/clipIcons';
 import { DeleteLayer } from './handleDeleteLayer';
 import 'alwan/dist/css/alwan.min.css';
@@ -13,7 +11,7 @@ class EditorScreen {
   constructor() {
     this.canvasBG = '#efefef';
     this.canvas = new fabric.Canvas('c', { backgroundColor: this.canvasBG });
-    this.previewCanvas = new fabric.Canvas('preview-canvas', { backgroundImage: '/static/mug.png' });
+    // this.previewCanvas = new fabric.Canvas('preview-canvas', { backgroundImage: '/static/mug.png' });
     this.magnifier = new fabric.Canvas('magnifier', { backgroundColor: this.canvasBG });
     this.textMode = $('.nav-item[data-name="text"]');
     this.logoMode = $('.nav-item[data-name="logo"]');
@@ -85,7 +83,11 @@ class EditorScreen {
     this.zoomSlider = $('#zoom-slider');
     this.colorMode = 'Solid';
     this.activeNavbarSetting = 'logo';
-    let isLoading = false;
+
+    $('#back-main_3').addEventListener('click', () => {
+      localStorage.setItem('mainEditorCounter', 1);
+      location.reload();
+    });
 
     this.rotateObject = () => {
       const selectedObject = this.canvas.getActiveObject();
@@ -462,9 +464,11 @@ class EditorScreen {
     this.downloadBtn.addEventListener('click', () => {
       const savedLogo = this.canvas.toDataURL({
         format: 'png',
-        multiplier: 3,
+        multiplier: 10,
       });
       localStorage.setItem('saved_logo', savedLogo);
+      localStorage.setItem('mainEditorCounter', 3);
+      location.reload();
       setTimeout(() => {
         document.getElementById('drag_drop_view').style.display = 'none';
         document.getElementById('main_editor_view').style.display = 'none';
@@ -530,10 +534,10 @@ class EditorScreen {
 
     const updatePreview = () => {
       const imageURL = this.canvas.toDataURL({
-        format: 'jpg',
-        multiplier: 0.3,
+        format: 'png',
+        multiplier: 0.5,
       });
-      $('#magnifier_img').src = imageURL;
+      document.getElementById('magnifier_img').src = imageURL;
     };
 
     const onSelect = () => {
@@ -560,7 +564,7 @@ class EditorScreen {
     this.canvas.on('selection:created', onSelect);
     this.canvas.on('selection:updated', onSelect);
 
-    const textMain = ({ text, fontFamily = 'Poppins', fontSize = 32, fill = '#000' }) => {
+    const textMain = ({ text, fontFamily = 'Poppins', fontSize = 32, fill = '#000', id }) => {
       return new fabric.Text(text, {
         fontFamily,
         fontSize,
@@ -571,11 +575,12 @@ class EditorScreen {
         left: 50,
         top: 50,
         flipped: true,
+        id,
       });
     };
 
-    const logoNameElement = textMain({ text: this.logoName });
-    const sloganNameElement = textMain({ text: this.sloganName, fontSize: 24 });
+    const logoNameElement = textMain({ text: this.logoName, id: 'logoNameElement' });
+    const sloganNameElement = textMain({ text: this.sloganName, fontSize: 24, id: 'sloganNameElement' });
 
     if (this.logoFile) {
       fabric.loadSVGFromString(this.logoFile, (objects, options) => {
@@ -606,6 +611,7 @@ class EditorScreen {
           layerGroup.height = 350;
           layerGroup.ungroupOnCanvas();
         }
+
         this.canvas.requestRenderAll();
       });
 
@@ -615,10 +621,11 @@ class EditorScreen {
       sloganNameElement.viewportCenter();
       logoNameElement.set('top', (logoNameElement.top += 70));
       sloganNameElement.set('top', (sloganNameElement.top += 110));
-      this.canvas.setActiveObject(logoNameElement);
-      this.canvas.setActiveObject(sloganNameElement);
-      this.canvas.discardActiveObject(logoNameElement);
-      this.canvas.discardActiveObject(sloganNameElement);
+      const selection = new fabric.ActiveSelection(this.canvas.getObjects(), {
+        canvas: this.canvas,
+      });
+      this.canvas.setActiveObject(selection);
+      this.canvas.discardActiveObject(selection);
       this.canvas.requestRenderAll();
     }
 
@@ -640,67 +647,6 @@ class EditorScreen {
       $(className).append(icon);
     };
 
-    logoNameElement.on('mousedown', (event) => {
-      event.e.preventDefault();
-      const currentObjColor = logoNameElement.get('fill');
-      const textColorPalette = $('#text-pallete').querySelector('.color-palette-gradient');
-
-      if (typeof currentObjColor === 'string') {
-        textColorPalette.style.background = currentObjColor;
-        // textColorPalette?.querySelector('#grad-solid').style?.background = currentObjColor;
-      } else if (currentObjColor && currentObjColor.type === 'radial') {
-        const gradientColors = convertFabricColorsToRGB(currentObjColor);
-        const gradientStyle = `linear-gradient(0, ${gradientColors.join(', ')})`;
-        textColorPalette.style.background = gradientStyle;
-        textColorPalette.querySelector('#grad-1').value = gradientStyle;
-        textColorPalette.querySelector('#grad-2').value = gradientStyle;
-        textColorPalette.querySelector('#grad-solid').value = gradientStyle;
-      }
-
-      $('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
-      putAngleDownIcon('.font_style-list-item__title');
-
-      const letterSpacing = +logoNameElement.charSpacing;
-      $('#letter-spacing-slider').value = letterSpacing;
-      const fontFamily = logoNameElement.fontFamily;
-      $('#font-selector-title').innerText = fontFamily;
-      putAngleDownIcon('#font-selector-title');
-      const logoText = logoNameElement.text;
-      $('.case-list-item__title').innerText = getTextCase(logoText);
-      putAngleDownIcon('.case-list-item__title');
-      this.canvas.requestRenderAll();
-    });
-
-    sloganNameElement.on('mousedown', (event) => {
-      event.e.preventDefault();
-      const currentObjColor = sloganNameElement.get('fill');
-      const textColorPalette = $('#text-pallete').querySelector('.color-palette-gradient');
-
-      if (typeof currentObjColor === 'string') {
-        textColorPalette.style.background = currentObjColor;
-        // textColorPalette.querySelector('#grad-solid').style?.background = currentObjColor;
-      } else if (currentObjColor && currentObjColor.type === 'radial') {
-        const gradientColors = convertFabricColorsToRGB(currentObjColor);
-        const gradientStyle = `linear-gradient(0, ${gradientColors.join(', ')})`;
-        textColorPalette.style.background = gradientStyle;
-        textColorPalette.querySelector('#grad-1').value = gradientStyle;
-        textColorPalette.querySelector('#grad-2').value = gradientStyle;
-        textColorPalette.querySelector('#grad-solid').value = gradientStyle;
-      }
-
-      $('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
-      putAngleDownIcon('.font_style-list-item__title');
-
-      const letterSpacing = +sloganNameElement.charSpacing;
-      $('#letter-spacing-slider').value = letterSpacing;
-      const fontFamily = sloganNameElement.fontFamily;
-      $('#font-selector-title').innerText = fontFamily;
-      putAngleDownIcon('#font-selector-title');
-      const logoText = sloganNameElement.text;
-      $('.case-list-item__title').innerText = getTextCase(logoText);
-      putAngleDownIcon('.case-list-item__title');
-    });
-
     logoNameElement.on('mousedblclick', () => {
       const logoNameInput = document.getElementById('logoNameInput');
       if (logoNameInput) {
@@ -713,46 +659,6 @@ class EditorScreen {
       if (sloganNameInput) {
         sloganNameElement.focus();
       }
-    });
-
-    logoNameElement.on('mousedown', () => {
-      this.fontSizeListTitle.innerText = logoNameElement.fontSize + ' px';
-      this.activeNavbarSetting = 'text';
-      this.updateActiveNavbar();
-      this.logoSettingsContainer.style.display = 'none';
-      this.textSettingsContainer.style.display = 'grid';
-      this.backgroundSettingsContainer.style.display = 'none';
-      this.uploadSettingsContainer.style.display = 'none';
-      putAngleDownIcon('.font_size-list-item__title');
-      this.canvas.requestRenderAll();
-
-      this.textSelectorValue = 'LogoName';
-      this.settingsListTitle.textContent = 'Logo Name';
-      const icon = document.createElement('i');
-      icon.className = 'fa-solid fa-angle-down';
-      this.settingsListTitle.append(icon);
-      this.sloganNameInput.style.display = 'none';
-      this.logoNameInput.style.display = 'block';
-    });
-
-    sloganNameElement.on('mousedown', () => {
-      this.fontSizeListTitle.innerText = sloganNameElement.fontSize + ' px';
-      this.activeNavbarSetting = 'text';
-      this.updateActiveNavbar();
-      this.logoSettingsContainer.style.display = 'none';
-      this.textSettingsContainer.style.display = 'grid';
-      this.backgroundSettingsContainer.style.display = 'none';
-      this.uploadSettingsContainer.style.display = 'none';
-      putAngleDownIcon('.font_size-list-item__title');
-      this.canvas.requestRenderAll();
-
-      this.textSelectorValue = 'SloganName';
-      this.settingsListTitle.textContent = 'Slogan Name';
-      const icon = document.createElement('i');
-      icon.className = 'fa-solid fa-angle-down';
-      this.settingsListTitle.append(icon);
-      this.logoNameInput.style.display = 'none';
-      this.sloganNameInput.style.display = 'block';
     });
 
     this.logoNameInput.addEventListener('input', (e) => {
@@ -848,17 +754,28 @@ class EditorScreen {
 
     this.previewMode.addEventListener('click', () => {
       this.activeNavbarSetting = 'preview';
-      document.querySelector('.preview-modal-bg').style.display = 'block';
-      document.querySelector('#right-arrow').click();
+
+      this.canvas.setBackgroundColor(null, this.canvas.renderAll.bind(this.canvas));
+      this.canvas.setBackgroundImage(null, this.canvas.renderAll.bind(this.canvas));
+      this.canvas.requestRenderAll();
+
+      $('.preview-modal-bg').style.display = 'block';
+
+      const logo = this.canvas.toDataURL({
+        format: 'png',
+        multiplier: 3,
+      });
+
+      $('#fixed_preview').src = logo;
+      // document.querySelector('#right-arrow').click();
     });
 
-    const letterSpacingEvent = (e) => {
+    this.letterSpacingSlider.addEventListener('input', (e) => {
       this.letterSpacing = e.target.value;
-      const element = this.textSelectorValue === 'SloganName' ? sloganNameElement : logoNameElement;
-      element.set('charSpacing', this.letterSpacing);
+      const active = this.canvas.getActiveObject();
+      active.set('charSpacing', this.letterSpacing);
       this.canvas.requestRenderAll();
-    };
-    this.letterSpacingSlider.addEventListener('input', letterSpacingEvent);
+    });
 
     this.shadowBlurSlider.addEventListener('input', (e) => {
       this.shadowBlur = e.target.value;
@@ -979,16 +896,16 @@ class EditorScreen {
 
     fontList.addEventListener('click', (e) => {
       const fontValue = e.target.innerText;
-      let element = this.textSelectorValue === 'SloganName' ? sloganNameElement : logoNameElement;
+      let active = this.canvas.getActiveObject();
       switch (fontValue) {
         case 'Inter':
-          element.set('fontFamily', 'Inter');
+          active.set('fontFamily', 'Inter');
           break;
         case 'Roboto':
-          element.set('fontFamily', 'Roboto');
+          active.set('fontFamily', 'Roboto');
           break;
         default:
-          element.set('fontFamily', 'Poppins');
+          active.set('fontFamily', 'Poppins');
           break;
       }
       const title = this.fontSelector.querySelector('.font-selector-title');
@@ -1002,7 +919,20 @@ class EditorScreen {
 
     this.canvas.on('object:added', updatePreview);
     this.canvas.on('object:removed', updatePreview);
-    this.canvas.on('object:modified', () => updatePreview);
+    this.canvas.on('object:modified', () => {
+      captureCanvasState();
+
+      updatePreview();
+    });
+    let localDirFile = null;
+    let localDirFiles = null;
+    document.onkeydown = (event) => {
+      if (event.key === 'Delete') {
+        const deleteLayer = new DeleteLayer(event, this.canvas, this.layers, this.activeLayerIndex);
+        deleteLayer.deleteLayer();
+        localDirFile = null;
+      }
+    };
 
     let verticalLine, horizontalLine;
 
@@ -1027,7 +957,7 @@ class EditorScreen {
     //   );
     // }
 
-    const canvasCenter = {
+    let canvasCenter = {
       x: this.canvas.width / 2,
       y: this.canvas.height / 2,
     };
@@ -1036,12 +966,16 @@ class EditorScreen {
       stroke: 'blue',
       selectable: false,
       visible: false,
+      lockMovementX: true,
+      lockMovementY: true,
     });
 
     const line2 = new fabric.Line([canvasCenter.x, 0, canvasCenter.x, this.canvas.getHeight()], {
       stroke: 'blue',
       selectable: false,
       visible: false,
+      lockMovementX: true,
+      lockMovementY: true,
     });
 
     this.canvas.add(line1, line2);
@@ -1049,8 +983,8 @@ class EditorScreen {
     this.canvas.on('object:moving', (e) => {
       const obj = e.target;
 
-    //   const snappedLeft = Math.round(obj.left / gridSize) * gridSize;
-    //   const snappedTop = Math.round(obj.top / gridSize) * gridSize;
+      const snappedLeft = Math.round(obj.left / gridSize) * gridSize;
+      const snappedTop = Math.round(obj.top / gridSize) * gridSize;
 
       const objectCenter = {
         x: snappedLeft + (obj.width * obj.scaleX) / 2,
@@ -1071,14 +1005,69 @@ class EditorScreen {
         line2.set('visible', false);
       }
 
-    //   this.canvas.requestRenderAll();
-    // });
+      this.canvas.requestRenderAll();
+    });
 
     this.canvas.on('object:modified', () => {
       captureCanvasState();
       updatePreview();
       line1.set('visible', false);
       line2.set('visible', false);
+    });
+
+    this.canvas.on('selection:created', () => {
+      const activeObject = this.canvas.getActiveObject();
+      document.onkeydown = (e) => {
+        if (activeObject === undefined || activeObject === null) {
+          return; // return if no active object
+        }
+
+        var movementIncrement = 1;
+
+        switch (e.keyCode) {
+          case 37: // left arrow key
+            activeObject.set('left', activeObject.get('left') - movementIncrement);
+            break;
+          case 38: // up arrow key
+            activeObject.set('top', activeObject.get('top') - movementIncrement);
+            break;
+          case 39: // right arrow key
+            activeObject.set('left', activeObject.get('left') + movementIncrement);
+            break;
+          case 40: // down arrow key
+            activeObject.set('top', activeObject.get('top') + movementIncrement);
+            break;
+        }
+
+        this.canvas.renderAll();
+      };
+    });
+
+    this.canvas.on('selection:updated', () => {
+      const activeObject = this.canvas.getActiveObject();
+      document.onkeydown = (e) => {
+        if (activeObject === undefined || activeObject === null) {
+          return; // return if no active object
+        }
+
+        var movementIncrement = 1;
+
+        switch (e.key) {
+          case 'ArrowLeft':
+            activeObject.set('left', activeObject.get('left') - movementIncrement);
+            break;
+          case 'ArrowUp':
+            activeObject.set('top', activeObject.get('top') - movementIncrement);
+            break;
+          case 'ArrowRight':
+            activeObject.set('left', activeObject.get('left') + movementIncrement);
+            break;
+          case 'ArrowDown':
+            activeObject.set('top', activeObject.get('top') + movementIncrement);
+            break;
+        }
+        this.canvas.renderAll();
+      };
     });
 
     const setCanvasBackground = () => {
@@ -1093,6 +1082,105 @@ class EditorScreen {
       });
     };
 
+    // let lElement = this.canvas.getObjects().find((obj) => obj.id === 'logoNameElement');
+    // let sElement = this.canvas.getObjects().find((obj) => obj.id === 'sloganNameElement');
+
+    // var aEl = this.canvas.getActiveObject();
+    // document.onkeydown = function (e) {
+    //   if (aEl === undefined || aEl === null) {
+    //     console.log('error');
+    //     return; // return if no active object
+    //   }
+
+    //   var movementIncrement = 10; // adjust this value for faster/slower movement
+
+    //   switch (e.keyCode) {
+    //     case 37: // left arrow key
+    //       aEl.set('left', aEl.get('left') - movementIncrement);
+    //       break;
+    //     case 38: // up arrow key
+    //       aEl.set('top', aEl.get('top') - movementIncrement);
+    //       break;
+    //     case 39: // right arrow key
+    //       aEl.set('left', aEl.get('left') + movementIncrement);
+    //       break;
+    //     case 40: // down arrow key
+    //       aEl.set('top', aEl.get('top') + movementIncrement);
+    //       break;
+    //   }
+
+    //   this.canvas.renderAll();
+    // };
+
+    // const logoSloganEvent = () => {
+    //   console.log({ sloganNameElement: sElement, logoNameElement: lElement });
+
+    //   lElement?.on('mousedown', (event) => {
+    //     event.e.preventDefault();
+    //     const currentObjColor = lElement.get('fill');
+    //     const textColorPalette = $('#text-pallete').querySelector('.color-palette-gradient');
+
+    //     if (typeof currentObjColor === 'string') {
+    //       textColorPalette.style.background = currentObjColor;
+    //       // textColorPalette?.querySelector('#grad-solid').style?.background = currentObjColor;
+    //     } else if (currentObjColor && currentObjColor.type === 'radial') {
+    //       const gradientColors = convertFabricColorsToRGB(currentObjColor);
+    //       const gradientStyle = `linear-gradient(0, ${gradientColors.join(', ')})`;
+    //       textColorPalette.style.background = gradientStyle;
+    //       textColorPalette.querySelector('#grad-1').value = gradientStyle;
+    //       textColorPalette.querySelector('#grad-2').value = gradientStyle;
+    //       textColorPalette.querySelector('#grad-solid').value = gradientStyle;
+    //     }
+
+    //     $('.font_style-list-item__title').innerText = lElement.fontStyle;
+    //     putAngleDownIcon('.font_style-list-item__title');
+
+    //     const letterSpacing = lElement.get('charSpacing');
+    //     $('#letter-spacing-slider').value = letterSpacing;
+
+    //     const fontFamily = lElement.fontFamily;
+    //     $('#font-selector-title').innerText = fontFamily;
+
+    //     putAngleDownIcon('#font-selector-title');
+    //     const logoText = lElement.text;
+    //     $('.case-list-item__title').innerText = getTextCase(logoText);
+    //     putAngleDownIcon('.case-list-item__title');
+    //     this.canvas.requestRenderAll();
+    //   });
+
+    //   sElement?.on('mousedown', (event) => {
+    //     event.e.preventDefault();
+    //     const currentObjColor = sElement.get('fill');
+    //     const textColorPalette = $('#text-pallete').querySelector('.color-palette-gradient');
+
+    //     if (typeof currentObjColor === 'string') {
+    //       textColorPalette.style.background = currentObjColor;
+    //       // textColorPalette.querySelector('#grad-solid').style?.background = currentObjColor;
+    //     } else if (currentObjColor && currentObjColor.type === 'radial') {
+    //       const gradientColors = convertFabricColorsToRGB(currentObjColor);
+    //       const gradientStyle = `linear-gradient(0, ${gradientColors.join(', ')})`;
+    //       textColorPalette.style.background = gradientStyle;
+    //       textColorPalette.querySelector('#grad-1').value = gradientStyle;
+    //       textColorPalette.querySelector('#grad-2').value = gradientStyle;
+    //       textColorPalette.querySelector('#grad-solid').value = gradientStyle;
+    //     }
+
+    //     $('.font_style-list-item__title').innerText = sElement.fontStyle;
+    //     putAngleDownIcon('.font_style-list-item__title');
+
+    //     const letterSpacing = +sElement.charSpacing;
+    //     $('#letter-spacing-slider').value = letterSpacing;
+
+    //     const fontFamily = sElement.fontFamily;
+    //     $('#font-selector-title').innerText = fontFamily;
+
+    //     putAngleDownIcon('#font-selector-title');
+    //     const logoText = sElement.text;
+    //     $('.case-list-item__title').innerText = getTextCase(logoText);
+    //     putAngleDownIcon('.case-list-item__title');
+    //   });
+    // };
+
     const undoHistory = [];
     let currIndex = -1;
     let captureTimeout = null;
@@ -1106,7 +1194,7 @@ class EditorScreen {
           currIndex = undoHistory.length - 1;
         }, 500);
       } else if (undoHistory.length > 10) {
-        cur;
+        currIndex = 0;
         undoHistory.splice(0, undoHistory.length);
       }
     };
@@ -1117,8 +1205,16 @@ class EditorScreen {
         currIndex -= 1;
         const stateToRestore = JSON.parse(undoHistory[currIndex]);
         this.canvas.clear();
+
         this.canvas.loadFromJSON(stateToRestore, () => {
           this.canvas.requestRenderAll();
+
+          // Reassign lElement and sElement after the new state has been loaded.
+          lElement = this.canvas.getObjects().find((obj) => obj.id === 'logoNameElement');
+          sElement = this.canvas.getObjects().find((obj) => obj.id === 'sloganNameElement');
+
+          console.log({ lElement, sElement });
+          logoSloganEvent();
         });
       }
     };
@@ -1129,31 +1225,34 @@ class EditorScreen {
         currIndex += 1;
         const stateToRestore = JSON.parse(undoHistory[currIndex]);
         this.canvas.clear();
+
         this.canvas.loadFromJSON(stateToRestore, () => {
           this.canvas.requestRenderAll();
+
+          // Reassign lElement and sElement after the new state has been loaded.
+          lElement = this.canvas.getObjects().find((obj) => obj.id === 'logoNameElement');
+          sElement = this.canvas.getObjects().find((obj) => obj.id === 'sloganNameElement');
+
+          logoSloganEvent();
         });
       }
     };
 
+    // logoSloganEvent();
+
     document.getElementById('undo-btn').addEventListener('click', undo);
     document.getElementById('redo-btn').addEventListener('click', redo);
 
-    this.canvas.on('object:modified', captureCanvasState);
-    this.canvas.on('object:removed', captureCanvasState);
-    this.canvas.on('object:added', captureCanvasState);
-    captureCanvasState();
-
-    let localDirFile = null;
-    let localDirFiles = null;
-    document.onkeydown = (event) => {
-      if (event.key === 'Delete') {
-        const deleteLayer = new DeleteLayer(event, this.canvas, this.layers, this.activeLayerIndex);
-        deleteLayer.deleteLayer();
-        localDirFile = null;
+    document.addEventListener('keydown', function (e) {
+      if (e.ctrlKey && e.key === 'z') {
+        undo();
       }
-    };
 
-    let isMouseOverCanvas = false;
+      if (e.ctrlKey && e.key === 'y') {
+        redo();
+        this.canvas.requestRenderAll();
+      }
+    });
 
     const convertFabricColorsToRGB = (canvasObj) => {
       if (!canvasObj || canvasObj.type !== 'radial' || !canvasObj.colorStops) {
@@ -1174,7 +1273,7 @@ class EditorScreen {
       return colors.filter((color) => color !== null);
     };
 
-    this.canvas.on('mouse:down', (e) => {
+    this.canvas.on('mousedown', (e) => {
       if (e.target) {
         const currentObjColor = e.target.get('fill');
         const colorPalette = $('#color-palette-gradient');
@@ -1190,29 +1289,9 @@ class EditorScreen {
           document.querySelector('#grad-2').value = gradientStyle;
           document.querySelector('#grad-solid').value = gradientStyle;
         }
-        this.canvas.renderAll();
-        isMouseOverCanvas = true;
+        this.canvas.requestRenderAll();
       }
     });
-
-    this.canvas.on('mouse:up', (e) => {
-      isMouseOverCanvas = false;
-      if (!this.canvas.getActiveObject()) {
-        this.canvas.discardActiveObject();
-        this.canvas.renderAll();
-      }
-    });
-
-    // this.canvas.on('object:selected', () => {
-    //   isMouseOverCanvas = true;
-    // });
-
-    // this.canvas.on('mouse:up', () => {
-    //   if (!isMouseOverCanvas) {
-    //     this.canvas.discardActiveObject();
-    //     this.canvas.renderAll();
-    //   }
-    // });
 
     this.zoomSlider.addEventListener('input', () => {
       let imgZoom = this.zoomSlider.value * 2;
@@ -1342,78 +1421,74 @@ class EditorScreen {
     //   this.canvas.requestRenderAll();
     // });
 
-    const textPalleteComponent = $('#text-pallete');
-    textPalleteComponent.addEventListener('colorChange', (e) => {
-      const selectedObject = this.canvas.getActiveObject();
-      const { colorMode, grad1Value, grad2Value, solidValue } = e.detail;
+    // const textPalleteComponent = $('#text-pallete');
+    // textPalleteComponent.addEventListener('colorChange', (e) => {
+    //   const selectedObject = this.canvas.getActiveObject();
+    //   const { colorMode, grad1Value, grad2Value, solidValue } = e.detail;
 
-      let color = null;
-      if (colorMode !== 'Solid') {
-        color = new fabric.Gradient({
-          type: 'linear',
-          coords: {
-            x1: 0,
-            y1: 0,
-            x2: selectedObject.width,
-            y2: selectedObject.height,
-          },
-          colorStops: [
-            { offset: 0, color: grad1Value },
-            { offset: 1, color: grad2Value },
-          ],
-        });
-      } else {
-        color = solidValue;
-      }
+    //   let color = null;
+    //   if (colorMode !== 'Solid') {
+    //     color = new fabric.Gradient({
+    //       type: 'linear',
+    //       coords: {
+    //         x1: 0,
+    //         y1: 0,
+    //         x2: selectedObject.width,
+    //         y2: selectedObject.height,
+    //       },
+    //       colorStops: [
+    //         { offset: 0, color: grad1Value },
+    //         { offset: 1, color: grad2Value },
+    //       ],
+    //     });
+    //   } else {
+    //     color = solidValue;
+    //   }
 
-      selectedObject.set('fill', color);
-      this.canvas.requestRenderAll();
-    });
+    //   selectedObject.set('fill', color);
+    //   this.canvas.requestRenderAll();
+    // });
 
     updatePreview();
 
-    const renderPreview = () => {
-      this.previewCanvas.setBackgroundImage(previewPaths[previewIdx], () => {
-        if (previewIdx === 0) {
-          renderSVGForMug(fabric, this.previewCanvas, this.canvas);
-        } else if (previewIdx === 1) {
-          wallPreview(fabric, this.previewCanvas, this.canvas);
-        } else if (previewIdx === 2) {
-          wallPreview(fabric, this.previewCanvas, this.canvas);
-        }
-        this.previewCanvas.requestRenderAll();
-      });
-    };
+    let previewImages = ['/static/mug.png', '/static/wall.png'];
+    let counter = previewImages.length - 1;
 
-    renderSVGForMug(fabric, this.previewCanvas, this.canvas);
+    $('#right-arrow').addEventListener('click', () => {
+      counter++;
+      if (counter >= previewImages.length) {
+        counter = 0;
+      }
 
-    const previewPaths = ['/static/mug.png', '/static/wall.png', '/static/wall.png'];
-    let previewIdx = 0;
+      const img = previewImages[counter];
+
+      $('.preview_image_wrapper').style.backgroundImage = 'url(' + img.toString() + ')';
+      $('.preview_image').style.marginTop = counter === 0 ? '100px' : '-100px';
+    });
 
     $('#left-arrow').addEventListener('click', () => {
-      this.previewCanvas.clear();
-      if (previewIdx < 0) {
-        previewIdx = 0;
+      if (counter === 0) {
+        counter = previewImages.length - 1;
       } else {
-        previewIdx -= 1;
+        counter--;
       }
-      renderPreview();
+
+      const img = previewImages[counter];
+
+      $('.preview_image_wrapper').style.backgroundImage = 'url(' + img.toString() + ')';
+      $('.preview_image').style.marginTop = counter === 0 ? '100px' : '-100px';
     });
 
-    document.querySelector('#right-arrow').addEventListener('click', () => {
-      this.previewCanvas.clear();
-      if (previewIdx >= previewPaths.length - 1) {
-        previewIdx = 0;
-      } else {
-        previewIdx += 1;
-      }
-      renderPreview();
+    $('#close_modal').addEventListener('click', () => {
+      setCanvasBackground();
+      this.canvas.setBackgroundColor('#eee', this.canvas.renderAll.bind(this.canvas));
+      document.querySelector('.preview-modal-bg').style.display = 'none';
     });
 
-    this.canvas.requestRenderAll();
-
-    document.querySelector('#overlay').addEventListener('click', (e) => {
+    $('#overlay').addEventListener('click', (e) => {
       if (e.target.classList.contains('overlay')) {
+        setCanvasBackground();
+        this.canvas.setBackgroundColor('#eee', this.canvas.renderAll.bind(this.canvas));
         document.querySelector('.preview-modal-bg').style.display = 'none';
       }
     });
@@ -1428,10 +1503,6 @@ class EditorScreen {
         }
       });
     });
-
-    // $('#btn-add-clipart-or-text').addEventListener('click', () => {
-    //   $('#popup-parent').style.display = 'block';
-    // });
 
     $('.popup').addEventListener('click', (e) => {
       if (e.target.classList.contains('popup')) {
@@ -1567,46 +1638,13 @@ class EditorScreen {
     const colorPalette = $('#logo_colors_pallete');
     const textPalette = $('#logo_text_colors_pallete');
 
-    canvasObjects.forEach((item) => {
-      const itemFill = item.get('fill');
-
-      const colorPicker = document.createElement('input');
-      colorPicker.setAttribute('type', 'color');
-
-      if (typeof itemFill === 'string') {
-        colorPicker.setAttribute('value', itemFill);
-      } else {
-        const gradientColor = itemFill.colorStops[0].color;
-        const rgbValues = gradientColor.match(/\d+/g);
-        if (rgbValues && rgbValues.length === 3) {
-          const hexColor = ConvertRGBtoHex(
-            parseInt(rgbValues[0]),
-            parseInt(rgbValues[1]),
-            parseInt(rgbValues[2])
-          );
-          colorPicker.setAttribute('value', hexColor);
-        }
-      }
-
-      colorPicker.className = 'color-picker';
-      colorPicker.style.borderRadius = '5px';
-
-      colorPicker.addEventListener('input', (event) => {
-        const color = event.target.value;
-        item.set('fill', color);
-        this.canvas.requestRenderAll();
-      });
-
-      if (item && item?.text) {
-        textPalette?.appendChild(colorPicker);
-      } else {
-        colorPalette?.appendChild(colorPicker);
-      }
-    });
-
     const solidColorMode = $('#solid_color_mode');
     const pickerColorMode = $('#picker_color_mode');
 
+    const solidColorTextMode = $('#solid_color_text_mode');
+    const pickerColorTextMode = $('#picker_color_text_mode');
+
+    let openTextPickerView = 'block';
     let openPickerView = 'block';
 
     let pickerDefaultColor = '#fff';
@@ -1641,12 +1679,57 @@ class EditorScreen {
       ],
     });
 
-    colorPicker.on('color:init', function (color) {
+    let itemFill, colPicker;
+
+    const updateColorPickers = () => {
+      canvasObjects.forEach((item) => {
+        itemFill = item.get('fill');
+
+        colPicker = document.createElement('input');
+        colPicker.setAttribute('id', 'color-layers-pickers');
+        colPicker.setAttribute('type', 'color');
+
+        if (typeof itemFill === 'string') {
+          colPicker.setAttribute('value', itemFill);
+        } else {
+          const gradientColor = itemFill.colorStops[0].color;
+          const rgbValues = gradientColor.match(/\d+/g);
+          if (rgbValues && rgbValues.length === 3) {
+            const hexColor = ConvertRGBtoHex(
+              parseInt(rgbValues[0]),
+              parseInt(rgbValues[1]),
+              parseInt(rgbValues[2])
+            );
+            colPicker.setAttribute('value', hexColor);
+          }
+        }
+
+        colPicker.className = 'color-picker';
+        colPicker.style.borderRadius = '5px';
+
+        colPicker.addEventListener('input', (event) => {
+          const color = event.target.value;
+          item.set('fill', color);
+          this.canvas.requestRenderAll();
+        });
+
+        if (item && item.text) {
+          textPalette?.appendChild(colPicker);
+        } else {
+          colorPalette?.appendChild(colPicker);
+        }
+      });
+      captureCanvasState();
+    };
+
+    updateColorPickers();
+
+    colorPicker.on('color:init', (color) => {
       color.set(pickerDefaultColor);
     });
 
     const CanvasColorPicker = this.canvas;
-    colorPicker.on('input:move', function (color) {
+    colorPicker.on('input:move', (color) => {
       pickerDefaultColor = color.hexString;
       if (color.index === 0) {
         const hsl = color.hsl;
@@ -1663,11 +1746,13 @@ class EditorScreen {
       }
       const active = CanvasColorPicker.getActiveObject();
       active.set('fill', color.hexString);
-      captureCanvasState();
       CanvasColorPicker.requestRenderAll();
+      const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
+      logoColorPickers.forEach((i) => i.remove());
+      updateColorPickers();
     });
 
-    ['R', 'G', 'B'].forEach((id) => {
+    [('R', 'G', 'B')].forEach((id) => {
       $(`#${id}`).addEventListener('input', () => {
         let r = $('#R').value;
         let g = $('#G').value;
@@ -1704,14 +1789,34 @@ class EditorScreen {
       $('#solid_color_mode').classList.remove('category_selected');
       $('#picker_color_mode').classList.add('category_selected');
       $('#picker_color_items').style.marginTop = '8px';
-      openPickerView = 'block';
+      openTextPickerView = 'block';
     };
 
-    solidColorEvent();
+    const solidTextColorEvent = () => {
+      $('#picker_color_text_mode').classList.remove('category_selected');
+      $('#solid_color_text_mode').classList.add('category_selected');
+      $('#solid_color_items_text').style.display = 'flex';
+      $('#picker_color_items_text').style.display = 'none';
+      openPickerView = 'none';
+    };
+
+    const pickerTextColorEvent = () => {
+      $('#solid_color_items_text').style.display = 'none';
+      $('#picker_color_items_text').style.display = 'flex';
+      $('#solid_color_text_mode').classList.remove('category_selected');
+      $('#picker_color_text_mode').classList.add('category_selected');
+      $('#picker_color_items_text').style.marginTop = '8px';
+      openTextPickerView = 'block';
+    };
+
+    pickerColorEvent();
+    pickerTextColorEvent();
 
     solidColorMode.addEventListener('click', solidColorEvent);
-
     pickerColorMode.addEventListener('click', pickerColorEvent);
+
+    solidColorTextMode.addEventListener('click', solidTextColorEvent);
+    pickerColorTextMode.addEventListener('click', pickerTextColorEvent);
 
     $('#custom_color_generator').addEventListener('change', (e) => {
       const color = e.target.value;
@@ -1733,6 +1838,26 @@ class EditorScreen {
       $('#custom_colors_wrapper').append(newColor);
     });
 
+    $('#custom_text_color_generator').addEventListener('change', (e) => {
+      const color = e.target.value;
+
+      const newColor = document.createElement('input');
+      newColor.setAttribute('type', 'color');
+      newColor.setAttribute('value', color);
+      newColor.className = 'color-picker';
+      newColor.style.width = '32px';
+      newColor.style.height = '32px';
+      newColor.style.borderColor = color;
+
+      newColor.addEventListener('input', () => {
+        const activeObj = this.canvas.getActiveObject();
+        activeObj.set('fill', color);
+        this.canvas.requestRenderAll();
+      });
+
+      $('#custom_text_colors_wrapper').append(newColor);
+    });
+
     document.querySelectorAll('#solid_color').forEach((item) => {
       item.addEventListener('click', (event) => {
         if (this.canvas) {
@@ -1746,6 +1871,7 @@ class EditorScreen {
               const blue = parseInt(match[3]);
               const hexColor = ConvertRGBtoHex(red, green, blue);
               activeObj.set('fill', hexColor);
+              captureCanvasState();
               this.canvas.requestRenderAll();
             }
           }
@@ -1753,129 +1879,239 @@ class EditorScreen {
       });
     });
 
+    document.querySelectorAll('#solid_color2').forEach((item) => {
+      item.addEventListener('click', (event) => {
+        if (this.canvas) {
+          const activeObj = this.canvas.getActiveObject();
+          if (activeObj) {
+            const bgColor = event.target.style.backgroundColor;
+            const match = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/.exec(bgColor);
+            if (match) {
+              const red = parseInt(match[1]);
+              const green = parseInt(match[2]);
+              const blue = parseInt(match[3]);
+              const hexColor = ConvertRGBtoHex(red, green, blue);
+              activeObj.set('fill', hexColor);
+              captureCanvasState();
+              this.canvas.requestRenderAll();
+            }
+          }
+        }
+      });
+    });
+
+    const colorPickerText = new iro.ColorPicker('#open_picker_text', {
+      display: openTextPickerView,
+      width: 180,
+      marginTop: 20,
+      color: pickerDefaultColor,
+      layout: [
+        {
+          component: iro.ui.Wheel,
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'hue',
+          },
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'saturation',
+          },
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'alpha',
+          },
+        },
+      ],
+    });
+
+    const updateColorTextPickers = () => {
+      let itemFill, colPicker;
+      canvasObjects.forEach((item) => {
+        itemFill = item.get('fill');
+
+        colPicker = document.createElement('input');
+        colPicker.setAttribute('id', 'color-layers-pickers');
+        colPicker.setAttribute('type', 'color');
+
+        if (typeof itemFill === 'string') {
+          colPicker.setAttribute('value', itemFill);
+        } else {
+          const gradientColor = itemFill.colorStops[0].color;
+          const rgbValues = gradientColor.match(/\d+/g);
+          if (rgbValues && rgbValues.length === 3) {
+            const hexColor = ConvertRGBtoHex(
+              parseInt(rgbValues[0]),
+              parseInt(rgbValues[1]),
+              parseInt(rgbValues[2])
+            );
+            colPicker.setAttribute('value', hexColor);
+          }
+        }
+
+        colPicker.className = 'color-picker';
+        colPicker.style.borderRadius = '5px';
+
+        colPicker.addEventListener('input', (event) => {
+          const color = event.target.value;
+          item.set('fill', color);
+          this.canvas.requestRenderAll();
+        });
+
+        if (item && item.text) {
+          textPalette?.appendChild(colPicker);
+        } else {
+          colorPalette?.appendChild(colPicker);
+        }
+      });
+      captureCanvasState();
+    };
+
+    updateColorTextPickers();
+
+    colorPickerText.on('color:init', (color) => {
+      color.set(pickerDefaultColor);
+    });
+
+    // const CanvasColorPicker = this.canvas;
+    colorPickerText.on('input:move', (color) => {
+      pickerDefaultColor = color.hexString;
+      if (color.index === 0) {
+        const hsl = color.hsl;
+        const rgb = color.rgb;
+
+        $('#H2').value = hsl.h;
+        $('#S2').value = hsl.s;
+        $('#L2').value = hsl.l;
+        $('#R2').value = rgb.r;
+        $('#G2').value = rgb.g;
+        $('#B2').value = rgb.b;
+
+        $('#HEX2').value = color.hexString;
+      }
+      const active = CanvasColorPicker.getActiveObject();
+      active.set('fill', color.hexString);
+      CanvasColorPicker.requestRenderAll();
+      const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
+      logoColorPickers.forEach((i) => i.remove());
+      updateColorPickers();
+    });
+
+    [('R2', 'G2', 'B2')].forEach((id) => {
+      $(`#${id}`).addEventListener('input', () => {
+        let r = $('#R2').value;
+        let g = $('#G2').value;
+        let b = $('#B2').value;
+        colorPickerText.color.rgb = { r, g, b };
+      });
+    });
+
+    ['H2', 'S2', 'L2'].forEach((id) => {
+      $(`#${id}`).addEventListener('input', () => {
+        let h = $('#H2').value;
+        let s = $('#S2').value;
+        let l = $('#L2').value;
+        colorPickerText.color.hsl = { h, s, l };
+      });
+    });
+
+    $('#HEX2').addEventListener('input', () => {
+      let hex = $('#HEX2').value;
+      colorPickerText.color.hexString = hex;
+    });
+
     const centerAndResizeElements = (type, logoSize, sloganSize, textPosition, mainTop = -100) => {
-      (logoNameElement.fontSize = logoSize), sloganSize;
-      (sloganNameElement.fontSize = logoSize), sloganSize;
+      const logoNameElement = this.canvas
+        .getObjects()
+        .find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'mybrande');
+      const sloganNameElement = this.canvas
+        .getObjects()
+        .find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here');
+
       const objects = this.canvas.getObjects();
-      const logoMain = objects.filter((i) => !i.text);
+      const logoMain = objects.filter((i) => !i.text && !i.stroke);
 
       const timeout = 5;
       switch (type) {
         case 'topBottom':
           setTimeout(() => {
-            const objects = this.canvas.getObjects();
-            const logoNameElement = objects.find((obj) => obj.type === 'text' && obj.text === 'MyBrande');
-            const sloganNameElement = objects.find(
-              (obj) => obj.type === 'text' && obj.text === 'Slogan goes here'
-            );
-
-            logoNameElement.set('top', this.canvas.height / 2.1);
-            sloganNameElement.set('top', this.canvas.height / 1.85);
-
             logoNameElement.centerH();
             sloganNameElement.centerH();
+            const logoMainGrp = new fabric.Group(logoMain);
+            logoMainGrp.center();
+            logoNameElement.set('top', this.canvas.height / 1.3);
+            sloganNameElement.set('top', this.canvas.height / 1.18);
+            this.canvas.centerObject(logoMainGrp);
+            logoMainGrp.ungroupOnCanvas();
 
             const newGrp = new fabric.Group(objects);
+            this.canvas.centerObject(newGrp);
             newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
           }, timeout);
-
           break;
         case 'bottomTop':
           setTimeout(() => {
-            const logoNameElement = this.canvas
-              .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text === 'MyBrande');
-            const sloganNameElement = this.canvas
-              .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text === 'Slogan goes here');
-
-            logoNameElement.set('top', this.canvas.height / 30);
-            sloganNameElement.set('top', this.canvas.height / 12);
-
             logoNameElement.centerH();
             sloganNameElement.centerH();
+            const logoMainGrp = new fabric.Group(logoMain);
+            logoMainGrp.center();
+            logoNameElement.set('top', this.canvas.height / 5);
+            sloganNameElement.set('top', this.canvas.height / 8);
+            this.canvas.centerObject(logoMainGrp);
+            logoMainGrp.ungroupOnCanvas();
+
             const newGrp = new fabric.Group(objects);
+            this.canvas.centerObject(newGrp);
             newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
           }, timeout);
           break;
         case 'leftRight':
           setTimeout(() => {
-            const logoNameElement = this.canvas
-              .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text === 'MyBrande');
-            const sloganNameElement = this.canvas
-              .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text === 'Slogan goes here');
+            logoNameElement.centerH();
+            sloganNameElement.centerH();
+            const logoMainGrp = new fabric.Group(logoMain);
+            logoMainGrp.center();
+            logoNameElement.set('top', this.canvas.height / 2.5);
+            sloganNameElement.set('top', this.canvas.height / 2);
 
-            logoNameElement.center();
-            sloganNameElement.center();
-            logoNameElement.set('top', this.canvas.height / 4);
-            sloganNameElement.set('top', this.canvas.height / 3);
+            logoNameElement.set('left', (logoNameElement.left += 300));
+            sloganNameElement.set('left', (sloganNameElement.left += 300));
+            this.canvas.centerObject(logoMainGrp);
+            logoMainGrp.ungroupOnCanvas();
 
-            if (textPosition === 'left') {
-              logoNameElement.viewportCenter();
-              sloganNameElement.viewportCenter();
-
-              logoNameElement.set('top', this.canvas.height / 4);
-              sloganNameElement.set('top', this.canvas.height / 3);
-
-              logoNameElement.set('left', this.canvas.width / 2.25);
-              sloganNameElement.set('left', this.canvas.width / 2.25);
-            } else {
-              logoNameElement.viewportCenterH();
-              sloganNameElement.viewportCenterH();
-
-              logoNameElement.set('top', this.canvas.height / 4);
-              sloganNameElement.set('top', this.canvas.height / 3);
-
-              logoNameElement.set('left', (logoNameElement.left += 100));
-              sloganNameElement.set('left', (sloganNameElement.left += 100));
-            }
-
-            logoMain.forEach((i) => (i.left -= 200));
             const newGrp = new fabric.Group(objects);
+            newGrp.center();
+            this.canvas.centerObject(newGrp);
+            newGrp.set('left', -100);
             newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
           }, timeout);
           break;
         case 'rightLeft':
           setTimeout(() => {
-            const logoNameElement = this.canvas
-              .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text === 'MyBrande');
-            const sloganNameElement = this.canvas
-              .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text === 'Slogan goes here');
+            logoNameElement.centerH();
+            sloganNameElement.centerH();
+            const logoMainGrp = new fabric.Group(logoMain);
+            logoMainGrp.center();
+            logoNameElement.set('top', this.canvas.height / 2.5);
+            sloganNameElement.set('top', this.canvas.height / 2);
 
-            logoNameElement.center();
-            sloganNameElement.center();
-            logoNameElement.set('top', this.canvas.height / 4);
-            sloganNameElement.set('top', this.canvas.height / 3);
+            logoNameElement.set('left', (logoNameElement.left -= 300));
+            sloganNameElement.set('left', (sloganNameElement.left -= 300));
+            this.canvas.centerObject(logoMainGrp);
+            logoMainGrp.ungroupOnCanvas();
 
-            if (textPosition === 'left') {
-              logoNameElement.viewportCenter();
-              sloganNameElement.viewportCenter();
-
-              logoNameElement.set('top', this.canvas.height / 4);
-              sloganNameElement.set('top', this.canvas.height / 3);
-
-              logoNameElement.set('left', this.canvas.width / 2.25);
-              sloganNameElement.set('left', this.canvas.width / 2.25);
-            } else {
-              logoNameElement.viewportCenterH();
-              sloganNameElement.viewportCenterH();
-
-              logoNameElement.set('top', this.canvas.height / 4);
-              sloganNameElement.set('top', this.canvas.height / 3);
-
-              logoNameElement.set('left', (logoNameElement.left -= 100));
-              sloganNameElement.set('left', (sloganNameElement.left -= 100));
-            }
-
-            logoMain.forEach((i) => (i.left += 200));
             const newGrp = new fabric.Group(objects);
+            newGrp.center();
+            this.canvas.centerObject(newGrp);
+            newGrp.set('left', 100);
             newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
           }, timeout);
@@ -1886,7 +2122,7 @@ class EditorScreen {
       this.canvas.renderAll();
     };
 
-    const scaleLogo = (scaleSize) => {
+    const scaleLogo = (scaleFactor) => {
       const selection = new fabric.ActiveSelection(
         this.canvas.getObjects().filter((i) => !i.text),
         {
@@ -1894,10 +2130,17 @@ class EditorScreen {
         }
       );
 
-      const { width, height } = selection;
-      const scaleFactor = Math.min(scaleSize / width, scaleSize / height);
-      selection.scale(scaleFactor);
+      const scaledWidth = selection.width * scaleFactor;
+      const scaledHeight = selection.height * scaleFactor;
 
+      let scaleToFit;
+      if (scaledWidth > this.canvas.width || scaledHeight > this.canvas.height) {
+        scaleToFit = Math.min(this.canvas.width / selection.width, this.canvas.height / selection.height);
+      } else {
+        scaleToFit = scaleFactor;
+      }
+
+      selection.scale(scaleToFit);
       selection.center();
       this.canvas.setActiveObject(selection);
       this.canvas.discardActiveObject(selection);
@@ -1905,63 +2148,63 @@ class EditorScreen {
     };
 
     $('#top_bottom_1').addEventListener('click', () => {
-      scaleLogo(1500);
+      scaleLogo(1.5);
       centerAndResizeElements('topBottom', 29, 23, 'center');
     });
 
     $('#top_bottom_2').addEventListener('click', () => {
-      scaleLogo(1500);
-      centerAndResizeElements('topBottom', 26, 21, 'center');
+      scaleLogo(1);
+      centerAndResizeElements('topBottom', 29, 23, 'center', -50);
     });
 
     $('#top_bottom_3').addEventListener('click', () => {
-      scaleLogo(1800);
-      centerAndResizeElements('topBottom', 29, 23, 'center', -200);
+      scaleLogo(1.2);
+      centerAndResizeElements('topBottom', 29, 23, 'center', -80);
     });
 
     $('#bottom_top_1').addEventListener('click', () => {
-      scaleLogo(1800);
-      centerAndResizeElements('bottomTop', 32, 25, 'center', -100);
+      scaleLogo(1.2);
+      centerAndResizeElements('bottomTop', 32, 25, 'center', 50);
     });
 
     $('#bottom_top_2').addEventListener('click', () => {
-      scaleLogo(1500);
-      centerAndResizeElements('bottomTop', 26, 21, 'center');
+      scaleLogo(1);
+      centerAndResizeElements('bottomTop', 26, 21, 'center', 80);
     });
 
     $('#bottom_top_3').addEventListener('click', () => {
-      scaleLogo(1800);
-      centerAndResizeElements('bottomTop', 29, 23, 'center');
+      scaleLogo(1.5);
+      centerAndResizeElements('bottomTop', 29, 23, 'center', 80);
     });
 
     $('#left_right_1').addEventListener('click', () => {
-      scaleLogo(1800);
-      centerAndResizeElements('leftRight', 32, 25, 'center', -100);
+      scaleLogo(1.2);
+      centerAndResizeElements('leftRight', 29, 23, 'center', 0);
     });
 
     $('#left_right_2').addEventListener('click', () => {
-      scaleLogo(1800);
-      centerAndResizeElements('leftRight', 32, 25, 'left', -100);
+      scaleLogo(1);
+      centerAndResizeElements('leftRight', 32, 25, 'center', 0);
     });
 
     $('#left_right_3').addEventListener('click', () => {
-      scaleLogo(1500);
-      centerAndResizeElements('leftRight', 32, 25, 'center', -100);
+      scaleLogo(1.5);
+      centerAndResizeElements('leftRight', 32, 25, 'center', 0);
     });
 
     $('#right_left_1').addEventListener('click', () => {
-      scaleLogo(1500);
-      centerAndResizeElements('rightLeft', 32, 25, 'center', -100);
+      scaleLogo(1.2);
+      centerAndResizeElements('rightLeft', 32, 25, 'center', 0);
     });
 
     $('#right_left_2').addEventListener('click', () => {
-      scaleLogo(1800);
-      centerAndResizeElements('rightLeft', 32, 25, 'center', -100);
+      scaleLogo(1);
+      centerAndResizeElements('rightLeft', 32, 25, 'center', 0);
     });
 
     $('#right_left_3').addEventListener('click', () => {
-      scaleLogo(1500);
-      centerAndResizeElements('rightLeft', 32, 25, 'center', -100);
+      scaleLogo(1.5);
+      centerAndResizeElements('rightLeft', 32, 25, 'center', 0);
     });
   }
 }
