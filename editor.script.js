@@ -1723,8 +1723,9 @@ class EditorScreen {
 
     $('#HEX').addEventListener('input', (e) => {
       let hex = e.target.value;
-      console.log(colorPicker);
       colorPicker.color.hexString = hex;
+      const a = this.canvas.getActiveObject();
+      a.set('fill', hex)
     });
 
     const solidColorEvent = () => {
@@ -1821,13 +1822,12 @@ class EditorScreen {
               const red = parseInt(match[1]);
               const green = parseInt(match[2]);
               const blue = parseInt(match[3]);
-              const hexColor = ConvertRGBtoHex(red, green, blue);
+              const hexColor = convertRGBtoHex(red, green, blue);
               activeObj.set('fill', hexColor);
               captureCanvasState();
               this.canvas.requestRenderAll();
 
               const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
-              console.log(logoColorPickers);
               logoColorPickers.forEach((i) => i.remove());
               updateColorPickers();
             }
@@ -1847,7 +1847,7 @@ class EditorScreen {
               const red = parseInt(match[1]);
               const green = parseInt(match[2]);
               const blue = parseInt(match[3]);
-              const hexColor = ConvertRGBtoHex(red, green, blue);
+              const hexColor = convertRGBtoHex(red, green, blue);
               activeObj.set('fill', hexColor);
               captureCanvasState();
               this.canvas.requestRenderAll();
@@ -1980,6 +1980,8 @@ class EditorScreen {
     $('#HEX2').addEventListener('input', () => {
       let hex = $('#HEX2').value;
       colorPickerText.color.hexString = hex;
+      const a = this.canvas.getActiveObject();
+      a.set('fill', hex)
     });
 
     const centerAndResizeElements = (type, logoSize, sloganSize, textPosition, mainTop = -100) => {
