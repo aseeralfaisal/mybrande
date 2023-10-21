@@ -296,7 +296,7 @@
                     <span id="solid_color_mode" class="category">Solid Colors</span>
                     <span id="picker_color_mode" class="category">Color Picker</span>
                 </div>
-                
+
                 <div id="solid_color_items" style="display: flex; flex-direction: column; gap: 5px;">
                     <div style="display: flex;">
                         <span id="solid_color" class="color-picker solid_color_section"
@@ -447,21 +447,23 @@
                 <div id="picker_color_items" style="display: flex; flex-direction: column; margin-top: -40px;">
 
                     <div id="open_picker"></div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                        <span id="HSL_mode" class="color_mode_title">HSL</span>
+                        <span id="RGB_mode" class="color_mode_title">RGB</span>
+                        <span id="HEX_mode" class="color_mode_title">HEX</span>
+                    </div>
                     <div style="display: grid; gap: 10px; margin: 20px 0;">
-                        <span style="color: #555; font-size: 14px; font-weight: bold;">HSL</span>
-                        <div style="display: flex; width: 200px;">
+                        <div id="HSL_view" style="display: flex; width: 180px;">
                             <input id="H" class="hslPalette" type="text" placeholder="H">
                             <input id="S" class="hslPalette" type="text" placeholder="S">
                             <input id="L" class="hslPalette" type="text" placeholder="L">
                         </div>
-                        <span style="color: #555; font-size: 14px; font-weight: bold;">RGB</span>
-                        <div style="display: flex; width: 200px;">
+                        <div id="RGB_view" style="display: flex; width: 180px;">
                             <input id="R" class="hslPalette" type="text" placeholder="R">
                             <input id="G" class="hslPalette" type="text" placeholder="G">
                             <input id="B" class="hslPalette" type="text" placeholder="B">
                         </div>
-                        <span style="color: #555; font-size: 14px; font-weight: bold;">HEX</span>
-                        <div style="display: flex; width: 200px;">
+                        <div id="HEX_view" style="display: flex; width: 180px;">
                             <input id="HEX" class="hslPalette" type="text" placeholder="HEX">
                         </div>
                     </div>
@@ -500,7 +502,7 @@
                 <div class="setting-item">
                     <span>Scale: </span> <span id="scale-value"></span>
                     <div class="slider-container">
-                        <input class="slider" id="progress-bar" type="range" value="3" min="0" max="100">
+                        <input class="slider" id="progress-bar" type="range" value="5" min="0" max="10">
                     </div>
                 </div>
                 <div class="setting-item">
@@ -556,7 +558,7 @@
                     <span id="picker_color_text_mode" class="category">Color Picker</span>
                 </div>
 
-                                
+
                 <div id="solid_color_items_text" style="display: flex; flex-direction: column; gap: 5px;">
                     <div style="display: flex;">
                         <span id="solid_color2" class="color-picker solid_color_section"
@@ -695,7 +697,7 @@
                             <input id="custom_text_color_generator" type="color" style="visibility: hidden;">
                         </label>
                     </div>
-<!-- 
+                    <!-- 
                     <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Layer</h4>
                     <div id="logo_colors_pallete"
                         style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
@@ -785,7 +787,7 @@
                 <div class="setting-item">
                     <span>Letter Spacing</span>
                     <div class="slider-container">
-                        <input class="slider" id="letter-spacing-slider" type="range" value="0" min="0" max="1000">
+                        <input class="slider" id="letter-spacing-slider" type="range" value="10" min="-200" max="200">
                     </div>
                 </div>
                 <div class="setting-switch">
@@ -1207,7 +1209,6 @@
     <script src="details.js" type="module"></script>
     <script src="editor.script.js" type="module"></script>
     <script src="color-container.js" type="module"></script>
-    <script src="colorPallete.js" type="module"></script>
 </body>
 
 </html>

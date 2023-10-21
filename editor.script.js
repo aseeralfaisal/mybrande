@@ -476,12 +476,14 @@ class EditorScreen {
       }, 50);
     });
 
-    this.scaleElement.textContent = this.scaleValue;
-    this.scaleRange.addEventListener('input', (e) => {
-      if (this.isScaling <= 10) this.isScaling = true;
-      this.scaleElement.textContent = this.scaleValue;
-      this.scaleValue = parseFloat(e.target.value, 10) / 10;
-      this.scaleObject();
+    this.scaleElement.textContent = 0;
+    this.scaleRange.addEventListener('input', ({ target }) => {
+      const scaleValue = parseFloat(target.value);
+      const selectedObject = this.canvas.getActiveObject();
+      if (selectedObject && scaleValue) {
+        selectedObject.scale(scaleValue);
+        this.canvas.requestRenderAll();
+      }
     });
 
     this.scaleRangeUploads.addEventListener('input', (e) => {
@@ -540,9 +542,86 @@ class EditorScreen {
       document.getElementById('magnifier_img').src = imageURL;
     };
 
+    let openTextPickerView = 'block';
+    let openPickerView = 'block';
+
+    let pickerDefaultColor = '#fff';
+    const colorPicker = new iro.ColorPicker('#open_picker', {
+      display: openPickerView,
+      width: 180,
+      marginTop: 20,
+      color: pickerDefaultColor,
+      layout: [
+        {
+          component: iro.ui.Box,
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'hue',
+          },
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'saturation',
+          },
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'alpha',
+          },
+        },
+      ],
+    });
+
+    function ColorChannelToHex(channel) {
+      const hex = channel.toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    }
+
+    function convertRGBtoHex(red, green, blue) {
+      const redHex = ColorChannelToHex(red);
+      const greenHex = ColorChannelToHex(green);
+      const blueHex = ColorChannelToHex(blue);
+      return `#${redHex}${greenHex}${blueHex}`;
+    }
+
+    function rgbToHex(rgbString) {
+      let parts = rgbString.replace('rgb(', '').replace(')', '').split(',');
+
+      let r = parseInt(parts[0], 10);
+      let g = parseInt(parts[1], 10);
+      let b = parseInt(parts[2], 10);
+
+      r = r.toString(16);
+      g = g.toString(16);
+      b = b.toString(16);
+
+      if (r.length < 2) r = '0' + r;
+      if (g.length < 2) g = '0' + g;
+      if (b.length < 2) b = '0' + b;
+
+      return '#' + r + g + b;
+    }
+
+    const changePickerColors = (element) => {
+      const color = Array.isArray(element.get('fill').colorStops)
+        ? rgbToHex(element.get('fill').colorStops[0].color)
+        : element.get('fill');
+      colorPicker.color.hexString = color;
+    };
+
+    const updatePickerHandler = (element) => {
+      return () => changePickerColors(element);
+    };
+
     const onSelect = () => {
       const activeObject = this.canvas.getActiveObject();
       this.activeLayerIndex = this.canvas.getObjects().indexOf(activeObject);
+
+      !activeObject.text && activeObject.on('mousedown', updatePickerHandler(activeObject));
 
       if (activeObject) {
         const layers = document.querySelectorAll('.layer-container');
@@ -550,6 +629,7 @@ class EditorScreen {
           const layerImg = layer.querySelector('.layer-img');
           const layerSpan = layer.querySelector('.layer-span');
           if (idx == this.activeLayerIndex) {
+            layerSpan.scrollIntoView({ block: 'center', behavior: 'smooth' });
             layerImg.classList.add('selected');
             layerSpan.classList.add('selected');
           } else {
@@ -695,12 +775,8 @@ class EditorScreen {
     this.textMode.addEventListener('mouseleave', () => onMouseOver(false, this.textMode));
     this.logoMode.addEventListener('mouseover', () => onMouseOver(true, this.logoMode));
     this.logoMode.addEventListener('mouseleave', () => onMouseOver(false, this.logoMode));
-    // this.galleryMode.addEventListener('mouseover', () => onMouseOver(true, this.galleryMode));
-    // this.galleryMode.addEventListener('mouseleave', () => onMouseOver(false, this.galleryMode));
     this.previewMode.addEventListener('mouseover', () => onMouseOver(true, this.previewMode));
     this.previewMode.addEventListener('mouseleave', () => onMouseOver(false, this.previewMode));
-    // this.uploadsMode.addEventListener('mouseover', () => onMouseOver(true, this.uploadsMode));
-    // this.uploadsMode.addEventListener('mouseleave', () => onMouseOver(false, this.uploadsMode));
 
     this.uploadSettingsContainer.style.display = 'none';
     this.backgroundSettingsContainer.style.display = 'none';
@@ -723,24 +799,6 @@ class EditorScreen {
       this.uploadSettingsContainer.style.display = 'none';
       this.canvas.renderAll();
     });
-
-    // this.galleryMode.addEventListener('click', () => {
-    //   this.activeNavbarSetting = 'gallery';
-    //   this.logoSettingsContainer.style.display = 'none';
-    //   this.textSettingsContainer.style.display = 'none';
-    //   this.uploadSettingsContainer.style.display = 'none';
-    //   this.backgroundSettingsContainer.style.display = 'none';
-    //   this.updateActiveNavbar();
-    // });
-
-    // this.uploadsMode.addEventListener('click', () => {
-    //   this.activeNavbarSetting = 'uploads';
-    //   this.uploadSettingsContainer.style.display = 'grid';
-    //   this.backgroundSettingsContainer.style.display = 'none';
-    //   this.logoSettingsContainer.style.display = 'none';
-    //   this.textSettingsContainer.style.display = 'none';
-    //   this.updateActiveNavbar();
-    // });
 
     this.backgroundMode.addEventListener('click', () => {
       this.activeNavbarSetting = 'background';
@@ -873,6 +931,18 @@ class EditorScreen {
       } else {
         this.fontSizeList.classList.add('show');
       }
+    });
+
+    [logoNameElement, sloganNameElement].forEach((i) => {
+      i.on('mousedown', () => {
+        this.activeNavbarSetting = 'text';
+        this.updateActiveNavbar();
+        this.logoSettingsContainer.style.display = 'none';
+        this.textSettingsContainer.style.display = 'grid';
+        this.backgroundSettingsContainer.style.display = 'none';
+        this.uploadSettingsContainer.style.display = 'none';
+        this.canvas.renderAll();
+      });
     });
 
     $('#upload-file').addEventListener('input', (e) => {
@@ -1018,23 +1088,21 @@ class EditorScreen {
     this.canvas.on('selection:created', () => {
       const activeObject = this.canvas.getActiveObject();
       document.onkeydown = (e) => {
-        if (activeObject === undefined || activeObject === null) {
-          return; // return if no active object
-        }
+        if (activeObject === undefined || activeObject === null) return;
 
-        var movementIncrement = 1;
+        const movementIncrement = 5;
 
-        switch (e.keyCode) {
-          case 37: // left arrow key
+        switch (e.key) {
+          case 'ArrowLeft':
             activeObject.set('left', activeObject.get('left') - movementIncrement);
             break;
-          case 38: // up arrow key
+          case 'ArrowUp':
             activeObject.set('top', activeObject.get('top') - movementIncrement);
             break;
-          case 39: // right arrow key
+          case 'ArrowRight':
             activeObject.set('left', activeObject.get('left') + movementIncrement);
             break;
-          case 40: // down arrow key
+          case 'ArrowDown':
             activeObject.set('top', activeObject.get('top') + movementIncrement);
             break;
         }
@@ -1046,11 +1114,9 @@ class EditorScreen {
     this.canvas.on('selection:updated', () => {
       const activeObject = this.canvas.getActiveObject();
       document.onkeydown = (e) => {
-        if (activeObject === undefined || activeObject === null) {
-          return; // return if no active object
-        }
+        if (activeObject === undefined || activeObject === null) return;
 
-        var movementIncrement = 1;
+        const movementIncrement = 5;
 
         switch (e.key) {
           case 'ArrowLeft':
@@ -1209,11 +1275,9 @@ class EditorScreen {
         this.canvas.loadFromJSON(stateToRestore, () => {
           this.canvas.requestRenderAll();
 
-          // Reassign lElement and sElement after the new state has been loaded.
           lElement = this.canvas.getObjects().find((obj) => obj.id === 'logoNameElement');
           sElement = this.canvas.getObjects().find((obj) => obj.id === 'sloganNameElement');
 
-          console.log({ lElement, sElement });
           logoSloganEvent();
         });
       }
@@ -1622,18 +1686,6 @@ class EditorScreen {
       }
     });
 
-    function ColorChannelToHex(channel) {
-      const hex = channel.toString(16);
-      return hex.length === 1 ? '0' + hex : hex;
-    }
-
-    function ConvertRGBtoHex(red, green, blue) {
-      const redHex = ColorChannelToHex(red);
-      const greenHex = ColorChannelToHex(green);
-      const blueHex = ColorChannelToHex(blue);
-      return `#${redHex}${greenHex}${blueHex}`;
-    }
-
     const canvasObjects = this.canvas.getObjects();
     const colorPalette = $('#logo_colors_pallete');
     const textPalette = $('#logo_text_colors_pallete');
@@ -1643,41 +1695,6 @@ class EditorScreen {
 
     const solidColorTextMode = $('#solid_color_text_mode');
     const pickerColorTextMode = $('#picker_color_text_mode');
-
-    let openTextPickerView = 'block';
-    let openPickerView = 'block';
-
-    let pickerDefaultColor = '#fff';
-
-    const colorPicker = new iro.ColorPicker('#open_picker', {
-      display: openPickerView,
-      width: 180,
-      marginTop: 20,
-      color: pickerDefaultColor,
-      layout: [
-        {
-          component: iro.ui.Wheel,
-        },
-        {
-          component: iro.ui.Slider,
-          options: {
-            sliderType: 'hue',
-          },
-        },
-        {
-          component: iro.ui.Slider,
-          options: {
-            sliderType: 'saturation',
-          },
-        },
-        {
-          component: iro.ui.Slider,
-          options: {
-            sliderType: 'alpha',
-          },
-        },
-      ],
-    });
 
     let itemFill, colPicker;
 
@@ -1695,7 +1712,7 @@ class EditorScreen {
           const gradientColor = itemFill.colorStops[0].color;
           const rgbValues = gradientColor.match(/\d+/g);
           if (rgbValues && rgbValues.length === 3) {
-            const hexColor = ConvertRGBtoHex(
+            const hexColor = convertRGBtoHex(
               parseInt(rgbValues[0]),
               parseInt(rgbValues[1]),
               parseInt(rgbValues[2])
@@ -1714,9 +1731,9 @@ class EditorScreen {
         });
 
         if (item && item.text) {
-          textPalette?.appendChild(colPicker);
+          textPalette.appendChild(colPicker);
         } else {
-          colorPalette?.appendChild(colPicker);
+          colorPalette.appendChild(colPicker);
         }
       });
       captureCanvasState();
@@ -1729,7 +1746,7 @@ class EditorScreen {
     });
 
     const CanvasColorPicker = this.canvas;
-    colorPicker.on('input:move', (color) => {
+    colorPicker.on('input:change', (color) => {
       pickerDefaultColor = color.hexString;
       if (color.index === 0) {
         const hsl = color.hsl;
@@ -1770,8 +1787,9 @@ class EditorScreen {
       });
     });
 
-    $('#HEX').addEventListener('input', () => {
-      let hex = $('#HEX').value;
+    $('#HEX').addEventListener('input', (e) => {
+      let hex = e.target.value;
+      console.log(colorPicker);
       colorPicker.color.hexString = hex;
     });
 
@@ -1873,6 +1891,11 @@ class EditorScreen {
               activeObj.set('fill', hexColor);
               captureCanvasState();
               this.canvas.requestRenderAll();
+
+              const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
+              console.log(logoColorPickers);
+              logoColorPickers.forEach((i) => i.remove());
+              updateColorPickers();
             }
           }
         }
@@ -1945,7 +1968,7 @@ class EditorScreen {
           const gradientColor = itemFill.colorStops[0].color;
           const rgbValues = gradientColor.match(/\d+/g);
           if (rgbValues && rgbValues.length === 3) {
-            const hexColor = ConvertRGBtoHex(
+            const hexColor = convertRGBtoHex(
               parseInt(rgbValues[0]),
               parseInt(rgbValues[1]),
               parseInt(rgbValues[2])
@@ -1963,11 +1986,11 @@ class EditorScreen {
           this.canvas.requestRenderAll();
         });
 
-        if (item && item.text) {
-          textPalette?.appendChild(colPicker);
-        } else {
-          colorPalette?.appendChild(colPicker);
-        }
+        // if (item && item.text) {
+        //   textPalette?.appendChild(colPicker);
+        // } else {
+        //   colorPalette?.appendChild(colPicker);
+        // }
       });
       captureCanvasState();
     };
@@ -2122,7 +2145,36 @@ class EditorScreen {
       this.canvas.renderAll();
     };
 
+    function handleColorModeClick(activeElement, element1, element2) {
+      $(element1 + '_view').classList.remove('color_mode_title-active');
+      $(element1 + '_view').style.display = 'none';
+
+      $(element2 + '_view').classList.remove('color_mode_title-active');
+      $(element2 + '_view').style.display = 'none';
+
+      $(activeElement + '_view').classList.add('color_mode_title-active');
+      $(activeElement + '_view').style.display = 'flex';
+    }
+
+    $('#HSL_mode').addEventListener('click', () => {
+      handleColorModeClick('#HSL', '#RGB', '#HEX');
+    });
+
+    $('#RGB_mode').addEventListener('click', () => {
+      handleColorModeClick('#RGB', '#HSL', '#HEX');
+    });
+
+    $('#HEX_mode').addEventListener('click', () => {
+      handleColorModeClick('#HEX', '#RGB', '#HSL');
+    });
+    handleColorModeClick('#HEX', '#RGB', '#HSL');
+
     const scaleLogo = (scaleFactor) => {
+      if (!this.canvas) {
+        console.error('Canvas is not defined');
+        return;
+      }
+
       const selection = new fabric.ActiveSelection(
         this.canvas.getObjects().filter((i) => !i.text),
         {
@@ -2130,25 +2182,17 @@ class EditorScreen {
         }
       );
 
-      const scaledWidth = selection.width * scaleFactor;
-      const scaledHeight = selection.height * scaleFactor;
-
-      let scaleToFit;
-      if (scaledWidth > this.canvas.width || scaledHeight > this.canvas.height) {
-        scaleToFit = Math.min(this.canvas.width / selection.width, this.canvas.height / selection.height);
-      } else {
-        scaleToFit = scaleFactor;
+      if (selection.size() > 0) {
+        selection.scale(scaleFactor);
+        selection.center();
+        this.canvas.setActiveObject(selection);
+        this.canvas.requestRenderAll();
+        this.canvas.discardActiveObject();
       }
-
-      selection.scale(scaleToFit);
-      selection.center();
-      this.canvas.setActiveObject(selection);
-      this.canvas.discardActiveObject(selection);
-      this.canvas.requestRenderAll();
     };
 
     $('#top_bottom_1').addEventListener('click', () => {
-      scaleLogo(1.5);
+      scaleLogo(1.2);
       centerAndResizeElements('topBottom', 29, 23, 'center');
     });
 

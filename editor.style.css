@@ -363,14 +363,14 @@ input:checked + .switch-slider:before {
 .layer-container:hover .layer-span {
   color: var(--lighter);
   background: var(--gold-light);
-  padding: 14px;
+  padding: 7px;
   border-radius: 3px;
 }
 
 .layer-span.selected {
   color: var(--lighter);
   background: var(--gold);
-  padding: 14px;
+  padding: 7px;
   border-radius: 3px;
 }
 
@@ -1222,21 +1222,39 @@ input:checked + .switch-slider:before {
   margin-left: 30px;
 }
 
-
 canvas#c {
   max-width: 100%;
   height: auto;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 #canvasContainer {
   width: 100%;
   height: 100%;
+}
+
+.color_mode_title {
+  color: #555;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 5px 12px;
+}
+
+.color_mode_title:hover {
+  color: var(--gold);
+  cursor: pointer;
+  border-bottom: 2px solid var(--gold);
+}
+
+.color_mode_title-active {
+  border-bottom: 2px solid var(--gold);
 }
