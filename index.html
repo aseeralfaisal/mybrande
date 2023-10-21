@@ -710,21 +710,23 @@
                 <div id="picker_color_items_text" style="display: flex; flex-direction: column; margin-top: 20px;">
 
                     <div id="open_picker_text"></div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                        <span id="HSL2_mode" class="color_mode_title">HSL</span>
+                        <span id="RGB2_mode" class="color_mode_title">RGB</span>
+                        <span id="HEX2_mode" class="color_mode_title">HEX</span>
+                    </div>
                     <div style="display: grid; gap: 10px; margin: 20px 0;">
-                        <span style="color: #555; font-size: 14px; font-weight: bold;">HSL</span>
-                        <div style="display: flex; width: 200px;">
+                        <div id="HSL2_view" style="display: flex; width: 200px;">
                             <input id="H2" class="hslPalette" type="text" placeholder="H">
                             <input id="S2" class="hslPalette" type="text" placeholder="S">
                             <input id="L2" class="hslPalette" type="text" placeholder="L">
                         </div>
-                        <span style="color: #555; font-size: 14px; font-weight: bold;">RGB</span>
-                        <div style="display: flex; width: 200px;">
+                        <div id="RGB2_view" style="display: flex; width: 200px;">
                             <input id="R2" class="hslPalette" type="text" placeholder="R">
                             <input id="G2" class="hslPalette" type="text" placeholder="G">
                             <input id="B2" class="hslPalette" type="text" placeholder="B">
                         </div>
-                        <span style="color: #555; font-size: 14px; font-weight: bold;">HEX</span>
-                        <div style="display: flex; width: 200px;">
+                        <div id="HEX2_view" style="display: flex; width: 200px;">
                             <input id="HEX2" class="hslPalette" type="text" placeholder="HEX">
                         </div>
                     </div>

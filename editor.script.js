@@ -11,7 +11,6 @@ class EditorScreen {
   constructor() {
     this.canvasBG = '#efefef';
     this.canvas = new fabric.Canvas('c', { backgroundColor: this.canvasBG });
-    // this.previewCanvas = new fabric.Canvas('preview-canvas', { backgroundImage: '/static/mug.png' });
     this.magnifier = new fabric.Canvas('magnifier', { backgroundColor: this.canvasBG });
     this.textMode = $('.nav-item[data-name="text"]');
     this.logoMode = $('.nav-item[data-name="logo"]');
@@ -20,8 +19,6 @@ class EditorScreen {
     this.previewMode = $('.nav-item[data-name="preview"]');
     this.galleryMode = $('.nav-item[data-name="gallery"]');
     this.urlParams = new URLSearchParams(document.location.search);
-    // this.logoName = this.urlParams.get('logo_name');
-    // this.sloganName = this.urlParams.get('slogan_name');
     this.logoName = 'MyBrande';
     this.sloganName = 'Slogan goes here';
     this.rotateRange = $('#rotate-bar');
@@ -1148,104 +1145,41 @@ class EditorScreen {
       });
     };
 
-    // let lElement = this.canvas.getObjects().find((obj) => obj.id === 'logoNameElement');
-    // let sElement = this.canvas.getObjects().find((obj) => obj.id === 'sloganNameElement');
+    logoNameElement.on('mousedown', (event) => {
+      event.e.preventDefault();
 
-    // var aEl = this.canvas.getActiveObject();
-    // document.onkeydown = function (e) {
-    //   if (aEl === undefined || aEl === null) {
-    //     console.log('error');
-    //     return; // return if no active object
-    //   }
+      $('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
+      putAngleDownIcon('.font_style-list-item__title');
 
-    //   var movementIncrement = 10; // adjust this value for faster/slower movement
+      const letterSpacing = logoNameElement.get('charSpacing');
+      $('#letter-spacing-slider').value = letterSpacing;
 
-    //   switch (e.keyCode) {
-    //     case 37: // left arrow key
-    //       aEl.set('left', aEl.get('left') - movementIncrement);
-    //       break;
-    //     case 38: // up arrow key
-    //       aEl.set('top', aEl.get('top') - movementIncrement);
-    //       break;
-    //     case 39: // right arrow key
-    //       aEl.set('left', aEl.get('left') + movementIncrement);
-    //       break;
-    //     case 40: // down arrow key
-    //       aEl.set('top', aEl.get('top') + movementIncrement);
-    //       break;
-    //   }
+      const fontFamily = logoNameElement.fontFamily;
+      $('#font-selector-title').innerText = fontFamily;
 
-    //   this.canvas.renderAll();
-    // };
+      putAngleDownIcon('#font-selector-title');
+      const logoText = logoNameElement.text;
+      $('.case-list-item__title').innerText = getTextCase(logoText);
+      putAngleDownIcon('.case-list-item__title');
+      this.canvas.requestRenderAll();
+    });
 
-    // const logoSloganEvent = () => {
-    //   console.log({ sloganNameElement: sElement, logoNameElement: lElement });
+    sloganNameElement.on('mousedown', (event) => {
+      event.e.preventDefault();
+      $('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
+      putAngleDownIcon('.font_style-list-item__title');
 
-    //   lElement?.on('mousedown', (event) => {
-    //     event.e.preventDefault();
-    //     const currentObjColor = lElement.get('fill');
-    //     const textColorPalette = $('#text-pallete').querySelector('.color-palette-gradient');
+      const letterSpacing = +sloganNameElement.charSpacing;
+      $('#letter-spacing-slider').value = letterSpacing;
 
-    //     if (typeof currentObjColor === 'string') {
-    //       textColorPalette.style.background = currentObjColor;
-    //       // textColorPalette?.querySelector('#grad-solid').style?.background = currentObjColor;
-    //     } else if (currentObjColor && currentObjColor.type === 'radial') {
-    //       const gradientColors = convertFabricColorsToRGB(currentObjColor);
-    //       const gradientStyle = `linear-gradient(0, ${gradientColors.join(', ')})`;
-    //       textColorPalette.style.background = gradientStyle;
-    //       textColorPalette.querySelector('#grad-1').value = gradientStyle;
-    //       textColorPalette.querySelector('#grad-2').value = gradientStyle;
-    //       textColorPalette.querySelector('#grad-solid').value = gradientStyle;
-    //     }
+      const fontFamily = sloganNameElement.fontFamily;
+      $('#font-selector-title').innerText = fontFamily;
 
-    //     $('.font_style-list-item__title').innerText = lElement.fontStyle;
-    //     putAngleDownIcon('.font_style-list-item__title');
-
-    //     const letterSpacing = lElement.get('charSpacing');
-    //     $('#letter-spacing-slider').value = letterSpacing;
-
-    //     const fontFamily = lElement.fontFamily;
-    //     $('#font-selector-title').innerText = fontFamily;
-
-    //     putAngleDownIcon('#font-selector-title');
-    //     const logoText = lElement.text;
-    //     $('.case-list-item__title').innerText = getTextCase(logoText);
-    //     putAngleDownIcon('.case-list-item__title');
-    //     this.canvas.requestRenderAll();
-    //   });
-
-    //   sElement?.on('mousedown', (event) => {
-    //     event.e.preventDefault();
-    //     const currentObjColor = sElement.get('fill');
-    //     const textColorPalette = $('#text-pallete').querySelector('.color-palette-gradient');
-
-    //     if (typeof currentObjColor === 'string') {
-    //       textColorPalette.style.background = currentObjColor;
-    //       // textColorPalette.querySelector('#grad-solid').style?.background = currentObjColor;
-    //     } else if (currentObjColor && currentObjColor.type === 'radial') {
-    //       const gradientColors = convertFabricColorsToRGB(currentObjColor);
-    //       const gradientStyle = `linear-gradient(0, ${gradientColors.join(', ')})`;
-    //       textColorPalette.style.background = gradientStyle;
-    //       textColorPalette.querySelector('#grad-1').value = gradientStyle;
-    //       textColorPalette.querySelector('#grad-2').value = gradientStyle;
-    //       textColorPalette.querySelector('#grad-solid').value = gradientStyle;
-    //     }
-
-    //     $('.font_style-list-item__title').innerText = sElement.fontStyle;
-    //     putAngleDownIcon('.font_style-list-item__title');
-
-    //     const letterSpacing = +sElement.charSpacing;
-    //     $('#letter-spacing-slider').value = letterSpacing;
-
-    //     const fontFamily = sElement.fontFamily;
-    //     $('#font-selector-title').innerText = fontFamily;
-
-    //     putAngleDownIcon('#font-selector-title');
-    //     const logoText = sElement.text;
-    //     $('.case-list-item__title').innerText = getTextCase(logoText);
-    //     putAngleDownIcon('.case-list-item__title');
-    //   });
-    // };
+      putAngleDownIcon('#font-selector-title');
+      const logoText = sloganNameElement.text;
+      $('.case-list-item__title').innerText = getTextCase(logoText);
+      putAngleDownIcon('.case-list-item__title');
+    });
 
     const undoHistory = [];
     let currIndex = -1;
@@ -1924,13 +1858,13 @@ class EditorScreen {
     });
 
     const colorPickerText = new iro.ColorPicker('#open_picker_text', {
-      display: openTextPickerView,
+      display: openPickerView,
       width: 180,
       marginTop: 20,
       color: pickerDefaultColor,
       layout: [
         {
-          component: iro.ui.Wheel,
+          component: iro.ui.Box,
         },
         {
           component: iro.ui.Slider,
@@ -2168,6 +2102,30 @@ class EditorScreen {
       handleColorModeClick('#HEX', '#RGB', '#HSL');
     });
     handleColorModeClick('#HEX', '#RGB', '#HSL');
+
+    function handleColorModeClick(activeElement, element1, element2) {
+      $(element1 + '_view').classList.remove('color_mode_title-active');
+      $(element1 + '_view').style.display = 'none';
+
+      $(element2 + '_view').classList.remove('color_mode_title-active');
+      $(element2 + '_view').style.display = 'none';
+
+      $(activeElement + '_view').classList.add('color_mode_title-active');
+      $(activeElement + '_view').style.display = 'flex';
+    }
+
+    $('#HSL2_mode').addEventListener('click', () => {
+      handleColorModeClick('#HSL2', '#RGB2', '#HEX2');
+    });
+
+    $('#RGB2_mode').addEventListener('click', () => {
+      handleColorModeClick('#RGB2', '#HSL2', '#HEX2');
+    });
+
+    $('#HEX2_mode').addEventListener('click', () => {
+      handleColorModeClick('#HEX2', '#RGB2', '#HSL2');
+    });
+    handleColorModeClick('#HEX2', '#RGB2', '#HSL2');
 
     const scaleLogo = (scaleFactor) => {
       if (!this.canvas) {
