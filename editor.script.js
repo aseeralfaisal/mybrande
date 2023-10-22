@@ -2018,6 +2018,7 @@ class EditorScreen {
 
     
     const centerAndResizeElements = (type, left, sloganSize, textPosition, mainTop = -100) => {
+      this.canvas.remove(line1, line2);
       const logoNameElement = this.canvas
         .getObjects()
         .find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'mybrande');
@@ -2111,6 +2112,7 @@ class EditorScreen {
       }
       updatePreview();
       captureCanvasState();
+      this.canvas.add(line1, line2);
       this.canvas.renderAll();
     };
 
@@ -2176,62 +2178,62 @@ class EditorScreen {
 
     $('#top_bottom_1').addEventListener('click', () => {
       scaleLogo(1.1);
-      centerAndResizeElements('topBottom', 29, 23, 'center', -100);
+      centerAndResizeElements('topBottom', 29, 23, 'center', 100);
     });
 
     $('#top_bottom_2').addEventListener('click', () => {
       scaleLogo(1.2);
-      centerAndResizeElements('topBottom', 29, 23, 'center', -140);
+      centerAndResizeElements('topBottom', 29, 23, 'center', 140);
     });
 
     $('#top_bottom_3').addEventListener('click', () => {
       scaleLogo(1);
-      centerAndResizeElements('topBottom', 29, 23, 'center', -70);
+      centerAndResizeElements('topBottom', 29, 23, 'center', 140);
     });
 
     $('#bottom_top_1').addEventListener('click', () => {
       scaleLogo(1.2);
-      centerAndResizeElements('bottomTop', 32, 25, 'center', 0);
+      centerAndResizeElements('bottomTop', 32, 25, 'center', 140);
     });
 
     $('#bottom_top_2').addEventListener('click', () => {
-      scaleLogo(1);
-      centerAndResizeElements('bottomTop', 26, 21, 'center', 70);
+      scaleLogo(1.1);
+      centerAndResizeElements('bottomTop', 26, 21, 'center', 100);
     });
 
     $('#bottom_top_3').addEventListener('click', () => {
-      scaleLogo(1.2);
-      centerAndResizeElements('bottomTop', 29, 23, 'center', 0);
+      scaleLogo(1);
+      centerAndResizeElements('bottomTop', 29, 23, 'center', 140);
     });
 
     $('#left_right_1').addEventListener('click', () => {
       scaleLogo(1.2);
-      centerAndResizeElements('leftRight', -250, 25, 'center', -70);
+      centerAndResizeElements('leftRight', 250, 25, 'center', 70);
     });
 
     $('#left_right_2').addEventListener('click', () => {
       scaleLogo(1);
-      centerAndResizeElements('leftRight', -150, 25, 'center', -70);
+      centerAndResizeElements('leftRight', 150, 25, 'center', 70);
     });
 
     $('#left_right_3').addEventListener('click', () => {
       scaleLogo(1.2);
-      centerAndResizeElements('leftRight', -250, 25, 'center', -70);
+      centerAndResizeElements('leftRight', 250, 25, 'center', 70);
     });
 
     $('#right_left_1').addEventListener('click', () => {
       scaleLogo(1.2);
-      centerAndResizeElements('rightLeft', 0, 25, 'center', -70);
+      centerAndResizeElements('rightLeft', 200, 25, 'center', 160);
     });
 
     $('#right_left_2').addEventListener('click', () => {
       scaleLogo(1);
-      centerAndResizeElements('rightLeft', 100, 25, 'center', 0);
+      centerAndResizeElements('rightLeft', 200, 25, 'center', 190);
     });
 
     $('#right_left_3').addEventListener('click', () => {
-      scaleLogo(1.2);
-      centerAndResizeElements('rightLeft', 0, 25, 'center', -70);
+      scaleLogo(1.3);
+      centerAndResizeElements('rightLeft', 200, 25, 'center', 160);
     });
   }
 }
