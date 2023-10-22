@@ -2016,6 +2016,7 @@ class EditorScreen {
       a.set('fill', hex);
     });
 
+    
     const centerAndResizeElements = (type, left, sloganSize, textPosition, mainTop = -100) => {
       const logoNameElement = this.canvas
         .getObjects()
@@ -2025,7 +2026,7 @@ class EditorScreen {
         .find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here');
 
       const objects = this.canvas.getObjects();
-      const logoMain = objects.filter((i) => !i.text && !i.stroke);
+      const logoMain = objects.filter((i) => !i.text && !i.stroke && !(i instanceof fabric.Line));
 
       const timeout = 5;
       switch (type) {
