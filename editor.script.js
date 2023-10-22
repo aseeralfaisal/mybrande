@@ -680,12 +680,12 @@ class EditorScreen {
 
         const originalWidth = layerGroup.width;
         const originalHeight = layerGroup.height;
-        const scaleFactor = Math.min(250 / originalWidth, 250 / originalHeight);
+        const scaleFactor = Math.min(200 / originalWidth, 200 / originalHeight);
         layerGroup.scale(scaleFactor);
         this.canvas.centerObject(layerGroup);
         this.canvas.viewportCenterObject(layerGroup);
         if (layerGroup) {
-          layerGroup.height = 350;
+          layerGroup.height = 200;
           layerGroup.ungroupOnCanvas();
         }
 
@@ -988,9 +988,9 @@ class EditorScreen {
     this.canvas.on('object:removed', updatePreview);
     this.canvas.on('object:modified', () => {
       captureCanvasState();
-
       updatePreview();
     });
+
     let localDirFile = null;
     let localDirFiles = null;
     document.onkeydown = (event) => {
@@ -1227,7 +1227,6 @@ class EditorScreen {
         this.canvas.loadFromJSON(stateToRestore, () => {
           this.canvas.requestRenderAll();
 
-          // Reassign lElement and sElement after the new state has been loaded.
           lElement = this.canvas.getObjects().find((obj) => obj.id === 'logoNameElement');
           sElement = this.canvas.getObjects().find((obj) => obj.id === 'sloganNameElement');
 
@@ -1565,11 +1564,27 @@ class EditorScreen {
         $('#logo-shadow-adjust').style.display = 'block';
         const settingsView = $('.settings-view');
         settingsView.scrollTop = settingsView.scrollHeight;
+
+        const active = this.canvas.getActiveObject();
+        active.set('shadow', {
+          offsetX: 2,
+          offsetY: 2,
+          blur: 5,
+        });
+        this.canvas.requestRenderAll();
       } else {
         $('#logo-shadow-adjust').style.display = 'none';
         $('#logo-shadow-blur').style.display = 'none';
         $('#logo-shadow-offsetX').style.display = 'none';
         $('#logo-shadow-offsetY').style.display = 'none';
+
+        const active = this.canvas.getActiveObject();
+        active.set('shadow', {
+          offsetX: 0,
+          offsetY: 0,
+          blur: 0,
+        });
+        this.canvas.requestRenderAll();
       }
     });
 
@@ -1580,6 +1595,7 @@ class EditorScreen {
         $('#logo-shadow-blur').style.display = 'block';
         $('#logo-shadow-offsetX').style.display = 'block';
         $('#logo-shadow-offsetY').style.display = 'block';
+
         const settingsView = $('.settings-view');
         settingsView.scrollTop = settingsView.scrollHeight;
       } else {
@@ -1596,11 +1612,27 @@ class EditorScreen {
         $('#shadow-adjust').style.display = 'block';
         const settingsView = $('.settings-view');
         settingsView.scrollTop = settingsView.scrollHeight;
+
+        const active = this.canvas.getActiveObject();
+        active.set('shadow', {
+          offsetX: 2,
+          offsetY: 2,
+          blur: 5,
+        });
+        this.canvas.requestRenderAll();
       } else {
         $('#shadow-adjust').style.display = 'none';
         $('#shadow-blur').style.display = 'none';
         $('#shadow-offsetX').style.display = 'none';
         $('#shadow-offsetY').style.display = 'none';
+
+        const active = this.canvas.getActiveObject();
+        active.set('shadow', {
+          offsetX: 0,
+          offsetY: 0,
+          blur: 0,
+        });
+        this.canvas.requestRenderAll();
       }
     });
 
@@ -1725,7 +1757,7 @@ class EditorScreen {
       let hex = e.target.value;
       colorPicker.color.hexString = hex;
       const a = this.canvas.getActiveObject();
-      a.set('fill', hex)
+      a.set('fill', hex);
     });
 
     const solidColorEvent = () => {
@@ -1981,10 +2013,10 @@ class EditorScreen {
       let hex = $('#HEX2').value;
       colorPickerText.color.hexString = hex;
       const a = this.canvas.getActiveObject();
-      a.set('fill', hex)
+      a.set('fill', hex);
     });
 
-    const centerAndResizeElements = (type, logoSize, sloganSize, textPosition, mainTop = -100) => {
+    const centerAndResizeElements = (type, left, sloganSize, textPosition, mainTop = -100) => {
       const logoNameElement = this.canvas
         .getObjects()
         .find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'mybrande');
@@ -2003,8 +2035,8 @@ class EditorScreen {
             sloganNameElement.centerH();
             const logoMainGrp = new fabric.Group(logoMain);
             logoMainGrp.center();
-            logoNameElement.set('top', this.canvas.height / 1.3);
-            sloganNameElement.set('top', this.canvas.height / 1.18);
+            logoNameElement.set('top', this.canvas.height / 1.35);
+            sloganNameElement.set('top', this.canvas.height / 1.25);
             this.canvas.centerObject(logoMainGrp);
             logoMainGrp.ungroupOnCanvas();
 
@@ -2040,16 +2072,16 @@ class EditorScreen {
             logoNameElement.set('top', this.canvas.height / 2.5);
             sloganNameElement.set('top', this.canvas.height / 2);
 
-            logoNameElement.set('left', (logoNameElement.left += 300));
-            sloganNameElement.set('left', (sloganNameElement.left += 300));
+            logoNameElement.set('left', (logoNameElement.left += 250));
+            sloganNameElement.set('left', (sloganNameElement.left += 250));
             this.canvas.centerObject(logoMainGrp);
             logoMainGrp.ungroupOnCanvas();
 
             const newGrp = new fabric.Group(objects);
             newGrp.center();
-            this.canvas.centerObject(newGrp);
-            newGrp.set('left', -100);
             newGrp.set('top', mainTop);
+            this.canvas.centerObject(newGrp);
+            newGrp.set('left', left);
             newGrp.ungroupOnCanvas();
           }, timeout);
           break;
@@ -2062,15 +2094,15 @@ class EditorScreen {
             logoNameElement.set('top', this.canvas.height / 2.5);
             sloganNameElement.set('top', this.canvas.height / 2);
 
-            logoNameElement.set('left', (logoNameElement.left -= 300));
-            sloganNameElement.set('left', (sloganNameElement.left -= 300));
+            logoNameElement.set('left', (logoNameElement.left -= 250));
+            sloganNameElement.set('left', (sloganNameElement.left -= 250));
             this.canvas.centerObject(logoMainGrp);
             logoMainGrp.ungroupOnCanvas();
 
             const newGrp = new fabric.Group(objects);
             newGrp.center();
             this.canvas.centerObject(newGrp);
-            newGrp.set('left', 100);
+            newGrp.set('left', left);
             newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
           }, timeout);
@@ -2129,86 +2161,76 @@ class EditorScreen {
     });
     handleColorModeClick('#HEX2', '#RGB2', '#HSL2');
 
+    let currentScale = 1;
+
     const scaleLogo = (scaleFactor) => {
-      if (!this.canvas) {
-        console.error('Canvas is not defined');
-        return;
-      }
-
-      const selection = new fabric.ActiveSelection(
-        this.canvas.getObjects().filter((i) => !i.text),
-        {
-          canvas: this.canvas,
-        }
-      );
-
-      if (selection.size() > 0) {
-        selection.scale(scaleFactor);
-        selection.center();
-        this.canvas.setActiveObject(selection);
-        this.canvas.requestRenderAll();
-        this.canvas.discardActiveObject();
-      }
+      const objectsToScale = this.canvas.getObjects().filter((i) => !i.text);
+      const grp = new fabric.Group(objectsToScale);
+      grp.scale(scaleFactor / currentScale);
+      this.canvas.centerObject(grp);
+      grp.ungroupOnCanvas();
+      currentScale = scaleFactor;
+      this.canvas.requestRenderAll();
     };
 
     $('#top_bottom_1').addEventListener('click', () => {
-      scaleLogo(1.2);
-      centerAndResizeElements('topBottom', 29, 23, 'center');
+      scaleLogo(1.1);
+      centerAndResizeElements('topBottom', 29, 23, 'center', -100);
     });
 
     $('#top_bottom_2').addEventListener('click', () => {
-      scaleLogo(1);
-      centerAndResizeElements('topBottom', 29, 23, 'center', -50);
+      scaleLogo(1.2);
+      centerAndResizeElements('topBottom', 29, 23, 'center', -140);
     });
 
     $('#top_bottom_3').addEventListener('click', () => {
-      scaleLogo(1.2);
-      centerAndResizeElements('topBottom', 29, 23, 'center', -80);
+      scaleLogo(1);
+      centerAndResizeElements('topBottom', 29, 23, 'center', -70);
     });
 
     $('#bottom_top_1').addEventListener('click', () => {
       scaleLogo(1.2);
-      centerAndResizeElements('bottomTop', 32, 25, 'center', 50);
+      centerAndResizeElements('bottomTop', 32, 25, 'center', 0);
     });
 
     $('#bottom_top_2').addEventListener('click', () => {
       scaleLogo(1);
-      centerAndResizeElements('bottomTop', 26, 21, 'center', 80);
+      centerAndResizeElements('bottomTop', 26, 21, 'center', 70);
     });
 
     $('#bottom_top_3').addEventListener('click', () => {
-      scaleLogo(1.5);
-      centerAndResizeElements('bottomTop', 29, 23, 'center', 80);
+      scaleLogo(1.2);
+      centerAndResizeElements('bottomTop', 29, 23, 'center', 0);
     });
 
     $('#left_right_1').addEventListener('click', () => {
       scaleLogo(1.2);
-      centerAndResizeElements('leftRight', 29, 23, 'center', 0);
+      centerAndResizeElements('leftRight', -250, 25, 'center', -70);
     });
 
     $('#left_right_2').addEventListener('click', () => {
       scaleLogo(1);
-      centerAndResizeElements('leftRight', 32, 25, 'center', 0);
+      centerAndResizeElements('leftRight', -150, 25, 'center', -70);
     });
 
     $('#left_right_3').addEventListener('click', () => {
-      scaleLogo(1.5);
-      centerAndResizeElements('leftRight', 32, 25, 'center', 0);
+      scaleLogo(1.2);
+      centerAndResizeElements('leftRight', -250, 25, 'center', -70);
     });
 
     $('#right_left_1').addEventListener('click', () => {
       scaleLogo(1.2);
-      centerAndResizeElements('rightLeft', 32, 25, 'center', 0);
+      centerAndResizeElements('rightLeft', 0, 25, 'center', -70);
     });
 
     $('#right_left_2').addEventListener('click', () => {
       scaleLogo(1);
-      centerAndResizeElements('rightLeft', 32, 25, 'center', 0);
+      centerAndResizeElements('rightLeft', 100, 25, 'center', 0);
     });
 
     $('#right_left_3').addEventListener('click', () => {
-      scaleLogo(1.5);
-      centerAndResizeElements('rightLeft', 32, 25, 'center', 0);
+      scaleLogo(1.2);
+      centerAndResizeElements('rightLeft', 0, 25, 'center', -70);
     });
   }
 }
