@@ -363,10 +363,14 @@ class EditorScreen {
         this.textSelectorValue = 'SloganName';
         this.logoNameInput.style.display = 'none';
         this.sloganNameInput.style.display = 'block';
+        this.canvas.setActiveObject(sloganNameElement);
+        this.canvas.requestRenderAll();
       } else {
         this.textSelectorValue = 'LogoName';
         this.sloganNameInput.style.display = 'none';
         this.logoNameInput.style.display = 'block';
+        this.canvas.setActiveObject(logoNameElement);
+        this.canvas.requestRenderAll();
       }
       this.settingsListTitle.innerText = selectedTextElement;
       const icon = document.createElement('i');
@@ -1147,8 +1151,20 @@ class EditorScreen {
       });
     };
 
+    const logoOrSloganView = (element) => {
+      if (element === 'LogoName') {
+        this.sloganNameInput.style.display = 'none';
+        this.logoNameInput.style.display = 'block';
+      } else {
+        this.logoNameInput.style.display = 'none';
+        this.sloganNameInput.style.display = 'block';
+      }
+    };
+
     logoNameElement.on('mousedown', (event) => {
       event.e.preventDefault();
+      this.textSelectorValue = 'LogoName';
+      logoOrSloganView('LogoName');
 
       $('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
       putAngleDownIcon('.font_style-list-item__title');
@@ -1171,6 +1187,9 @@ class EditorScreen {
 
     sloganNameElement.on('mousedown', (event) => {
       event.e.preventDefault();
+      this.textSelectorValue = 'SloganName';
+      logoOrSloganView('SloganName');
+
       $('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
       putAngleDownIcon('.font_style-list-item__title');
 
@@ -2112,8 +2131,14 @@ class EditorScreen {
             logoNameElement.set('top', this.canvas.height / 2.5);
             sloganNameElement.set('top', this.canvas.height / 2);
 
-            logoNameElement.set('left', (logoNameElement.left += 250));
-            sloganNameElement.set('left', (sloganNameElement.left += 250));
+            if (textPosition === 'center') {
+              logoNameElement.set('left', (logoNameElement.left += 250));
+              sloganNameElement.set('left', (sloganNameElement.left += 250));
+            } else {
+              logoNameElement.set('left', (logoNameElement.left += 230));
+              sloganNameElement.set('left', (sloganNameElement.left += 250));
+            }
+
             this.canvas.centerObject(logoMainGrp);
             logoMainGrp.ungroupOnCanvas();
 
@@ -2134,8 +2159,14 @@ class EditorScreen {
             logoNameElement.set('top', this.canvas.height / 2.5);
             sloganNameElement.set('top', this.canvas.height / 2);
 
-            logoNameElement.set('left', (logoNameElement.left -= 250));
-            sloganNameElement.set('left', (sloganNameElement.left -= 250));
+            if (textPosition === 'left') {
+              logoNameElement.set('left', (logoNameElement.left -= 230));
+              sloganNameElement.set('left', (sloganNameElement.left -= 250));
+            } else {
+              logoNameElement.set('left', (logoNameElement.left -= 250));
+              sloganNameElement.set('left', (sloganNameElement.left -= 250));
+            }
+
             this.canvas.centerObject(logoMainGrp);
             logoMainGrp.ungroupOnCanvas();
 
@@ -2217,17 +2248,17 @@ class EditorScreen {
 
     $('#top_bottom_1').addEventListener('click', () => {
       scaleLogo(1.1);
-      centerAndResizeElements('topBottom', 29, 23, 'center', 100);
+      centerAndResizeElements('topBottom', 29, 23, 'center', 120);
     });
 
     $('#top_bottom_2').addEventListener('click', () => {
-      scaleLogo(1.2);
-      centerAndResizeElements('topBottom', 29, 23, 'center', 140);
+      scaleLogo(1.3);
+      centerAndResizeElements('topBottom', 29, 23, 'center', 120);
     });
 
     $('#top_bottom_3').addEventListener('click', () => {
       scaleLogo(1);
-      centerAndResizeElements('topBottom', 29, 23, 'center', 140);
+      centerAndResizeElements('topBottom', 29, 23, 'center', 130);
     });
 
     $('#bottom_top_1').addEventListener('click', () => {
@@ -2252,7 +2283,7 @@ class EditorScreen {
 
     $('#left_right_2').addEventListener('click', () => {
       scaleLogo(1);
-      centerAndResizeElements('leftRight', 150, 25, 'center', 70);
+      centerAndResizeElements('leftRight', 250, 25, 'left', 70);
     });
 
     $('#left_right_3').addEventListener('click', () => {
@@ -2262,17 +2293,17 @@ class EditorScreen {
 
     $('#right_left_1').addEventListener('click', () => {
       scaleLogo(1.2);
-      centerAndResizeElements('rightLeft', 200, 25, 'center', 160);
+      centerAndResizeElements('rightLeft', 200, 25, 'center', 200);
     });
 
     $('#right_left_2').addEventListener('click', () => {
       scaleLogo(1);
-      centerAndResizeElements('rightLeft', 200, 25, 'center', 190);
+      centerAndResizeElements('rightLeft', 200, 25, 'left', 210);
     });
 
     $('#right_left_3').addEventListener('click', () => {
       scaleLogo(1.3);
-      centerAndResizeElements('rightLeft', 200, 25, 'center', 160);
+      centerAndResizeElements('rightLeft', 200, 25, 'center', 200);
     });
   }
 }
