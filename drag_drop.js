@@ -95,13 +95,9 @@ elements.dragDrop.addEventListener('drop', (event) => {
 
 let uploaded = false;
 elements.uploadFileBtn.addEventListener('change', (event) => {
-  if (!uploaded) {
-    alert('Please upload an SVG file');
-    localStorage.removeItem('mainEditorCounter');
-    return location.reload();
-  }
   preventEvents(event);
   uploadLocalFile(event.target.files[0]);
+  uploaded = true;
 });
 
 elements.imgViewContainer.style.display = 'none';

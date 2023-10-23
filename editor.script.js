@@ -473,22 +473,24 @@ class EditorScreen {
       }, 50);
     });
 
-    this.scaleElement.textContent = 0;
-    this.scaleRange.addEventListener('input', ({ target }) => {
-      const scaleValue = parseFloat(target.value);
-      const selectedObject = this.canvas.getActiveObject();
-      if (selectedObject && scaleValue) {
-        selectedObject.scale(scaleValue);
-        this.canvas.requestRenderAll();
+    this.scaleElement.textContent = 1;
+    this.scaleRange.addEventListener('input', (e) => {
+      const scaleValue = e.target.value;
+
+      if (scaleValue) {
+        if (this.isScaling <= 10) this.isScaling = true;
+        this.scaleValue = parseFloat(scaleValue, 10) / 10;
+        this.scaleObject();
+        this.scaleElement.textContent = this.scaleValue;
       }
     });
 
-    this.scaleRangeUploads.addEventListener('input', (e) => {
-      if (this.isScaling <= 10) this.isScaling = true;
-      this.scaleElement.textContent = this.scaleValue;
-      this.scaleValue = parseFloat(e.target.value, 100) / 10;
-      this.scaleObject();
-    });
+    // this.scaleRangeUploads.addEventListener('input', (e) => {
+    //   if (this.isScaling <= 10) this.isScaling = true;
+    //   this.scaleElement.textContent = this.scaleValue;
+    //   this.scaleValue = parseFloat(e.target.value, 10) / 10;
+    //   this.scaleObject();
+    // });
 
     this.flipHorizontal.addEventListener('change', () => {
       this.isFlipX = !this.isFlipX;
@@ -1157,6 +1159,9 @@ class EditorScreen {
       const fontFamily = logoNameElement.fontFamily;
       $('#font-selector-title').innerText = fontFamily;
 
+      const fontSize = logoNameElement.fontSize;
+      this.fontSizeListTitle.innerText = fontSize + ' px';
+
       putAngleDownIcon('#font-selector-title');
       const logoText = logoNameElement.text;
       $('.case-list-item__title').innerText = getTextCase(logoText);
@@ -1171,6 +1176,9 @@ class EditorScreen {
 
       const letterSpacing = +sloganNameElement.charSpacing;
       $('#letter-spacing-slider').value = letterSpacing;
+
+      const fontSize = sloganNameElement.fontSize;
+      this.fontSizeListTitle.innerText = fontSize + ' px';
 
       const fontFamily = sloganNameElement.fontFamily;
       $('#font-selector-title').innerText = fontFamily;
@@ -1999,7 +2007,7 @@ class EditorScreen {
     });
 
     // const CanvasColorPicker = this.canvas;
-    colorPickerText.on('input:move', (color) => {
+    colorPickerText.on('input:change', (color) => {
       pickerDefaultColor = color.hexString;
       if (color.index === 0) {
         const hsl = color.hsl;
@@ -2047,7 +2055,6 @@ class EditorScreen {
       a.set('fill', hex);
     });
 
-    
     const centerAndResizeElements = (type, left, sloganSize, textPosition, mainTop = -100) => {
       this.canvas.remove(line1, line2);
       const logoNameElement = this.canvas
@@ -2193,6 +2200,7 @@ class EditorScreen {
     $('#HEX2_mode').addEventListener('click', () => {
       handleColorModeClick('#HEX2', '#RGB2', '#HSL2');
     });
+
     handleColorModeClick('#HEX2', '#RGB2', '#HSL2');
 
     let currentScale = 1;
