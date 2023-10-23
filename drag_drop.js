@@ -93,14 +93,19 @@ elements.dragDrop.addEventListener('drop', (event) => {
   uploadLocalFile(event.dataTransfer.files[0]);
 });
 
+let uploaded = false;
 elements.uploadFileBtn.addEventListener('change', (event) => {
+  if (!uploaded) {
+    alert('Please upload an SVG file');
+    localStorage.removeItem('mainEditorCounter');
+    return location.reload();
+  }
   preventEvents(event);
   uploadLocalFile(event.target.files[0]);
 });
 
 elements.imgViewContainer.style.display = 'none';
 elements.imgView.style.display = 'none';
-let uploaded = false;
 
 const dragDropEvent = (event, background, borderColor, borderWidth, height, width) => {
   preventEvents(event);

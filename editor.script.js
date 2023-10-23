@@ -486,7 +486,7 @@ class EditorScreen {
     this.scaleRangeUploads.addEventListener('input', (e) => {
       if (this.isScaling <= 10) this.isScaling = true;
       this.scaleElement.textContent = this.scaleValue;
-      this.scaleValue = parseFloat(e.target.value, 10) / 10;
+      this.scaleValue = parseFloat(e.target.value, 100) / 10;
       this.scaleObject();
     });
 
@@ -1735,21 +1735,51 @@ class EditorScreen {
       updateColorPickers();
     });
 
-    [('R', 'G', 'B')].forEach((id) => {
-      $(`#${id}`).addEventListener('input', () => {
+    [('#R', '#G', '#B')].forEach((id) => {
+      $(id).addEventListener('input', () => {
         let r = $('#R').value;
         let g = $('#G').value;
         let b = $('#B').value;
         colorPicker.color.rgb = { r, g, b };
+        const a = this.canvas.getActiveObject();
+        a.set('fill', colorPicker.color.hexString);
+        this.canvas.requestRenderAll();
       });
     });
 
-    ['H', 'S', 'L'].forEach((id) => {
-      $(`#${id}`).addEventListener('input', () => {
+    ['#H', '#S', '#L'].forEach((id) => {
+      $(id).addEventListener('input', () => {
         let h = $('#H').value;
         let s = $('#S').value;
         let l = $('#L').value;
         colorPicker.color.hsl = { h, s, l };
+        const a = this.canvas.getActiveObject();
+        a.set('fill', colorPicker.color.hexString);
+        this.canvas.requestRenderAll();
+      });
+    });
+
+    [('#R2', '#G2', '#B2')].forEach((id) => {
+      $(id).addEventListener('input', () => {
+        let r = $('#R2').value;
+        let g = $('#G2').value;
+        let b = $('#B2').value;
+        colorPicker.color.rgb = { r, g, b };
+        const a = this.canvas.getActiveObject();
+        a.set('fill', colorPicker.color.hexString);
+        this.canvas.requestRenderAll();
+      });
+    });
+
+    ['#H2', '#S2', '#L2'].forEach((id) => {
+      $(id).addEventListener('input', () => {
+        let h = $('#H2').value;
+        let s = $('#S2').value;
+        let l = $('#L2').value;
+        colorPicker.color.hsl = { h, s, l };
+        const a = this.canvas.getActiveObject();
+        a.set('fill', colorPicker.color.hexString);
+        this.canvas.requestRenderAll();
       });
     });
 
@@ -1758,6 +1788,7 @@ class EditorScreen {
       colorPicker.color.hexString = hex;
       const a = this.canvas.getActiveObject();
       a.set('fill', hex);
+      this.canvas.requestRenderAll();
     });
 
     const solidColorEvent = () => {
