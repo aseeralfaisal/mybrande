@@ -1511,7 +1511,7 @@ class EditorScreen {
 
       let angleColor = `${colorAngle}deg`;
       let color = null;
-      if (colorMode !== 'Solid') {
+      if (colorMode === 'Linear') {
         color = new fabric.Gradient({
           type: 'linear',
           coords: {
@@ -1525,6 +1525,11 @@ class EditorScreen {
             { offset: 1, color: grad2Value },
           ],
         });
+      } else if (colorMode === 'None') {
+        
+        setCanvasBackground();
+        this.canvas.setBackgroundColor('#eeeeee', this.canvas.renderAll.bind(this.canvas));
+        this.canvas.requestRenderAll();
       } else {
         color = solidValue;
       }
@@ -1536,33 +1541,33 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    // const logoPalleteComponent = $('#logo-pallete');
-    // logoPalleteComponent.addEventListener('colorChange', (e) => {
-    //   const selectedObject = this.canvas.getActiveObject();
-    //   const { colorMode, grad1Value, grad2Value, solidValue } = e.detail;
+    const logoPalleteComponent = $('#logo-pallete');
+    logoPalleteComponent.addEventListener('colorChange', (e) => {
+      const selectedObject = this.canvas.getActiveObject();
+      const { colorMode, grad1Value, grad2Value, solidValue } = e.detail;
 
-    //   let color = null;
-    //   if (colorMode !== 'Solid') {
-    //     color = new fabric.Gradient({
-    //       type: 'linear',
-    //       coords: {
-    //         x1: 0,
-    //         y1: 0,
-    //         x2: selectedObject.width,
-    //         y2: selectedObject.height,
-    //       },
-    //       colorStops: [
-    //         { offset: 0, color: grad1Value },
-    //         { offset: 1, color: grad2Value },
-    //       ],
-    //     });
-    //   } else {
-    //     color = solidValue;
-    //   }
+      let color = null;
+      if (colorMode !== 'Solid') {
+        color = new fabric.Gradient({
+          type: 'linear',
+          coords: {
+            x1: 0,
+            y1: 0,
+            x2: selectedObject.width,
+            y2: selectedObject.height,
+          },
+          colorStops: [
+            { offset: 0, color: grad1Value },
+            { offset: 1, color: grad2Value },
+          ],
+        });
+      } else {
+        color = solidValue;
+      }
 
-    //   selectedObject.set('fill', color);
-    //   this.canvas.requestRenderAll();
-    // });
+      selectedObject.set('fill', color);
+      this.canvas.requestRenderAll();
+    });
 
     // const textPalleteComponent = $('#text-pallete');
     // textPalleteComponent.addEventListener('colorChange', (e) => {
@@ -2066,6 +2071,29 @@ class EditorScreen {
         }
       });
     });
+
+    document.querySelectorAll('#solid_color-bg').forEach((item) => {
+      item.addEventListener('click', (event) => {
+        if (this.canvas) {
+            const bgColor = event.target.style.backgroundColor;
+            const match = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/.exec(bgColor);
+            if (match) {
+              const red = parseInt(match[1]);
+              const green = parseInt(match[2]);
+              const blue = parseInt(match[3]);
+              const hexColor = convertRGBtoHex(red, green, blue);
+              this.canvas.setBackgroundColor(hexColor);
+              captureCanvasState();
+
+              const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
+              logoColorPickers.forEach((i) => i.remove());
+              updateColorPickers();
+              this.canvas.requestRenderAll();
+            }
+        }
+      });
+    });
+
 
     const colorPickerText = new iro.ColorPicker('#open_picker_text', {
       display: openPickerView,

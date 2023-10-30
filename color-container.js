@@ -2,7 +2,7 @@ const paletteMarkup = /*html*/ `
 <div class="bg-settings-container">
 <div>
     <div id="color-mode" class="color-mode-selector">
-        <span id="color-mode-title" class="color-mode-title">Solid
+        <span id="color-mode-title" class="color-mode-title">Linear
             <i class="fa-solid fa-angle-down"></i>
         </span>
         <div id="bg-color-list" class="color-mode-list"></div>
@@ -12,7 +12,7 @@ const paletteMarkup = /*html*/ `
         <div id="color-palette-gradient" class="color-palette-gradient"></div>
     </div>
 
-    <div id="gradient-panel" style="margin-top: 60px;  display: none;">
+    <div id="gradient-panel" style="margin-top: 60px;  display: none; justify-content: flex-start; gap: 5px">
         <input type="color" value="#000" class="color-picker" id="grad-1">
         <input type="color" value="#000" class="color-picker" id="grad-2">
       </div>
@@ -34,7 +34,7 @@ class Palette extends HTMLElement {
     super();
     this.innerHTML = paletteMarkup;
     const $ = (item) => this.querySelector(item);
-    this.colorMode = 'Solid';
+    this.colorMode = 'Linear';
 
     const dataList = this.getAttribute('data-list');
     const mainDataList = eval(dataList);
@@ -44,6 +44,37 @@ class Palette extends HTMLElement {
       li.style.fontWeight = 500;
       $('#bg-color-list').append(li);
     });
+
+    $('#color-angle-text').style.display = 'block';
+    $('#color-angle').style.display = 'block';
+    $('#gradient-panel').style.display = 'flex';
+    $('#slider-container').style.display = 'block';
+    $('#solid-panel').style.display = 'none';
+    $('#color-palette-gradient').style.background = '#000';
+
+  }
+
+  connectedCallback() {
+    const grad1 = this.querySelector('#grad-1');
+    const grad2 = this.querySelector('#grad-2');
+    const solid = this.querySelector('#grad-solid');
+    const colorAngle = this.querySelector('#color-angle');
+
+    const dispatchChangeEvent = () => {
+      this.dispatchEvent(
+        new CustomEvent('colorChange', {
+          detail: {
+            grad1Value: grad1.value,
+            grad2Value: grad2.value,
+            colorAngle: colorAngle.value,
+            solidValue: solid.value,
+            colorMode: this.colorMode,
+          },
+        })
+      );
+    };
+    
+    const $ = (item) => document.querySelector(item);
 
     const colorList = this.querySelector('#bg-color-list');
     const colorModeTitle = this.querySelector('#color-mode-title');
@@ -55,7 +86,7 @@ class Palette extends HTMLElement {
         colorList.classList.add('show');
       }
     });
-
+    
     colorList.addEventListener('click', (e) => {
       this.colorMode = e.target.innerText;
       const colorMode = this.colorMode;
@@ -86,6 +117,8 @@ class Palette extends HTMLElement {
         $('#color-angle').style.display = 'none';
         $('#color-palette-gradient').style.background =
           'url(https://t3.ftcdn.net/jpg/03/76/74/78/240_F_376747823_L8il80K6c2CM1lnPYJhhJZQNl6ynX1yj.jpg)';
+      } else if (colorMode === 'None'){
+        dispatchChangeEvent();
       }
 
       colorList.classList.remove('show');
@@ -94,27 +127,6 @@ class Palette extends HTMLElement {
       icon.className = 'fa-solid fa-angle-down';
       colorModeTitle.append(icon);
     });
-  }
-
-  connectedCallback() {
-    const grad1 = this.querySelector('#grad-1');
-    const grad2 = this.querySelector('#grad-2');
-    const solid = this.querySelector('#grad-solid');
-    const colorAngle = this.querySelector('#color-angle');
-
-    const dispatchChangeEvent = () => {
-      this.dispatchEvent(
-        new CustomEvent('colorChange', {
-          detail: {
-            grad1Value: grad1.value,
-            grad2Value: grad2.value,
-            colorAngle: colorAngle.value,
-            solidValue: solid.value,
-            colorMode: this.colorMode,
-          },
-        })
-      );
-    };
 
     grad1.addEventListener('input', () => {
       this.querySelector(
