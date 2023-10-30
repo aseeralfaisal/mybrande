@@ -321,6 +321,21 @@ class EditorScreen {
   }
 
   initialize() {
+    
+    fabric.Object.prototype.setControlsVisibility({
+      mt: false,
+      mb: false,
+      ml: false,
+      mr: false,
+      mtr: false,
+      bl: true,
+      br: true,
+      tl: true,
+      tr: true,
+    });
+
+    this.canvas.requestRenderAll();
+
     this.updateActiveNavbar = () => {
       document.querySelectorAll('.nav-item').forEach((item) => {
         if (this.activeNavbarSetting.includes(item.innerText.toLowerCase())) {
@@ -1402,7 +1417,33 @@ class EditorScreen {
       });
     });
 
-    $('#copyElement-uploads').addEventListener('click', (event) => {
+    $('#eyeElement').addEventListener('click', () => {
+      const activeObj = this.canvas.getActiveObject();
+      let visibilty = Boolean(activeObj.get('opacity'));
+      visibilty = !visibilty;
+      activeObj.set('opacity', visibilty ? 1 : 0);
+      this.canvas.requestRenderAll();
+    });
+
+    $('#removeElement').addEventListener('click', () => {
+      const activeObj = this.canvas.getActiveObject();
+      this.canvas.remove(activeObj);
+      this.canvas.requestRenderAll();
+    });
+
+    $('#bringDownElement').addEventListener('click', () => {
+      const selectedObject = this.canvas.getActiveObject();
+      this.canvas.sendBackwards(selectedObject);
+      this.canvas.requestRenderAll();
+    });
+    
+    $('#bringUpElement').addEventListener('click', () => {
+      const selectedObject = this.canvas.getActiveObject();
+      this.canvas.bringForward(selectedObject);
+      this.canvas.requestRenderAll();
+    });
+
+    $('#copyElement').addEventListener('click', (event) => {
       this.canvas.getActiveObject().clone((cloned) => {
         this.canvas.add(cloned);
         this.canvas.centerObject(cloned);
@@ -1410,11 +1451,29 @@ class EditorScreen {
       });
     });
 
-    $('#eyeElement').addEventListener('click', () => {
+    $('#eyeElement2').addEventListener('click', () => {
       const activeObj = this.canvas.getActiveObject();
       let visibilty = Boolean(activeObj.get('opacity'));
       visibilty = !visibilty;
       activeObj.set('opacity', visibilty ? 1 : 0);
+      this.canvas.requestRenderAll();
+    });
+
+    $('#removeElement2').addEventListener('click', () => {
+      const activeObj = this.canvas.getActiveObject();
+      this.canvas.remove(activeObj);
+      this.canvas.requestRenderAll();
+    });
+
+    $('#bringDownElement2').addEventListener('click', () => {
+      const selectedObject = this.canvas.getActiveObject();
+      this.canvas.sendBackwards(selectedObject);
+      this.canvas.requestRenderAll();
+    });
+
+    $('#bringUpElement2').addEventListener('click', () => {
+      const selectedObject = this.canvas.getActiveObject();
+      this.canvas.bringForward(selectedObject);
       this.canvas.requestRenderAll();
     });
 
@@ -1426,21 +1485,17 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    $('#bringUpElement').addEventListener('click', () => {
-      const selectedObject = this.canvas.getActiveObject();
-      this.canvas.bringForward(selectedObject);
-      this.canvas.requestRenderAll();
+    $('#copyElement-uploads').addEventListener('click', (event) => {
+      this.canvas.getActiveObject().clone((cloned) => {
+        this.canvas.add(cloned);
+        this.canvas.centerObject(cloned);
+        this.canvas.requestRenderAll();
+      });
     });
 
     $('#bringUpElement-uploads').addEventListener('click', () => {
       const selectedObject = this.canvas.getActiveObject();
       this.canvas.bringForward(selectedObject);
-      this.canvas.requestRenderAll();
-    });
-
-    $('#bringDownElement').addEventListener('click', () => {
-      const selectedObject = this.canvas.getActiveObject();
-      this.canvas.sendBackwards(selectedObject);
       this.canvas.requestRenderAll();
     });
 
@@ -1793,6 +1848,7 @@ class EditorScreen {
           colorPalette.appendChild(colPicker);
         }
       });
+      updatePreview();
       captureCanvasState();
     };
 
@@ -2090,7 +2146,8 @@ class EditorScreen {
     });
 
     // const CanvasColorPicker = this.canvas;
-    colorPickerText.on('input:change', (color) => {
+
+    const changeColorPickerText = (color) => {
       pickerDefaultColor = color.hexString;
       if (color.index === 0) {
         const hsl = color.hsl;
@@ -2111,7 +2168,10 @@ class EditorScreen {
       const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
       logoColorPickers.forEach((i) => i.remove());
       updateColorPickers();
-    });
+      this.canvas.requestRenderAll();
+    }
+    colorPickerText.on('input:change', (color) => changeColorPickerText(color));
+    colorPickerText.on('input:move', (color) => changeColorPickerText(color));
 
     [('R2', 'G2', 'B2')].forEach((id) => {
       $(`#${id}`).addEventListener('input', () => {
