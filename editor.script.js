@@ -321,7 +321,6 @@ class EditorScreen {
   }
 
   initialize() {
-    
     fabric.Object.prototype.setControlsVisibility({
       mt: false,
       mb: false,
@@ -717,8 +716,9 @@ class EditorScreen {
       this.canvas.add(sloganNameElement);
       logoNameElement.viewportCenter();
       sloganNameElement.viewportCenter();
-      logoNameElement.set('top', (logoNameElement.top += 70));
-      sloganNameElement.set('top', (sloganNameElement.top += 110));
+      logoNameElement.set('top', (logoNameElement.top += 60));
+      sloganNameElement.set('top', (sloganNameElement.top += 100));
+
       const selection = new fabric.ActiveSelection(this.canvas.getObjects(), {
         canvas: this.canvas,
       });
@@ -831,7 +831,7 @@ class EditorScreen {
     this.previewMode.addEventListener('click', () => {
       this.activeNavbarSetting = 'preview';
 
-      this.canvas.setBackgroundColor(null, this.canvas.renderAll.bind(this.canvas));
+      // this.canvas.setBackgroundColor(null, this.canvas.renderAll.bind(this.canvas));
       this.canvas.setBackgroundImage(null, this.canvas.renderAll.bind(this.canvas));
       this.canvas.requestRenderAll();
 
@@ -1436,7 +1436,7 @@ class EditorScreen {
       this.canvas.sendBackwards(selectedObject);
       this.canvas.requestRenderAll();
     });
-    
+
     $('#bringUpElement').addEventListener('click', () => {
       const selectedObject = this.canvas.getActiveObject();
       this.canvas.bringForward(selectedObject);
@@ -1624,7 +1624,7 @@ class EditorScreen {
 
     $('#close_modal').addEventListener('click', () => {
       setCanvasBackground();
-      this.canvas.setBackgroundColor('#eee', this.canvas.renderAll.bind(this.canvas));
+      // this.canvas.setBackgroundColor('#eee', this.canvas.renderAll.bind(this.canvas));
       document.querySelector('.preview-modal-bg').style.display = 'none';
     });
 
@@ -2035,11 +2035,11 @@ class EditorScreen {
               const hexColor = convertRGBtoHex(red, green, blue);
               activeObj.set('fill', hexColor);
               captureCanvasState();
-              this.canvas.requestRenderAll();
 
               const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
               logoColorPickers.forEach((i) => i.remove());
               updateColorPickers();
+              this.canvas.requestRenderAll();
             }
           }
         }
@@ -2169,9 +2169,9 @@ class EditorScreen {
       logoColorPickers.forEach((i) => i.remove());
       updateColorPickers();
       this.canvas.requestRenderAll();
-    }
-    colorPickerText.on('input:change', (color) => changeColorPickerText(color));
-    colorPickerText.on('input:move', (color) => changeColorPickerText(color));
+    };
+    colorPickerText.on('input:change', changeColorPickerText);
+    // colorPickerText.on('input:move', changeColorPickerText);
 
     [('R2', 'G2', 'B2')].forEach((id) => {
       $(`#${id}`).addEventListener('input', () => {
@@ -2218,8 +2218,8 @@ class EditorScreen {
             sloganNameElement.centerH();
             const logoMainGrp = new fabric.Group(logoMain);
             logoMainGrp.center();
-            logoNameElement.set('top', this.canvas.height / 1.35);
-            sloganNameElement.set('top', this.canvas.height / 1.25);
+            logoNameElement.set('top', this.canvas.height / 1.5);
+            sloganNameElement.set('top', this.canvas.height / 1.35);
             this.canvas.centerObject(logoMainGrp);
             logoMainGrp.ungroupOnCanvas();
 
@@ -2235,8 +2235,8 @@ class EditorScreen {
             sloganNameElement.centerH();
             const logoMainGrp = new fabric.Group(logoMain);
             logoMainGrp.center();
-            logoNameElement.set('top', this.canvas.height / 5);
-            sloganNameElement.set('top', this.canvas.height / 8);
+            logoNameElement.set('top', this.canvas.height / 4);
+            sloganNameElement.set('top', this.canvas.height / 5.5);
             this.canvas.centerObject(logoMainGrp);
             logoMainGrp.ungroupOnCanvas();
 
@@ -2256,11 +2256,11 @@ class EditorScreen {
             sloganNameElement.set('top', this.canvas.height / 2);
 
             if (textPosition === 'center') {
-              logoNameElement.set('left', (logoNameElement.left += 250));
-              sloganNameElement.set('left', (sloganNameElement.left += 250));
-            } else {
               logoNameElement.set('left', (logoNameElement.left += 230));
-              sloganNameElement.set('left', (sloganNameElement.left += 250));
+              sloganNameElement.set('left', (sloganNameElement.left += 230));
+            } else {
+              logoNameElement.set('left', (logoNameElement.left += 210));
+              sloganNameElement.set('left', (sloganNameElement.left += 230));
             }
 
             this.canvas.centerObject(logoMainGrp);
@@ -2284,11 +2284,11 @@ class EditorScreen {
             sloganNameElement.set('top', this.canvas.height / 2);
 
             if (textPosition === 'left') {
-              logoNameElement.set('left', (logoNameElement.left -= 230));
-              sloganNameElement.set('left', (sloganNameElement.left -= 250));
+              logoNameElement.set('left', (logoNameElement.left -= 210));
+              sloganNameElement.set('left', (sloganNameElement.left -= 230));
             } else {
-              logoNameElement.set('left', (logoNameElement.left -= 250));
-              sloganNameElement.set('left', (sloganNameElement.left -= 250));
+              logoNameElement.set('left', (logoNameElement.left -= 230));
+              sloganNameElement.set('left', (sloganNameElement.left -= 230));
             }
 
             this.canvas.centerObject(logoMainGrp);
@@ -2387,12 +2387,12 @@ class EditorScreen {
 
     $('#bottom_top_1').addEventListener('click', () => {
       scaleLogo(1.2);
-      centerAndResizeElements('bottomTop', 32, 25, 'center', 140);
+      centerAndResizeElements('bottomTop', 32, 25, 'center', 130);
     });
 
     $('#bottom_top_2').addEventListener('click', () => {
       scaleLogo(1.1);
-      centerAndResizeElements('bottomTop', 26, 21, 'center', 100);
+      centerAndResizeElements('bottomTop', 26, 21, 'center', 150);
     });
 
     $('#bottom_top_3').addEventListener('click', () => {
