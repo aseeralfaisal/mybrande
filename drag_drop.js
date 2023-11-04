@@ -18,9 +18,11 @@ const elements = {
   backBtn: $('#back-main'),
   uploadFileBtn: $('#upload_file_btn'),
   // imger: $('#imger'),
+  inputPrimary: $('#logo_name_input-primary'),
 };
 
 let editCounterLocal = localStorage.getItem('mainEditorCounter');
+localStorage.setItem('mainEditorCounter', 0)
 if (editCounterLocal === '1') {
   elements.detailsView.style.display = 'none';
   elements.mainEditorView.style.display = 'block';
@@ -121,11 +123,21 @@ elements.dragDrop.addEventListener('dragleave', (event) => {
   dragDropEvent(event, '#ffffff', '#4d4e4e55', '3px', '500px', '550px');
 });
 
+let logoNameExists = false;
+elements.inputPrimary.addEventListener('input', (event) => {
+  const val = event.target.value;
+  if (val.length >= 1) {
+    logoNameExists = true;
+  }
+});
+
 elements.nextBtn.addEventListener('click', () => {
   if (!uploaded) {
     alert('Please upload an SVG file');
     localStorage.removeItem('mainEditorCounter');
     return location.reload();
+  } else if (!logoNameExists) {
+    return alert('Please include a logo name');
   }
   localStorage.setItem('mainEditorCounter', '1');
   location.reload();

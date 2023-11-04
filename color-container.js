@@ -1,10 +1,10 @@
 const paletteMarkup = /*html*/ `
 <div class="bg-settings-container">
 <div>
-    <div id="color-mode" class="color-mode-selector">
-        <span id="color-mode-title" class="color-mode-title">Linear
-            <i class="fa-solid fa-angle-down"></i>
-        </span>
+  <div id="color-mode" class="color-mode-selector">
+    <span id="color-mode-title" class="color-mode-title" style="margin-left: -20px">Linear Colors
+      <i class="fa-solid fa-angle-down"  style="visibility: hidden; display: none"></i>
+    </span>
         <div id="bg-color-list" class="color-mode-list"></div>
     </div>
 
@@ -12,7 +12,7 @@ const paletteMarkup = /*html*/ `
         <div id="color-palette-gradient" class="color-palette-gradient"></div>
     </div>
 
-    <div id="gradient-panel" style="margin-top: 60px;  display: none; justify-content: flex-start; gap: 5px">
+    <div id="gradient-panel" style="margin-top: 60px;  display: none; justify-content: flex-start; gap: 5px; margin-left: -10px">
         <input type="color" value="#000" class="color-picker" id="grad-1">
         <input type="color" value="#000" class="color-picker" id="grad-2">
       </div>
@@ -22,7 +22,7 @@ const paletteMarkup = /*html*/ `
     </div>
 
     <h3 id="color-angle-text" style="display: none">0deg</h3>
-    <div id="slider-container" class="slider-container" style="margin-top: 20px; display: none">
+    <div id="slider-container" class="slider-container" style="margin-top: 20px; margin-left: -15px; display: none">
         <input class="slider" id="color-angle" type="range" value="0" min="0" max="360">
     </div>
 
@@ -77,15 +77,15 @@ class Palette extends HTMLElement {
     const $ = (item) => document.querySelector(item);
 
     const colorList = this.querySelector('#bg-color-list');
-    const colorModeTitle = this.querySelector('#color-mode-title');
+    // const colorModeTitle = this.querySelector('#color-mode-title');
 
-    colorModeTitle.addEventListener('click', () => {
-      if (colorList.classList.contains('show')) {
-        colorList.classList.remove('show');
-      } else {
-        colorList.classList.add('show');
-      }
-    });
+    // colorModeTitle.addEventListener('click', () => {
+    //   if (colorList.classList.contains('show')) {
+    //     colorList.classList.remove('show');
+    //   } else {
+    //     colorList.classList.add('show');
+    //   }
+    // });
     
     colorList.addEventListener('click', (e) => {
       this.colorMode = e.target.innerText;

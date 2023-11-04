@@ -335,13 +335,20 @@
                             style="background-color: #fff2e9;"></span>
                     </div>
                     <div style="display: flex;">
-                        <span class="color-picker solid_color_section" style="background-color: #8a6e10;"></span>
-                        <span class="color-picker solid_color_section" style="background-color: #b89e1e;"></span>
-                        <span class="color-picker solid_color_section" style="background-color: #e5c100;"></span>
-                        <span class="color-picker solid_color_section" style="background-color: #ffdd00;"></span>
-                        <span class="color-picker solid_color_section" style="background-color: #ffea66;"></span>
-                        <span class="color-picker solid_color_section" style="background-color: #fff59d;"></span>
-                        <span class="color-picker solid_color_section" style="background-color: #ffffe0;"></span>
+                        <span id="solid_color" class="color-picker solid_color_section"
+                            style="background-color: #8a6e10;"></span>
+                        <span id="solid_color" class="color-picker solid_color_section"
+                            style="background-color: #b89e1e;"></span>
+                        <span id="solid_color" class="color-picker solid_color_section"
+                            style="background-color: #e5c100;"></span>
+                        <span id="solid_color" class="color-picker solid_color_section"
+                            style="background-color: #ffdd00;"></span>
+                        <span id="solid_color" class="color-picker solid_color_section"
+                            style="background-color: #ffea66;"></span>
+                        <span id="solid_color" class="color-picker solid_color_section"
+                            style="background-color: #fff59d;"></span>
+                        <span id="solid_color" class="color-picker solid_color_section"
+                            style="background-color: #ffffe0;"></span>
                     </div>
                     <div style="display: flex;">
                         <span id="solid_color" class="color-picker solid_color_section"
@@ -446,18 +453,18 @@
                         <span id="RGB_mode" class="color_mode_title">RGB</span>
                         <span id="HEX_mode" class="color_mode_title">HEX</span>
                     </div>
-                    <div style="display: grid; gap: 10px; margin: 20px 0;">
-                        <div id="HSL_view" style="display: flex; width: 180px;">
+                    <div style="display: grid; gap: 10px; margin: 20px 18px;">
+                        <div id="HSL_view" style="display: flex;">
                             <input id="H" class="hslPalette" type="text" placeholder="H">
                             <input id="S" class="hslPalette" type="text" placeholder="S">
                             <input id="L" class="hslPalette" type="text" placeholder="L">
                         </div>
-                        <div id="RGB_view" style="display: flex; width: 180px;">
+                        <div id="RGB_view" style="display: flex;">
                             <input id="R" class="hslPalette" type="text" placeholder="R">
                             <input id="G" class="hslPalette" type="text" placeholder="G">
                             <input id="B" class="hslPalette" type="text" placeholder="B">
                         </div>
-                        <div id="HEX_view" style="display: flex; width: 180px;">
+                        <div id="HEX_view" style="display: flex;">
                             <input id="HEX" class="hslPalette" type="text" placeholder="HEX">
                         </div>
                     </div>
@@ -532,6 +539,15 @@
                 </div>
                 <div id="solid_color_items-bg" style="display: flex; flex-direction: column; gap: 5px;">
                     <h4 style="color: #777;">Solid Colors</h4>
+                    <span id="canvas-bg-none" class="none-icon">
+                        <svg width="30" height="30" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.7785 2.22168L2.22217 17.778" stroke="#DE3A3A" stroke-width="2"
+                                stroke-linecap="round"></path>
+                            <path
+                                d="M4 0.5H16C17.933 0.5 19.5 2.067 19.5 4V16C19.5 17.933 17.933 19.5 16 19.5H4C2.067 19.5 0.5 17.933 0.5 16V4C0.5 2.067 2.067 0.5 4 0.5Z"
+                                stroke="#E4E5E7"></path>
+                        </svg>
+                    </span>
                     <div style="display: flex;">
                         <span id="solid_color-bg" class="color-picker solid_color_section"
                             style="background-color: #000000;"></span>
@@ -565,13 +581,20 @@
                             style="background-color: #fff2e9;"></span>
                     </div>
                     <div style="display: flex;">
-                        <span id="solid_color-bg" class="color-picker solid_color_section" style="background-color: #8a6e10;"></span>
-                        <span id="solid_color-bg" class="color-picker solid_color_section" style="background-color: #b89e1e;"></span>
-                        <span id="solid_color-bg" class="color-picker solid_color_section" style="background-color: #e5c100;"></span>
-                        <span id="solid_color-bg" class="color-picker solid_color_section" style="background-color: #ffdd00;"></span>
-                        <span id="solid_color-bg" class="color-picker solid_color_section" style="background-color: #ffea66;"></span>
-                        <span id="solid_color-bg" class="color-picker solid_color_section" style="background-color: #fff59d;"></span>
-                        <span id="solid_color-bg" class="color-picker solid_color_section" style="background-color: #ffffe0;"></span>
+                        <span id="solid_color-bg" class="color-picker solid_color_section"
+                            style="background-color: #8a6e10;"></span>
+                        <span id="solid_color-bg" class="color-picker solid_color_section"
+                            style="background-color: #b89e1e;"></span>
+                        <span id="solid_color-bg" class="color-picker solid_color_section"
+                            style="background-color: #e5c100;"></span>
+                        <span id="solid_color-bg" class="color-picker solid_color_section"
+                            style="background-color: #ffdd00;"></span>
+                        <span id="solid_color-bg" class="color-picker solid_color_section"
+                            style="background-color: #ffea66;"></span>
+                        <span id="solid_color-bg" class="color-picker solid_color_section"
+                            style="background-color: #fff59d;"></span>
+                        <span id="solid_color-bg" class="color-picker solid_color_section"
+                            style="background-color: #ffffe0;"></span>
                     </div>
                     <div style="display: flex;">
                         <span id="solid_color-bg" class="color-picker solid_color_section"
@@ -734,19 +757,19 @@
                     </div>
                     <div style="display: flex;">
                         <span id="solid_color2" class="color-picker solid_color_section"
-                            style="background-color: #b25d1f;"></span>
+                            style="background-color: #8a6e10;"></span>
                         <span id="solid_color2" class="color-picker solid_color_section"
-                            style="background-color: #e37627;"></span>
+                            style="background-color: #b89e1e;"></span>
                         <span id="solid_color2" class="color-picker solid_color_section"
-                            style="background-color: #fc832b;"></span>
+                            style="background-color: #e5c100;"></span>
                         <span id="solid_color2" class="color-picker solid_color_section"
-                            style="background-color: #fd964b;"></span>
+                            style="background-color: #ffdd00;"></span>
                         <span id="solid_color2" class="color-picker solid_color_section"
-                            style="background-color: #febb8a;"></span>
+                            style="background-color: #ffea66;"></span>
                         <span id="solid_color2" class="color-picker solid_color_section"
-                            style="background-color: #fedfc9;"></span>
+                            style="background-color: #fff59d;"></span>
                         <span id="solid_color2" class="color-picker solid_color_section"
-                            style="background-color: #fff2e9;"></span>
+                            style="background-color: #ffffe0;"></span>
                     </div>
                     <div style="display: flex;">
                         <span id="solid_color2" class="color-picker solid_color_section"

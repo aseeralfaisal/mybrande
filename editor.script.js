@@ -112,6 +112,7 @@ class EditorScreen {
         blur: this.shadowBlur,
       });
     };
+
     this.canvas.setBackgroundImage('/static/pattern.png', this.canvas.renderAll.bind(this.canvas), {
       opacity: 0.6,
       originX: 'left',
@@ -321,6 +322,32 @@ class EditorScreen {
   }
 
   initialize() {
+    
+    
+    const updatePreview = () => {
+      const imageURL = this.canvas.toDataURL({
+        format: 'png',
+        multiplier: 0.5,
+      });
+      $('#magnifier_img').src = imageURL;
+    };
+    
+    const setCanvasBackground = () => {
+      this.canvas.setBackgroundImage('/static/pattern.png', this.canvas.renderAll.bind(this.canvas), {
+        opacity: 0.6,
+        originX: 'left',
+        originY: 'top',
+        top: 0,
+        left: 0,
+        scaleX: 0.3,
+        scaleY: 0.3,
+      });
+    };
+
+    setCanvasBackground();
+
+    updatePreview();
+
     fabric.Object.prototype.setControlsVisibility({
       mt: false,
       mb: false,
@@ -551,21 +578,13 @@ class EditorScreen {
       this.scaleObject();
     });
 
-    const updatePreview = () => {
-      const imageURL = this.canvas.toDataURL({
-        format: 'png',
-        multiplier: 0.5,
-      });
-      document.getElementById('magnifier_img').src = imageURL;
-    };
-
     let openTextPickerView = 'block';
     let openPickerView = 'block';
 
     let pickerDefaultColor = '#fff';
     const colorPicker = new iro.ColorPicker('#open_picker', {
       display: openPickerView,
-      width: 180,
+      width: 210,
       marginTop: 20,
       color: pickerDefaultColor,
       layout: [
@@ -627,7 +646,7 @@ class EditorScreen {
       const color = Array.isArray(element.get('fill').colorStops)
         ? rgbToHex(element.get('fill').colorStops[0].color)
         : element.get('fill');
-      colorPicker.color.hexString = color;
+      // colorPicker?.color?.hexString = color;
     };
 
     const updatePickerHandler = (element) => {
@@ -1056,6 +1075,8 @@ class EditorScreen {
       visible: false,
       lockMovementX: true,
       lockMovementY: true,
+      hasControls: false,
+      hasRotatingPoint: false,
     });
 
     const line2 = new fabric.Line([canvasCenter.x, 0, canvasCenter.x, this.canvas.getHeight()], {
@@ -1064,9 +1085,11 @@ class EditorScreen {
       visible: false,
       lockMovementX: true,
       lockMovementY: true,
+      hasControls: false,
+      hasRotatingPoint: false,
     });
 
-    this.canvas.add(line1, line2);
+    // this.canvas.add(line1, line2);
 
     this.canvas.on('object:moving', (e) => {
       const obj = e.target;
@@ -1135,10 +1158,10 @@ class EditorScreen {
 
       document.addEventListener('keydown', handler);
 
-      // this.canvas.on('selection:cleared', () => {
-      //   document.removeEventListener('keydown', handler);
-      //   activeObject = null;
-      // });
+      this.canvas.on('selection:cleared', () => {
+        document.removeEventListener('keydown', handler);
+        activeObject = null;
+      });
     });
 
     this.canvas.on('selection:updated', () => {
@@ -1166,17 +1189,6 @@ class EditorScreen {
       };
     });
 
-    const setCanvasBackground = () => {
-      this.canvas.setBackgroundImage('/static/pattern.png', this.canvas.renderAll.bind(this.canvas), {
-        opacity: 0.6,
-        originX: 'left',
-        originY: 'top',
-        top: 0,
-        left: 0,
-        scaleX: 0.3,
-        scaleY: 0.3,
-      });
-    };
 
     const logoOrSloganView = (element) => {
       if (element === 'LogoName') {
@@ -1848,7 +1860,7 @@ class EditorScreen {
           }
           colPicker.addEventListener('click', (event) => {
             const color = rgbToHex(event.target.style.backgroundColor);
-            const activeElem = this.canvas.getActiveObject()
+            const activeElem = this.canvas.getActiveObject();
             activeElem.set('fill', color);
             this.canvas.requestRenderAll();
           });
@@ -1865,34 +1877,41 @@ class EditorScreen {
       color.set(pickerDefaultColor);
     });
 
-    const CanvasColorPicker = this.canvas;
-    colorPicker.on('input:move', (color) => {
-      
+    let colorChanging = false;
+    colorPicker.on('input:change', (color) => {
+      colorChanging = true;
+
       pickerDefaultColor = color.rgbaString;
-      
+
       if (color.index === 0) {
         const hsl = color.hsl;
         const rgb = color.rgb;
-    
+
         $('#H2').value = hsl.h;
         $('#S2').value = hsl.s;
         $('#L2').value = hsl.l;
         $('#R2').value = rgb.r;
         $('#G2').value = rgb.g;
         $('#B2').value = rgb.b;
-    
+
         $('#HEX2').value = color.hexString;
       }
-      
-      const active = CanvasColorPicker.getActiveObject();
-      active.set('fill', color.rgbaString); // Now using rgbaString which includes alpha value
-      CanvasColorPicker.requestRenderAll();
-      
+
+      const active = this.canvas.getActiveObject();
+      active.set('fill', color.rgbaString);
+
       const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
       logoColorPickers.forEach((i) => i.remove());
       updateColorPickers();
       this.canvas.requestRenderAll();
 
+      colorChanging = false;
+    });
+
+    this.canvas.on('object:moving', function (e) {
+      if (colorChanging) {
+        e.preventDefault();
+      }
     });
 
     [('#R', '#G', '#B')].forEach((id) => {
@@ -2181,29 +2200,27 @@ class EditorScreen {
       color.set(pickerDefaultColor);
     });
 
-    // const CanvasColorPicker = this.canvas;
-
     const changeColorPickerText = (color) => {
       pickerDefaultColor = color.rgbaString;
-      
+
       if (color.index === 0) {
         const hsl = color.hsl;
         const rgb = color.rgb;
-    
+
         $('#H2').value = hsl.h;
         $('#S2').value = hsl.s;
         $('#L2').value = hsl.l;
         $('#R2').value = rgb.r;
         $('#G2').value = rgb.g;
         $('#B2').value = rgb.b;
-    
+
         $('#HEX2').value = color.hexString;
       }
-      
-      const active = CanvasColorPicker.getActiveObject();
-      active.set('fill', color.rgbaString); // Now using rgbaString which includes alpha value
-      CanvasColorPicker.requestRenderAll();
-      
+
+      const active = this.canvas.getActiveObject();
+      active.set('fill', color.rgbaString); 
+      this.canvas.requestRenderAll();
+
       const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
       logoColorPickers.forEach((i) => i.remove());
       updateColorPickers();
@@ -2211,7 +2228,7 @@ class EditorScreen {
     };
 
     colorPickerText.on('input:change', changeColorPickerText);
-    // colorPickerText.on('input:move', changeColorPickerText);
+    colorPickerText.on('input:move', changeColorPickerText);
 
     [('R2', 'G2', 'B2')].forEach((id) => {
       $(`#${id}`).addEventListener('input', () => {
@@ -2288,6 +2305,7 @@ class EditorScreen {
     handleColorModeClick('#HEX2', '#RGB2', '#HSL2');
 
     const centerAndResizeElements = (type, logoSize, sloganSize, textPosition, mainTop = -100) => {
+      // this.canvas.remove(line1, line2);
       (logoNameElement.fontSize = logoSize), sloganSize;
       (sloganNameElement.fontSize = logoSize), sloganSize;
       const objects = this.canvas.getObjects();
@@ -2297,126 +2315,131 @@ class EditorScreen {
       switch (type) {
         case 'topBottom':
           setTimeout(() => {
-            const objects = this.canvas.getObjects();
-            const logoNameElement = objects.find((obj) => obj.type === 'text' && obj.text === 'MyBrande');
+            // const objects = this.canvas.getObjects();
+            const logoNameElement = objects.find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'mybrande');
             const sloganNameElement = objects.find(
               (obj) => obj.type === 'text' && obj.text === 'Slogan goes here'
             );
 
-            logoNameElement.set('top', this.canvas.height / 1.8);
-            sloganNameElement.set('top', this.canvas.height / 1.6);
-
             logoNameElement.centerH();
             sloganNameElement.centerH();
 
+            logoNameElement.set('top', this.canvas.height / 1.5);
+            sloganNameElement.set('top', this.canvas.height / 1.35);
+
             const newGrp = new fabric.Group(objects);
+            this.canvas.centerObject(newGrp);
             newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
+            updatePreview();
+            this.canvas.requestRenderAll();
           }, timeout);
           break;
         case 'bottomTop':
           setTimeout(() => {
-            const logoNameElement = this.canvas
-              .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text === 'MyBrande');
-            const sloganNameElement = this.canvas
-              .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text === 'Slogan goes here');
-
-            logoNameElement.set('top', this.canvas.height / 30);
-            sloganNameElement.set('top', this.canvas.height / 12);
+            const logoNameElement = objects.find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'mybrande');
+            const sloganNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here'
+            );
 
             logoNameElement.centerH();
             sloganNameElement.centerH();
+
+            logoNameElement.set('top', this.canvas.height / 4.5);
+            sloganNameElement.set('top', this.canvas.height / 3.5);
+
             const newGrp = new fabric.Group(objects);
+            newGrp.center();
             newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
+            updatePreview();
+            this.canvas.requestRenderAll();
           }, timeout);
           break;
         case 'leftRight':
           setTimeout(() => {
             const logoNameElement = this.canvas
               .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text === 'MyBrande');
+              .find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'mybrande');
             const sloganNameElement = this.canvas
               .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text === 'Slogan goes here');
+              .find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here');
 
             logoNameElement.center();
             sloganNameElement.center();
-            logoNameElement.set('top', this.canvas.height / 4);
-            sloganNameElement.set('top', this.canvas.height / 3);
+            logoNameElement.set('top', this.canvas.height / 2.5);
+            sloganNameElement.set('top', this.canvas.height / 2);
 
             if (textPosition === 'left') {
               logoNameElement.viewportCenter();
               sloganNameElement.viewportCenter();
 
-              logoNameElement.set('top', this.canvas.height / 4);
-              sloganNameElement.set('top', this.canvas.height / 3);
+              logoNameElement.set('top', this.canvas.height / 2.5);
+              sloganNameElement.set('top', this.canvas.height / 2);
 
-              logoNameElement.set('left', this.canvas.width / 2.25);
-              sloganNameElement.set('left', this.canvas.width / 2.25);
+              logoNameElement.set('left', this.canvas.width / 2.4);
+              sloganNameElement.set('left', this.canvas.width / 2.4);
             } else {
               logoNameElement.viewportCenterH();
               sloganNameElement.viewportCenterH();
 
-              logoNameElement.set('top', this.canvas.height / 4);
-              sloganNameElement.set('top', this.canvas.height / 3);
-
-              logoNameElement.set('left', (logoNameElement.left += 100));
-              sloganNameElement.set('left', (sloganNameElement.left += 100));
+              logoNameElement.set('left', this.canvas.width / 2.25);
+              sloganNameElement.set('left', this.canvas.width / 2.5);
             }
 
             logoMain.forEach((i) => (i.left -= 200));
             const newGrp = new fabric.Group(objects);
             newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
+            updatePreview();
+            this.canvas.requestRenderAll();
           }, timeout);
           break;
         case 'rightLeft':
           setTimeout(() => {
             const logoNameElement = this.canvas
               .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text === 'MyBrande');
+              .find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'mybrande');
             const sloganNameElement = this.canvas
               .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text === 'Slogan goes here');
+              .find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here');
 
             logoNameElement.center();
             sloganNameElement.center();
-            logoNameElement.set('top', this.canvas.height / 4);
-            sloganNameElement.set('top', this.canvas.height / 3);
+
+            logoNameElement.set('top', this.canvas.height / 2.5);
+            sloganNameElement.set('top', this.canvas.height / 2);
 
             if (textPosition === 'left') {
               logoNameElement.viewportCenter();
               sloganNameElement.viewportCenter();
 
-              logoNameElement.set('top', this.canvas.height / 4);
-              sloganNameElement.set('top', this.canvas.height / 3);
+              logoNameElement.set('top', this.canvas.height / 2.5);
+              sloganNameElement.set('top', this.canvas.height / 2);
 
-              logoNameElement.set('left', this.canvas.width / 2.25);
-              sloganNameElement.set('left', this.canvas.width / 2.25);
+              logoNameElement.set('left', this.canvas.width / 2.8);
+              sloganNameElement.set('left', this.canvas.width / 4);
             } else {
               logoNameElement.viewportCenterH();
               sloganNameElement.viewportCenterH();
 
-              logoNameElement.set('top', this.canvas.height / 4);
-              sloganNameElement.set('top', this.canvas.height / 3);
-
-              logoNameElement.set('left', (logoNameElement.left -= 100));
-              sloganNameElement.set('left', (sloganNameElement.left -= 100));
+              logoNameElement.set('left', this.canvas.width / 2.8);
+              sloganNameElement.set('left', this.canvas.width / 3.4);
             }
 
-            logoMain.forEach((i) => (i.left += 200));
+            logoMain.forEach((i) => (i.left += 150));
             const newGrp = new fabric.Group(objects);
             newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
+            updatePreview();
+            this.canvas.requestRenderAll();
           }, timeout);
           break;
       }
-      updatePreview();
+      this.canvas.requestRenderAll();
       captureCanvasState();
-      this.canvas.renderAll();
+      // this.canvas.add(line1, line2);
+      this.canvas.requestRenderAll();
     };
 
     const scaleLogo = (scaleSize) => {
@@ -2437,64 +2460,73 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     };
 
+    $('#canvas-bg-none').addEventListener('click', () => {
+      this.canvas.setBackgroundColor(this.canvasBG);
+      this.canvas.requestRenderAll();
+      captureCanvasState();
+    });
+
+    scaleLogo(160);
+    centerAndResizeElements('topBottom', 29, 23, 'center', 150);
+
     $('#top_bottom_1').addEventListener('click', () => {
-      scaleLogo(1200);
-      centerAndResizeElements('topBottom', 29, 23, 'center', -50);
+      scaleLogo(160);
+      centerAndResizeElements('topBottom', 29, 23, 'center', 150);
     });
 
     $('#top_bottom_2').addEventListener('click', () => {
-      scaleLogo(1200);
-      centerAndResizeElements('topBottom', 26, 21, 'center', -50);
+      scaleLogo(160);
+      centerAndResizeElements('topBottom', 26, 21, 'center', 150);
     });
 
     $('#top_bottom_3').addEventListener('click', () => {
-      scaleLogo(1000);
-      centerAndResizeElements('topBottom', 29, 23, 'center', 0);
+      scaleLogo(140);
+      centerAndResizeElements('topBottom', 29, 23, 'center', 150);
     });
 
     $('#bottom_top_1').addEventListener('click', () => {
-      scaleLogo(1500);
-      centerAndResizeElements('bottomTop', 32, 25, 'center', -100);
+      scaleLogo(160);
+      centerAndResizeElements('bottomTop', 32, 25, 'center', 150);
     });
 
     $('#bottom_top_2').addEventListener('click', () => {
-      scaleLogo(1200);
-      centerAndResizeElements('bottomTop', 26, 21, 'center');
+      scaleLogo(140);
+      centerAndResizeElements('bottomTop', 26, 21, 'center', 150);
     });
 
     $('#bottom_top_3').addEventListener('click', () => {
-      scaleLogo(1800);
-      centerAndResizeElements('bottomTop', 29, 23, 'center');
+      scaleLogo(160);
+      centerAndResizeElements('bottomTop', 29, 23, 'center', 150);
     });
 
     $('#left_right_1').addEventListener('click', () => {
-      scaleLogo(1500);
-      centerAndResizeElements('leftRight', 32, 25, 'center', -100);
+      scaleLogo(160);
+      centerAndResizeElements('leftRight', 32, 25, 'center', 200);
     });
 
     $('#left_right_2').addEventListener('click', () => {
-      scaleLogo(1500);
-      centerAndResizeElements('leftRight', 32, 25, 'left', -100);
+      scaleLogo(160);
+      centerAndResizeElements('leftRight', 32, 25, 'left', 200);
     });
 
     $('#left_right_3').addEventListener('click', () => {
-      scaleLogo(1200);
-      centerAndResizeElements('leftRight', 32, 25, 'center', -100);
+      scaleLogo(140);
+      centerAndResizeElements('leftRight', 32, 25, 'left', 200);
     });
 
     $('#right_left_1').addEventListener('click', () => {
-      scaleLogo(1200);
-      centerAndResizeElements('rightLeft', 32, 25, 'center', -100);
+      scaleLogo(160);
+      centerAndResizeElements('rightLeft', 32, 25, 'center', 200);
     });
 
     $('#right_left_2').addEventListener('click', () => {
-      scaleLogo(1500);
-      centerAndResizeElements('rightLeft', 32, 25, 'center', -100);
+      scaleLogo(140);
+      centerAndResizeElements('rightLeft', 32, 25, 'left', 200);
     });
 
     $('#right_left_3').addEventListener('click', () => {
-      scaleLogo(1200);
-      centerAndResizeElements('rightLeft', 32, 25, 'center', -100);
+      scaleLogo(160);
+      centerAndResizeElements('rightLeft', 32, 25, 'left', 200);
     });
   }
 }
