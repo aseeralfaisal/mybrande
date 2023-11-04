@@ -850,7 +850,10 @@ class EditorScreen {
     this.previewMode.addEventListener('click', () => {
       this.activeNavbarSetting = 'preview';
 
-      // this.canvas.setBackgroundColor(null, this.canvas.renderAll.bind(this.canvas));
+      const bgColor = this.canvas.get('backgroundColor')
+      if(bgColor === '#efefef'){
+        this.canvas.setBackgroundColor(null, this.canvas.renderAll.bind(this.canvas));
+      }
       this.canvas.setBackgroundImage(null, this.canvas.renderAll.bind(this.canvas));
       this.canvas.requestRenderAll();
 
@@ -2413,11 +2416,11 @@ class EditorScreen {
             if (textPosition === 'left') {
               logoNameElement.viewportCenter();
               sloganNameElement.viewportCenter();
+              
+            logoNameElement.set('top', this.canvas.height / 2.5);
+            sloganNameElement.set('top', this.canvas.height / 2);
 
-              logoNameElement.set('top', this.canvas.height / 2.5);
-              sloganNameElement.set('top', this.canvas.height / 2);
-
-              logoNameElement.set('left', this.canvas.width / 2.8);
+              logoNameElement.set('left', this.canvas.width / 2.7);
               sloganNameElement.set('left', this.canvas.width / 4);
             } else {
               logoNameElement.viewportCenterH();
@@ -2521,7 +2524,7 @@ class EditorScreen {
 
     $('#right_left_2').addEventListener('click', () => {
       scaleLogo(140);
-      centerAndResizeElements('rightLeft', 32, 25, 'left', 200);
+      centerAndResizeElements('rightLeft', 32, 25, 'left', 210);
     });
 
     $('#right_left_3').addEventListener('click', () => {
