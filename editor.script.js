@@ -944,8 +944,10 @@ class EditorScreen {
 
     this.letterSpacingSlider.addEventListener('input', (e) => {
       this.letterSpacing = e.target.value;
+      console.log(e.target.value);
       const active = this.canvas.getActiveObject();
       active.set('charSpacing', this.letterSpacing);
+      $('#l_spacing_value').innerText = ': ' + e.target.value / 10;
       this.canvas.requestRenderAll();
     });
 
@@ -1280,6 +1282,33 @@ class EditorScreen {
     //   }
     // };
 
+    function rgbaToHex(rgbaString) {
+      var match = rgbaString.match(/^rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)$/);
+
+      if (!match) {
+        return 'Invalid RGBA string';
+      }
+
+      var r = parseInt(match[1]);
+      var g = parseInt(match[2]);
+      var b = parseInt(match[3]);
+      var a = parseFloat(match[4]);
+
+      function componentToHex(c) {
+        var hex = c.toString(16);
+        return hex.length == 1 ? '0' + hex : hex;
+      }
+
+      var hex = '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+
+      if (!isNaN(a)) {
+        var alphaHex = Math.round(a * 255).toString(16);
+        hex += componentToHex(parseInt(alphaHex));
+      }
+
+      return hex;
+    }
+
     logoNameElement.on('mousedown', (e) => {
       e.e.preventDefault();
       this.textSelectorValue = 'LogoName';
@@ -1302,28 +1331,6 @@ class EditorScreen {
       const logoText = logoNameElement.text;
       $('.case-list-item__title').innerText = getTextCase(logoText);
       putAngleDownIcon('.case-list-item__title');
-
-      // const fillColor = e.target.fill;
-      // console.log(fillColor.split("("))
-      // $('#HEX2').value = rgbToHex(fillColor);
-      
-      // let rgbValue = hexToRgb(fillColor);
-      // let rgbValues = rgbValue.match(/\d+/g);
-      
-      // if (rgbValues && rgbValues.length === 3) {
-      //   $('#R2').value = rgbValues[0];
-      //   $('#G2').value = rgbValues[1];
-      //   $('#B2').value = rgbValues[2];
-      // }
-      
-      // let hslValue = hexToHsl(fillColor.replace(/,\s*\d+(\.\d+)?\)/, ')'));
-      // let hslValues = hslValue.match(/\d+/g);
-      
-      // if (hslValues && hslValues.length === 3) {
-      //   $('#H2').value = hslValues[0];
-      //   $('#S2').value = hslValues[1];
-      //   $('#L2').value = hslValues[2];
-      // }      
 
       captureCanvasState();
       this.canvas.requestRenderAll();
@@ -1352,8 +1359,6 @@ class EditorScreen {
       const logoText = sloganNameElement.text;
       $('.case-list-item__title').innerText = getTextCase(logoText);
       putAngleDownIcon('.case-list-item__title');
-
-      
 
       captureCanvasState();
       this.canvas.requestRenderAll();
@@ -1388,8 +1393,25 @@ class EditorScreen {
           const logoNameElement = this.canvas.getObjects().find((i) => i.text === 'My Brand Name');
           const sloganNameElement = this.canvas.getObjects().find((i) => i.text === 'Slogan goes here');
 
+          this.canvas.getObjects().forEach((item) => {
+            if(!item.text){
+              item.on('mousedown', () => {
+                this.logoSettingsContainer.style.display = 'grid';
+                this.textSettingsContainer.style.display = 'none';
+                this.backgroundSettingsContainer.style.display = 'none';
+                this.uploadSettingsContainer.style.display = 'none';                
+              })
+            }
+          })
+
           logoNameElement.on('mousedown', (event) => {
             event.e.preventDefault();
+            this.activeNavbarSetting = 'text';
+            this.updateActiveNavbar();
+            this.logoSettingsContainer.style.display = 'none';
+            this.textSettingsContainer.style.display = 'grid';
+            this.backgroundSettingsContainer.style.display = 'none';
+            this.uploadSettingsContainer.style.display = 'none';
             this.textSelectorValue = 'LogoName';
             // logoOrSloganView('LogoName');
 
@@ -1415,6 +1437,12 @@ class EditorScreen {
 
           sloganNameElement.on('mousedown', (event) => {
             event.e.preventDefault();
+            this.activeNavbarSetting = 'text';
+            this.updateActiveNavbar();
+            this.logoSettingsContainer.style.display = 'none';
+            this.textSettingsContainer.style.display = 'grid';
+            this.backgroundSettingsContainer.style.display = 'none';
+            this.uploadSettingsContainer.style.display = 'none';
             this.textSelectorValue = 'SloganName';
             // logoOrSloganView('SloganName');
 
@@ -2311,10 +2339,10 @@ class EditorScreen {
 
     const colorPickerText = new iro.ColorPicker('#open_picker_text', {
       display: openTextPickerView,
-      width: 180,
+      width: 210,
       marginTop: 20,
       color: pickerDefaultColor,
-      transparency: true,
+      transparency: false,
       layout: [
         {
           component: iro.ui.Box,
@@ -2581,7 +2609,7 @@ class EditorScreen {
 
             logoNameElement.set('top', this.canvas.height / 2.3);
             sloganNameElement.set('top', this.canvas.height / 1.9);
-            
+
             logoNameElement.set('fontSize', 46);
             sloganNameElement.set('fontSize', 22);
 
