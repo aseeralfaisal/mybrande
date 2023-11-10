@@ -456,7 +456,7 @@ class EditorScreen {
 
     this.fontStyleList.addEventListener('click', (ev) => {
       const selectedTextElement = ev.target.innerText;
-      console.log(selectedTextElement)
+      console.log(selectedTextElement);
 
       const active = this.canvas.getActiveObject();
       if (selectedTextElement === 'Normal') {
@@ -644,6 +644,68 @@ class EditorScreen {
       return '#' + r + g + b;
     }
 
+    function hexToRgb(hexString) {
+      // Remove the hash if present
+      hexString = hexString.replace(/^#/, '');
+
+      // Parse the hex values
+      let bigint = parseInt(hexString, 16);
+      let r = (bigint >> 16) & 255;
+      let g = (bigint >> 8) & 255;
+      let b = bigint & 255;
+
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function hexToHsl(hexString) {
+      // Remove the hash if present
+      hexString = hexString.replace(/^#/, '');
+
+      // Parse the hex values
+      let bigint = parseInt(hexString, 16);
+      let r = (bigint >> 16) & 255;
+      let g = (bigint >> 8) & 255;
+      let b = bigint & 255;
+
+      // Convert RGB to HSL
+      r /= 255;
+      g /= 255;
+      b /= 255;
+
+      let max = Math.max(r, g, b);
+      let min = Math.min(r, g, b);
+      let h,
+        s,
+        l = (max + min) / 2;
+
+      if (max == min) {
+        h = s = 0; // achromatic
+      } else {
+        let d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+        switch (max) {
+          case r:
+            h = (g - b) / d + (g < b ? 6 : 0);
+            break;
+          case g:
+            h = (b - r) / d + 2;
+            break;
+          case b:
+            h = (r - g) / d + 4;
+            break;
+        }
+
+        h /= 6;
+      }
+
+      h = Math.round(h * 360);
+      s = Math.round(s * 100);
+      l = Math.round(l * 100);
+
+      return `hsl(${h}, ${s}%, ${l}%)`;
+    }
+
     const changePickerColors = (element) => {
       const color = Array.isArray(element.get('fill').colorStops)
         ? rgbToHex(element.get('fill').colorStops[0].color)
@@ -708,7 +770,28 @@ class EditorScreen {
           const layerSection = new CreateLayerSection(this.layers);
           layerSection.create(obj, idx);
 
-          obj.on('mousedown', () => {
+          obj.on('mousedown', (e) => {
+            const fillColor = e.target.fill;
+            $('#HEX').value = fillColor;
+
+            let rgbValue = hexToRgb(fillColor);
+            let rgbValues = rgbValue.match(/\d+/g);
+
+            if (rgbValues && rgbValues.length === 3) {
+              $('#R').value = rgbValues[0];
+              $('#G').value = rgbValues[1];
+              $('#B').value = rgbValues[2];
+            }
+
+            let hslValue = hexToHsl(fillColor);
+            let hslValues = hslValue.match(/\d+/g);
+
+            if (hslValues && hslValues.length === 3) {
+              $('#H').value = hslValues[0];
+              $('#S').value = hslValues[1];
+              $('#L').value = hslValues[2];
+            }
+
             this.activeNavbarSetting = 'logo';
             this.updateActiveNavbar();
             this.logoSettingsContainer.style.display = 'grid';
@@ -763,7 +846,7 @@ class EditorScreen {
     const putAngleDownIcon = (className) => {
       const icon = document.createElement('i');
       icon.className = 'fa-solid fa-angle-down';
-      $(className).append(icon);
+      $(className)?.append(icon);
     };
 
     logoNameElement.on('mousedblclick', () => {
@@ -1040,7 +1123,6 @@ class EditorScreen {
       updatePreview();
     });
 
-
     let localDirFile = null;
     let localDirFiles = null;
     document.onkeydown = (event) => {
@@ -1225,18 +1307,21 @@ class EditorScreen {
 
       const fontSize = logoNameElement.fontSize;
       this.fontSizeListTitle.innerText = fontSize + ' px';
+      putAngleDownIcon('.font_size-list-item__title');
 
       putAngleDownIcon('#font-selector-title');
       const logoText = logoNameElement.text;
       $('.case-list-item__title').innerText = getTextCase(logoText);
       putAngleDownIcon('.case-list-item__title');
+
+      captureCanvasState();
       this.canvas.requestRenderAll();
     });
 
     sloganNameElement.on('mousedown', (event) => {
       event.e.preventDefault();
       this.textSelectorValue = 'SloganName';
-      logoOrSloganView('SloganName');
+      // logoOrSloganView('SloganName');
 
       $('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
       putAngleDownIcon('.font_style-list-item__title');
@@ -1247,6 +1332,8 @@ class EditorScreen {
       const fontSize = sloganNameElement.fontSize;
       this.fontSizeListTitle.innerText = fontSize + ' px';
 
+      putAngleDownIcon('.font_size-list-item__title');
+
       const fontFamily = sloganNameElement.fontFamily;
       $('#font-selector-title').innerText = fontFamily;
 
@@ -1254,6 +1341,9 @@ class EditorScreen {
       const logoText = sloganNameElement.text;
       $('.case-list-item__title').innerText = getTextCase(logoText);
       putAngleDownIcon('.case-list-item__title');
+
+      captureCanvasState();
+      this.canvas.requestRenderAll();
     });
 
     const undoHistory = [];
@@ -1289,43 +1379,45 @@ class EditorScreen {
             event.e.preventDefault();
             this.textSelectorValue = 'LogoName';
             // logoOrSloganView('LogoName');
-      
+
             $('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
             putAngleDownIcon('.font_style-list-item__title');
-      
+
             const letterSpacing = logoNameElement.get('charSpacing');
             $('#letter-spacing-slider').value = letterSpacing;
-      
+
             const fontFamily = logoNameElement.fontFamily;
             $('#font-selector-title').innerText = fontFamily;
-      
+
             const fontSize = logoNameElement.fontSize;
             this.fontSizeListTitle.innerText = fontSize + ' px';
-      
+            putAngleDownIcon('.font_size-list-item__title');
+
             putAngleDownIcon('#font-selector-title');
             const logoText = logoNameElement.text;
             $('.case-list-item__title').innerText = getTextCase(logoText);
             putAngleDownIcon('.case-list-item__title');
             this.canvas.requestRenderAll();
           });
-      
+
           sloganNameElement.on('mousedown', (event) => {
             event.e.preventDefault();
             this.textSelectorValue = 'SloganName';
-            logoOrSloganView('SloganName');
-      
+            // logoOrSloganView('SloganName');
+
             $('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
             putAngleDownIcon('.font_style-list-item__title');
-      
+
             const letterSpacing = +sloganNameElement.charSpacing;
             $('#letter-spacing-slider').value = letterSpacing;
-      
+
             const fontSize = sloganNameElement.fontSize;
             this.fontSizeListTitle.innerText = fontSize + ' px';
-      
+            putAngleDownIcon('.font_size-list-item__title');
+
             const fontFamily = sloganNameElement.fontFamily;
             $('#font-selector-title').innerText = fontFamily;
-      
+
             putAngleDownIcon('#font-selector-title');
             const logoText = sloganNameElement.text;
             $('.case-list-item__title').innerText = getTextCase(logoText);
@@ -1345,26 +1437,26 @@ class EditorScreen {
                     const blue = parseInt(match[3]);
                     const hexColor = convertRGBtoHex(red, green, blue);
                     activeObj.set('fill', hexColor);
-                    console.log({hexColor})
+                    console.log({ hexColor });
                     captureCanvasState();
-      
+
                     const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
                     logoColorPickers.forEach((i) => i.remove());
-                    
+
                     let colorSet = new Set();
 
                     this.canvas.getObjects().forEach((item, idx) => {
                       let itemFill = item.get('fill');
                       const colPicker = document.createElement('div');
-              
+
                       if (getParsedColor(itemFill) !== undefined) {
                         let color = getParsedColor(itemFill);
                         color = color.padEnd(7, '0');
-              
+
                         if (!colorSet.has(color)) {
                           colorSet.add(color);
                           colPicker.setAttribute('id', 'color-layers-pickers');
-              
+
                           colPicker.style.background = itemFill;
                           colPicker.className = 'color-picker';
                           colPicker.style.borderRadius = '5px';
@@ -1378,7 +1470,7 @@ class EditorScreen {
                         });
                       }
                     });
-              
+
                     updatePreview();
                     captureCanvasState();
 
@@ -1388,7 +1480,7 @@ class EditorScreen {
               }
             });
           });
-      
+
           // document.querySelectorAll('#solid_color2').forEach((item) => {
           //   item.addEventListener('click', (event) => {
           //     if (this.canvas) {
@@ -2390,12 +2482,11 @@ class EditorScreen {
 
       switch (type) {
         case 'topBottom':
-          
           setTimeout(() => {
             const logoNameElement = objects.find(
               (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
             );
-      
+
             const sloganNameElement = objects.find(
               (obj) => obj.type === 'text' && obj.text === 'Slogan goes here'
             );
@@ -2417,12 +2508,11 @@ class EditorScreen {
           }, timeout);
           break;
         case 'bottomTop':
-          
           setTimeout(() => {
             const logoNameElement = objects.find(
               (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
             );
-      
+
             const sloganNameElement = objects.find(
               (obj) => obj.type === 'text' && obj.text === 'Slogan goes here'
             );
@@ -2443,7 +2533,6 @@ class EditorScreen {
           break;
         case 'leftRight':
           setTimeout(() => {
-
             logoNameElement.center();
             sloganNameElement.center();
             logoNameElement.set('top', this.canvas.height / 2.5);
@@ -2476,7 +2565,6 @@ class EditorScreen {
           break;
         case 'rightLeft':
           setTimeout(() => {
-
             logoNameElement.center();
             sloganNameElement.center();
 
