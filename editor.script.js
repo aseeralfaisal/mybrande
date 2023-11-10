@@ -602,12 +602,6 @@ class EditorScreen {
         {
           component: iro.ui.Slider,
           options: {
-            sliderType: 'saturation',
-          },
-        },
-        {
-          component: iro.ui.Slider,
-          options: {
             sliderType: 'alpha',
           },
         },
@@ -645,10 +639,8 @@ class EditorScreen {
     }
 
     function hexToRgb(hexString) {
-      // Remove the hash if present
       hexString = hexString.replace(/^#/, '');
 
-      // Parse the hex values
       let bigint = parseInt(hexString, 16);
       let r = (bigint >> 16) & 255;
       let g = (bigint >> 8) & 255;
@@ -658,16 +650,13 @@ class EditorScreen {
     }
 
     function hexToHsl(hexString) {
-      // Remove the hash if present
       hexString = hexString.replace(/^#/, '');
 
-      // Parse the hex values
       let bigint = parseInt(hexString, 16);
       let r = (bigint >> 16) & 255;
       let g = (bigint >> 8) & 255;
       let b = bigint & 255;
 
-      // Convert RGB to HSL
       r /= 255;
       g /= 255;
       b /= 255;
@@ -744,7 +733,7 @@ class EditorScreen {
     this.canvas.on('selection:created', onSelect);
     this.canvas.on('selection:updated', onSelect);
 
-    const textMain = ({ text, fontFamily = 'Poppins', fontSize = 32, fill = '#000', id }) => {
+    const textMain = ({ text, fontFamily = 'Poppins', fontSize = 32, fill = '#000000', id }) => {
       return new fabric.Text(text, {
         fontFamily,
         fontSize,
@@ -1291,8 +1280,8 @@ class EditorScreen {
     //   }
     // };
 
-    logoNameElement.on('mousedown', (event) => {
-      event.e.preventDefault();
+    logoNameElement.on('mousedown', (e) => {
+      e.e.preventDefault();
       this.textSelectorValue = 'LogoName';
       // logoOrSloganView('LogoName');
 
@@ -1313,27 +1302,28 @@ class EditorScreen {
       const logoText = logoNameElement.text;
       $('.case-list-item__title').innerText = getTextCase(logoText);
       putAngleDownIcon('.case-list-item__title');
+
+      // const fillColor = e.target.fill;
+      // console.log(fillColor.split("("))
+      // $('#HEX2').value = rgbToHex(fillColor);
       
-      const fillColor = event.target.fill;
-      $('#HEX2').value = fillColor;
-
-      let rgbValue = hexToRgb(fillColor);
-      let rgbValues = rgbValue.match(/\d+/g);
-
-      if (rgbValues && rgbValues.length === 3) {
-        $('#R2').value = rgbValues[0];
-        $('#G2').value = rgbValues[1];
-        $('#B2').value = rgbValues[2];
-      }
-
-      let hslValue = hexToHsl(fillColor);
-      let hslValues = hslValue.match(/\d+/g);
-
-      if (hslValues && hslValues.length === 3) {
-        $('#H2').value = hslValues[0];
-        $('#S2').value = hslValues[1];
-        $('#L2').value = hslValues[2];
-      }
+      // let rgbValue = hexToRgb(fillColor);
+      // let rgbValues = rgbValue.match(/\d+/g);
+      
+      // if (rgbValues && rgbValues.length === 3) {
+      //   $('#R2').value = rgbValues[0];
+      //   $('#G2').value = rgbValues[1];
+      //   $('#B2').value = rgbValues[2];
+      // }
+      
+      // let hslValue = hexToHsl(fillColor.replace(/,\s*\d+(\.\d+)?\)/, ')'));
+      // let hslValues = hslValue.match(/\d+/g);
+      
+      // if (hslValues && hslValues.length === 3) {
+      //   $('#H2').value = hslValues[0];
+      //   $('#S2').value = hslValues[1];
+      //   $('#L2').value = hslValues[2];
+      // }      
 
       captureCanvasState();
       this.canvas.requestRenderAll();
@@ -1363,26 +1353,7 @@ class EditorScreen {
       $('.case-list-item__title').innerText = getTextCase(logoText);
       putAngleDownIcon('.case-list-item__title');
 
-      const fillColor = event.target.fill;
-      $('#HEX2').value = fillColor;
-
-      let rgbValue = hexToRgb(fillColor);
-      let rgbValues = rgbValue.match(/\d+/g);
-
-      if (rgbValues && rgbValues.length === 3) {
-        $('#R2').value = rgbValues[0];
-        $('#G2').value = rgbValues[1];
-        $('#B2').value = rgbValues[2];
-      }
-
-      let hslValue = hexToHsl(fillColor);
-      let hslValues = hslValue.match(/\d+/g);
-
-      if (hslValues && hslValues.length === 3) {
-        $('#H2').value = hslValues[0];
-        $('#S2').value = hslValues[1];
-        $('#L2').value = hslValues[2];
-      }
+      
 
       captureCanvasState();
       this.canvas.requestRenderAll();
@@ -2096,14 +2067,14 @@ class EditorScreen {
         const hsl = color.hsl;
         const rgb = color.rgb;
 
-        $('#H2').value = hsl.h;
-        $('#S2').value = hsl.s;
-        $('#L2').value = hsl.l;
-        $('#R2').value = rgb.r;
-        $('#G2').value = rgb.g;
-        $('#B2').value = rgb.b;
+        $('#H').value = hsl.h;
+        $('#S').value = hsl.s;
+        $('#L').value = hsl.l;
+        $('#R').value = rgb.r;
+        $('#G').value = rgb.g;
+        $('#B').value = rgb.b;
 
-        $('#HEX2').value = color.hexString;
+        $('#HEX').value = color.hexString;
       }
 
       const active = this.canvas.getActiveObject();
@@ -2135,24 +2106,24 @@ class EditorScreen {
       });
     });
 
-    ['#H', '#S', '#L'].forEach((id) => {
-      $(id).addEventListener('input', () => {
-        let h = $('#H').value;
-        let s = $('#S').value;
-        let l = $('#L').value;
-        colorPicker.color.hsl = { h, s, l };
-        const a = this.canvas.getActiveObject();
-        a.set('fill', colorPicker.color.hexString);
-        this.canvas.requestRenderAll();
-      });
-    });
-
     [('#R2', '#G2', '#B2')].forEach((id) => {
       $(id).addEventListener('input', () => {
         let r = $('#R2').value;
         let g = $('#G2').value;
         let b = $('#B2').value;
         colorPicker.color.rgb = { r, g, b };
+        const a = this.canvas.getActiveObject();
+        a.set('fill', colorPicker.color.hexString);
+        this.canvas.requestRenderAll();
+      });
+    });
+
+    ['#H', '#S', '#L'].forEach((id) => {
+      $(id).addEventListener('input', () => {
+        let h = $('#H').value;
+        let s = $('#S').value;
+        let l = $('#L').value;
+        colorPicker.color.hsl = { h, s, l };
         const a = this.canvas.getActiveObject();
         a.set('fill', colorPicker.color.hexString);
         this.canvas.requestRenderAll();
@@ -2172,6 +2143,14 @@ class EditorScreen {
     });
 
     $('#HEX').addEventListener('input', (e) => {
+      let hex = e.target.value;
+      colorPicker.color.hexString = hex;
+      const a = this.canvas.getActiveObject();
+      a.set('fill', hex);
+      this.canvas.requestRenderAll();
+    });
+
+    $('#HEX2').addEventListener('input', (e) => {
       let hex = e.target.value;
       colorPicker.color.hexString = hex;
       const a = this.canvas.getActiveObject();
@@ -2331,7 +2310,7 @@ class EditorScreen {
     });
 
     const colorPickerText = new iro.ColorPicker('#open_picker_text', {
-      display: openPickerView,
+      display: openTextPickerView,
       width: 180,
       marginTop: 20,
       color: pickerDefaultColor,
@@ -2344,12 +2323,6 @@ class EditorScreen {
           component: iro.ui.Slider,
           options: {
             sliderType: 'hue',
-          },
-        },
-        {
-          component: iro.ui.Slider,
-          options: {
-            sliderType: 'saturation',
           },
         },
         {
@@ -2438,31 +2411,6 @@ class EditorScreen {
 
     colorPickerText.on('input:change', changeColorPickerText);
     colorPickerText.on('input:move', changeColorPickerText);
-
-    [('R2', 'G2', 'B2')].forEach((id) => {
-      $(`#${id}`).addEventListener('input', () => {
-        let r = $('#R2').value;
-        let g = $('#G2').value;
-        let b = $('#B2').value;
-        colorPickerText.color.rgb = { r, g, b };
-      });
-    });
-
-    ['H2', 'S2', 'L2'].forEach((id) => {
-      $(`#${id}`).addEventListener('input', () => {
-        let h = $('#H2').value;
-        let s = $('#S2').value;
-        let l = $('#L2').value;
-        colorPickerText.color.hsl = { h, s, l };
-      });
-    });
-
-    $('#HEX2').addEventListener('input', () => {
-      let hex = $('#HEX2').value;
-      colorPickerText.color.hexString = hex;
-      const a = this.canvas.getActiveObject();
-      a.set('fill', hex);
-    });
 
     function handleColorModeClick(activeElement, element1, element2) {
       $(element1 + '_view').classList.remove('color_mode_title-active');
@@ -2559,11 +2507,14 @@ class EditorScreen {
               (obj) => obj.type === 'text' && obj.text === 'Slogan goes here'
             );
 
+            logoNameElement.set('fontSize', 46);
+            sloganNameElement.set('fontSize', 22);
+
             logoNameElement.centerH();
             sloganNameElement.centerH();
 
-            logoNameElement.set('top', this.canvas.height / 4.5);
-            sloganNameElement.set('top', this.canvas.height / 3.5);
+            logoNameElement.set('top', this.canvas.height / 4);
+            sloganNameElement.set('top', this.canvas.height / 3);
 
             const newGrp = new fabric.Group(objects);
             newGrp.center();
@@ -2575,17 +2526,28 @@ class EditorScreen {
           break;
         case 'leftRight':
           setTimeout(() => {
+            const logoNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
+            );
+
+            const sloganNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text === 'Slogan goes here'
+            );
             logoNameElement.center();
             sloganNameElement.center();
-            logoNameElement.set('top', this.canvas.height / 2.5);
-            sloganNameElement.set('top', this.canvas.height / 2);
+
+            logoNameElement.set('top', this.canvas.height / 2.3);
+            sloganNameElement.set('top', this.canvas.height / 1.9);
+
+            logoNameElement.set('fontSize', 46);
+            sloganNameElement.set('fontSize', 22);
 
             if (textPosition === 'left') {
               logoNameElement.viewportCenter();
               sloganNameElement.viewportCenter();
 
-              logoNameElement.set('top', this.canvas.height / 2.5);
-              sloganNameElement.set('top', this.canvas.height / 2);
+              logoNameElement.set('top', this.canvas.height / 2.3);
+              sloganNameElement.set('top', this.canvas.height / 1.9);
 
               logoNameElement.set('left', this.canvas.width / 2.4);
               sloganNameElement.set('left', this.canvas.width / 2.4);
@@ -2593,8 +2555,8 @@ class EditorScreen {
               logoNameElement.viewportCenterH();
               sloganNameElement.viewportCenterH();
 
-              logoNameElement.set('left', this.canvas.width / 2.25);
-              sloganNameElement.set('left', this.canvas.width / 2.5);
+              logoNameElement.set('left', this.canvas.width / 2.5);
+              sloganNameElement.set('left', this.canvas.width / 2);
             }
 
             logoMain.forEach((i) => (i.left -= 200));
@@ -2607,27 +2569,37 @@ class EditorScreen {
           break;
         case 'rightLeft':
           setTimeout(() => {
+            const logoNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
+            );
+
+            const sloganNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text === 'Slogan goes here'
+            );
             logoNameElement.center();
             sloganNameElement.center();
 
-            logoNameElement.set('top', this.canvas.height / 2.5);
-            sloganNameElement.set('top', this.canvas.height / 2);
+            logoNameElement.set('top', this.canvas.height / 2.3);
+            sloganNameElement.set('top', this.canvas.height / 1.9);
+            
+            logoNameElement.set('fontSize', 46);
+            sloganNameElement.set('fontSize', 22);
 
             if (textPosition === 'left') {
               logoNameElement.viewportCenter();
               sloganNameElement.viewportCenter();
 
-              logoNameElement.set('top', this.canvas.height / 2.5);
-              sloganNameElement.set('top', this.canvas.height / 2);
+              logoNameElement.set('top', this.canvas.height / 2.3);
+              sloganNameElement.set('top', this.canvas.height / 1.9);
 
-              logoNameElement.set('left', this.canvas.width / 2.7);
-              sloganNameElement.set('left', this.canvas.width / 4);
+              logoNameElement.set('left', this.canvas.width / 6);
+              sloganNameElement.set('left', this.canvas.width / 2.95);
             } else {
               logoNameElement.viewportCenterH();
               sloganNameElement.viewportCenterH();
 
-              logoNameElement.set('left', this.canvas.width / 2.8);
-              sloganNameElement.set('left', this.canvas.width / 3.4);
+              logoNameElement.set('left', this.canvas.width / 6);
+              sloganNameElement.set('left', this.canvas.width / 3.7);
             }
 
             logoMain.forEach((i) => (i.left += 150));
@@ -2669,11 +2641,11 @@ class EditorScreen {
       captureCanvasState();
     });
 
-    scaleLogo(180);
+    scaleLogo(200);
     centerAndResizeElements('topBottom', 29, 23, 'center', 150);
 
     $('#top_bottom_1').addEventListener('click', () => {
-      scaleLogo(180);
+      scaleLogo(200);
       centerAndResizeElements('topBottom', 29, 23, 'center', 150);
     });
 
@@ -2688,7 +2660,7 @@ class EditorScreen {
     });
 
     $('#bottom_top_1').addEventListener('click', () => {
-      scaleLogo(160);
+      scaleLogo(200);
       centerAndResizeElements('bottomTop', 32, 25, 'center', 150);
     });
 
@@ -2718,17 +2690,17 @@ class EditorScreen {
     });
 
     $('#right_left_1').addEventListener('click', () => {
-      scaleLogo(160);
+      scaleLogo(200);
       centerAndResizeElements('rightLeft', 32, 25, 'center', 200);
     });
 
     $('#right_left_2').addEventListener('click', () => {
-      scaleLogo(140);
+      scaleLogo(160);
       centerAndResizeElements('rightLeft', 32, 25, 'left', 210);
     });
 
     $('#right_left_3').addEventListener('click', () => {
-      scaleLogo(160);
+      scaleLogo(200);
       centerAndResizeElements('rightLeft', 32, 25, 'left', 200);
     });
   }
