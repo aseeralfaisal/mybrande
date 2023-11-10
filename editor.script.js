@@ -1313,6 +1313,27 @@ class EditorScreen {
       const logoText = logoNameElement.text;
       $('.case-list-item__title').innerText = getTextCase(logoText);
       putAngleDownIcon('.case-list-item__title');
+      
+      const fillColor = event.target.fill;
+      $('#HEX2').value = fillColor;
+
+      let rgbValue = hexToRgb(fillColor);
+      let rgbValues = rgbValue.match(/\d+/g);
+
+      if (rgbValues && rgbValues.length === 3) {
+        $('#R2').value = rgbValues[0];
+        $('#G2').value = rgbValues[1];
+        $('#B2').value = rgbValues[2];
+      }
+
+      let hslValue = hexToHsl(fillColor);
+      let hslValues = hslValue.match(/\d+/g);
+
+      if (hslValues && hslValues.length === 3) {
+        $('#H2').value = hslValues[0];
+        $('#S2').value = hslValues[1];
+        $('#L2').value = hslValues[2];
+      }
 
       captureCanvasState();
       this.canvas.requestRenderAll();
@@ -1341,6 +1362,27 @@ class EditorScreen {
       const logoText = sloganNameElement.text;
       $('.case-list-item__title').innerText = getTextCase(logoText);
       putAngleDownIcon('.case-list-item__title');
+
+      const fillColor = event.target.fill;
+      $('#HEX2').value = fillColor;
+
+      let rgbValue = hexToRgb(fillColor);
+      let rgbValues = rgbValue.match(/\d+/g);
+
+      if (rgbValues && rgbValues.length === 3) {
+        $('#R2').value = rgbValues[0];
+        $('#G2').value = rgbValues[1];
+        $('#B2').value = rgbValues[2];
+      }
+
+      let hslValue = hexToHsl(fillColor);
+      let hslValues = hslValue.match(/\d+/g);
+
+      if (hslValues && hslValues.length === 3) {
+        $('#H2').value = hslValues[0];
+        $('#S2').value = hslValues[1];
+        $('#L2').value = hslValues[2];
+      }
 
       captureCanvasState();
       this.canvas.requestRenderAll();
