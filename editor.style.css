@@ -975,8 +975,8 @@ input:checked + .switch-slider:before {
   margin-top: 10px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
+  /* align-items: center; */
+  /* justify-content: space-around; */
   animation: slideMenuAnimation 0.2s ease-out both;
 }
 
@@ -992,7 +992,7 @@ input:checked + .switch-slider:before {
 .color-palette-gradient {
   width: 26px;
   border-radius: 5px;
-  height: 195px;
+  height: 220px;
   background: linear-gradient(0deg, #000, #000);
   transform: rotate(90deg);
   border: 0.05px solid #555;

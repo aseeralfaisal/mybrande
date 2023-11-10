@@ -295,7 +295,6 @@
                     </span>
                 </div>
 
-                <pallete-component id="logo-pallete" data-list="['Linear']"></pallete-component>
                 <div style="display: flex; justify-content: space-around;">
                     <span id="solid_color_mode" class="category">Solid Colors</span>
                     <span id="picker_color_mode" class="category">Color Picker</span>
@@ -317,6 +316,22 @@
                             style="background-color: #f5f5f5;"></span>
                         <span id="solid_color" class="color-picker solid_color_section"
                             style="background-color: #ffffff;"></span>
+                    </div>
+                    <div style="display: flex;">
+                        <span id="solid_color" class="color-picker solid_color_section"
+                            style="background-color: #ab2d2d;"></span>
+                        <span id="solid_color" class="color-picker solid_color_section"
+                            style="background-color: #de3a3a;"></span>
+                        <span id="solid_color" class="color-picker solid_color_section"
+                            style="background-color: #f74040;"></span>
+                        <span id="solid_color" class="color-picker solid_color_section"
+                            style="background-color: #f85d5d;"></span>
+                        <span id="solid_color" class="color-picker solid_color_section"
+                            style="background-color: #fcb3b3;"></span>
+                        <span id="solid_color" class="color-picker solid_color_section"
+                            style="background-color: #fed0d0;"></span>
+                        <span id="solid_color" class="color-picker solid_color_section"
+                            style="background-color: #ffeded;"></span>
                     </div>
                     <div style="display: flex;">
                         <span id="solid_color" class="color-picker solid_color_section"
@@ -349,22 +364,6 @@
                             style="background-color: #fff59d;"></span>
                         <span id="solid_color" class="color-picker solid_color_section"
                             style="background-color: #ffffe0;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #ab2d2d;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #de3a3a;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #f74040;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #f85d5d;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #fcb3b3;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #fed0d0;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #ffeded;"></span>
                     </div>
                     <div style="display: flex;">
                         <span id="solid_color" class="color-picker solid_color_section"
@@ -444,6 +443,8 @@
                         style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
                     </div>
                 </div>
+                <pallete-component id="logo-pallete" data-list="['Linear']"></pallete-component>
+
 
                 <div id="picker_color_items" style="display: flex; flex-direction: column; margin-top: -40px;">
 
@@ -682,7 +683,7 @@
 
             <div class="text-settings-container">
 
-                <div class='setting-list-item'>
+                <!-- <div class='setting-list-item'>
                     <span class="setting-list-item__title">Logo Name
                         <i class="fa-solid fa-angle-down"></i>
                     </span>
@@ -690,9 +691,9 @@
                         <li>Logo Name</li>
                         <li>Slogan Name</li>
                     </div>
-                </div>
-                <input id="logoNameInput" class="input-main" type="text" placeholder="Logo Name">
-                <input id="sloganNameInput" class="input-main" type="text" placeholder="Slogan Name">
+                </div> -->
+                <!-- <input id="logoNameInput" class="input-main" type="text" placeholder="Logo Name">
+                <input id="sloganNameInput" class="input-main" type="text" placeholder="Slogan Name"> -->
                 <div class="layer-specific-settings">
                     <span class="specific-setting" id="copyElement2">
                         <i class="fa-solid fa-copy"></i>
@@ -770,22 +771,6 @@
                             style="background-color: #fff59d;"></span>
                         <span id="solid_color2" class="color-picker solid_color_section"
                             style="background-color: #ffffe0;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color2" class="color-picker solid_color_section"
-                            style="background-color: #ab2d2d;"></span>
-                        <span id="solid_color2" class="color-picker solid_color_section"
-                            style="background-color: #de3a3a;"></span>
-                        <span id="solid_color2" class="color-picker solid_color_section"
-                            style="background-color: #f74040;"></span>
-                        <span id="solid_color2" class="color-picker solid_color_section"
-                            style="background-color: #f85d5d;"></span>
-                        <span id="solid_color2" class="color-picker solid_color_section"
-                            style="background-color: #fcb3b3;"></span>
-                        <span id="solid_color2" class="color-picker solid_color_section"
-                            style="background-color: #fed0d0;"></span>
-                        <span id="solid_color2" class="color-picker solid_color_section"
-                            style="background-color: #ffeded;"></span>
                     </div>
                     <div style="display: flex;">
                         <span id="solid_color2" class="color-picker solid_color_section"
@@ -1055,10 +1040,10 @@
                     <i class="fa fa-redo" style="color: var(--gray);"></i>
                     Redo
                 </span>
-                <span id="align-btn" class="canvas-action">
+                <!-- <span id="align-btn" class="canvas-action">
                     <i class="fa fa-align-center" style="color: var(--gray);"></i>
                     Align
-                </span>
+                </span> -->
             </div>
             <div id="canvas-container" tabindex="0">
                 <canvas id="c" height="600vh" width="980vw"></canvas>

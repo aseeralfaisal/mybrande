@@ -2,17 +2,17 @@ const paletteMarkup = /*html*/ `
 <div class="bg-settings-container">
 <div>
   <div id="color-mode" class="color-mode-selector">
-    <span id="color-mode-title" class="color-mode-title" style="margin-left: -20px">Linear Colors
+    <span id="color-mode-title" class="color-mode-title" style="margin-left: -10px; margin-bottom: 40px;">Linear Colors
       <i class="fa-solid fa-angle-down"  style="visibility: hidden; display: none"></i>
     </span>
         <div id="bg-color-list" class="color-mode-list"></div>
     </div>
 
-    <div id="gradient-panel-viewer" style="position: absolute; left: 43%; margin-top: -60px;">
+    <div id="gradient-panel-viewer" style="position: absolute; left: 43%; margin-top: -130px;">
         <div id="color-palette-gradient" class="color-palette-gradient"></div>
     </div>
 
-    <div id="gradient-panel" style="margin-top: 60px;  display: none; justify-content: flex-start; gap: 5px; margin-left: -10px">
+    <div id="gradient-panel" style="margin-top: 60px;  display: none; justify-content: flex-start; gap: 5px;">
         <input type="color" value="#000" class="color-picker" id="grad-1">
         <input type="color" value="#000" class="color-picker" id="grad-2">
       </div>

@@ -19,7 +19,7 @@ class EditorScreen {
     this.previewMode = $('.nav-item[data-name="preview"]');
     this.galleryMode = $('.nav-item[data-name="gallery"]');
     this.urlParams = new URLSearchParams(document.location.search);
-    this.logoName = 'MyBrande';
+    this.logoName = 'My Brand Name';
     this.sloganName = 'Slogan goes here';
     this.rotateRange = $('#rotate-bar');
     this.downloadBtn = $('#save-btn');
@@ -322,8 +322,6 @@ class EditorScreen {
   }
 
   initialize() {
-    
-    
     const updatePreview = () => {
       const imageURL = this.canvas.toDataURL({
         format: 'png',
@@ -331,7 +329,7 @@ class EditorScreen {
       });
       $('#magnifier_img').src = imageURL;
     };
-    
+
     const setCanvasBackground = () => {
       this.canvas.setBackgroundImage('/static/pattern.png', this.canvas.renderAll.bind(this.canvas), {
         opacity: 0.6,
@@ -374,13 +372,13 @@ class EditorScreen {
 
     this.updateActiveNavbar();
 
-    this.settingsListTitle.addEventListener('click', () => {
-      if (this.settingsList.classList.contains('show')) {
-        this.settingsList.classList.remove('show');
-      } else {
-        this.settingsList.classList.add('show');
-      }
-    });
+    // this.settingsListTitle.addEventListener('click', () => {
+    //   if (this.settingsList.classList.contains('show')) {
+    //     this.settingsList.classList.remove('show');
+    //   } else {
+    //     this.settingsList.classList.add('show');
+    //   }
+    // });
 
     this.caseListTitle.addEventListener('click', () => {
       if (this.caseList.classList.contains('show')) {
@@ -390,35 +388,35 @@ class EditorScreen {
       }
     });
 
-    if (this.textSelectorValue === 'LogoName') {
-      this.sloganNameInput.style.display = 'none';
-      this.logoNameInput.style.display = 'block';
-    } else if (this.textSelectorValue === 'LogoName') {
-      this.logoNameInput.style.display = 'none';
-      this.sloganNameInput.style.display = 'block';
-    }
+    // if (this.textSelectorValue === 'LogoName') {
+    //   this.sloganNameInput.style.display = 'none';
+    //   this.logoNameInput.style.display = 'block';
+    // } else if (this.textSelectorValue === 'LogoName') {
+    //   this.logoNameInput.style.display = 'none';
+    //   this.sloganNameInput.style.display = 'block';
+    // }
 
-    this.settingsList.addEventListener('click', (ev) => {
-      const selectedTextElement = ev.target.innerText;
-      if (selectedTextElement === 'Slogan Name') {
-        this.textSelectorValue = 'SloganName';
-        this.logoNameInput.style.display = 'none';
-        this.sloganNameInput.style.display = 'block';
-        this.canvas.setActiveObject(sloganNameElement);
-        this.canvas.requestRenderAll();
-      } else {
-        this.textSelectorValue = 'LogoName';
-        this.sloganNameInput.style.display = 'none';
-        this.logoNameInput.style.display = 'block';
-        this.canvas.setActiveObject(logoNameElement);
-        this.canvas.requestRenderAll();
-      }
-      this.settingsListTitle.innerText = selectedTextElement;
-      const icon = document.createElement('i');
-      icon.className = 'fa-solid fa-angle-down';
-      this.settingsListTitle.append(icon);
-      this.settingsList.classList.remove('show');
-    });
+    // this.settingsList.addEventListener('click', (ev) => {
+    //   const selectedTextElement = ev.target.innerText;
+    //   if (selectedTextElement === 'Slogan Name') {
+    //     this.textSelectorValue = 'SloganName';
+    //     this.logoNameInput.style.display = 'none';
+    //     this.sloganNameInput.style.display = 'block';
+    //     this.canvas.setActiveObject(sloganNameElement);
+    //     this.canvas.requestRenderAll();
+    //   } else {
+    //     this.textSelectorValue = 'LogoName';
+    //     this.sloganNameInput.style.display = 'none';
+    //     this.logoNameInput.style.display = 'block';
+    //     this.canvas.setActiveObject(logoNameElement);
+    //     this.canvas.requestRenderAll();
+    //   }
+    //   this.settingsListTitle.innerText = selectedTextElement;
+    //   const icon = document.createElement('i');
+    //   icon.className = 'fa-solid fa-angle-down';
+    //   this.settingsListTitle.append(icon);
+    //   this.settingsList.classList.remove('show');
+    // });
 
     const toTitleCase = (str) => {
       return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
@@ -458,13 +456,17 @@ class EditorScreen {
 
     this.fontStyleList.addEventListener('click', (ev) => {
       const selectedTextElement = ev.target.innerText;
+      console.log(selectedTextElement)
 
       const active = this.canvas.getActiveObject();
       if (selectedTextElement === 'Normal') {
         active.set('fontStyle', 'normal');
+        active.set('underline', false);
       } else if (selectedTextElement === 'Italic') {
         active.set('fontStyle', 'italic');
+        active.set('underline', false);
       } else {
+        active.set('fontStyle', 'normal');
         active.set('underline', true);
       }
 
@@ -778,25 +780,25 @@ class EditorScreen {
       }
     });
 
-    this.logoNameInput.addEventListener('input', (e) => {
-      logoNameElement.set('text', e.target.value);
-      const queryParams = new URLSearchParams(window.location.search);
-      queryParams.set('logo_name', e.target.value);
-      localStorage.setItem('logo_name', e.target.value);
-      logoNameElement.centerH();
-      updatePreview();
-      this.canvas.requestRenderAll();
-    });
+    // this.logoNameInput.addEventListener('input', (e) => {
+    //   logoNameElement.set('text', e.target.value);
+    //   const queryParams = new URLSearchParams(window.location.search);
+    //   queryParams.set('logo_name', e.target.value);
+    //   localStorage.setItem('logo_name', e.target.value);
+    //   logoNameElement.centerH();
+    //   updatePreview();
+    //   this.canvas.requestRenderAll();
+    // });
 
-    this.sloganNameInput.addEventListener('input', (e) => {
-      sloganNameElement.set('text', e.target.value);
-      const queryParams = new URLSearchParams(window.location.search);
-      queryParams.set('slogan_name', e.target.value);
-      localStorage.setItem('slogan_name', e.target.value);
-      sloganNameElement.centerH();
-      updatePreview();
-      this.canvas.renderAll();
-    });
+    // this.sloganNameInput.addEventListener('input', (e) => {
+    //   sloganNameElement.set('text', e.target.value);
+    //   const queryParams = new URLSearchParams(window.location.search);
+    //   queryParams.set('slogan_name', e.target.value);
+    //   localStorage.setItem('slogan_name', e.target.value);
+    //   sloganNameElement.centerH();
+    //   updatePreview();
+    //   this.canvas.renderAll();
+    // });
 
     const onMouseOver = (isMouseOver, element) => {
       let color = isMouseOver ? 'var(--gold-darker)' : 'var(--gold)';
@@ -850,8 +852,8 @@ class EditorScreen {
     this.previewMode.addEventListener('click', () => {
       this.activeNavbarSetting = 'preview';
 
-      const bgColor = this.canvas.get('backgroundColor')
-      if(bgColor === '#efefef'){
+      const bgColor = this.canvas.get('backgroundColor');
+      if (bgColor === '#efefef') {
         this.canvas.setBackgroundColor(null, this.canvas.renderAll.bind(this.canvas));
       }
       this.canvas.setBackgroundImage(null, this.canvas.renderAll.bind(this.canvas));
@@ -881,12 +883,12 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    $('#align-btn').addEventListener('click', () => {
-      const active = this.canvas.getActiveObject();
-      if (typeof active?.text === 'string') {
-        active.centerH();
-      }
-    });
+    // $('#align-btn').addEventListener('click', () => {
+    //   const active = this.canvas.getActiveObject();
+    //   if (typeof active?.text === 'string') {
+    //     active.centerH();
+    //   }
+    // });
 
     $('#logo-shadow-blur-slider').addEventListener('input', (e) => {
       this.logoShadowBlur = e.target.value;
@@ -1033,6 +1035,11 @@ class EditorScreen {
       captureCanvasState();
       updatePreview();
     });
+    this.canvas.on('object:moving', () => {
+      captureCanvasState();
+      updatePreview();
+    });
+
 
     let localDirFile = null;
     let localDirFiles = null;
@@ -1192,21 +1199,20 @@ class EditorScreen {
       };
     });
 
-
-    const logoOrSloganView = (element) => {
-      if (element === 'LogoName') {
-        this.sloganNameInput.style.display = 'none';
-        this.logoNameInput.style.display = 'block';
-      } else {
-        this.logoNameInput.style.display = 'none';
-        this.sloganNameInput.style.display = 'block';
-      }
-    };
+    // const logoOrSloganView = (element) => {
+    //   if (element === 'LogoName') {
+    //     this.sloganNameInput.style.display = 'none';
+    //     this.logoNameInput.style.display = 'block';
+    //   } else {
+    //     this.logoNameInput.style.display = 'none';
+    //     this.sloganNameInput.style.display = 'block';
+    //   }
+    // };
 
     logoNameElement.on('mousedown', (event) => {
       event.e.preventDefault();
       this.textSelectorValue = 'LogoName';
-      logoOrSloganView('LogoName');
+      // logoOrSloganView('LogoName');
 
       $('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
       putAngleDownIcon('.font_style-list-item__title');
@@ -1276,67 +1282,134 @@ class EditorScreen {
         this.canvas.clear();
 
         this.canvas.loadFromJSON(stateToRestore, () => {
-          const logoNameElement = this.canvas.getObjects().find((i) => i.text === 'MyBrande');
+          const logoNameElement = this.canvas.getObjects().find((i) => i.text === 'My Brand Name');
           const sloganNameElement = this.canvas.getObjects().find((i) => i.text === 'Slogan goes here');
 
-          logoNameElement.on('mousedown', () => {
-            this.activeNavbarSetting = 'text';
-            this.updateActiveNavbar();
-            this.logoSettingsContainer.style.display = 'none';
-            this.textSettingsContainer.style.display = 'grid';
-            this.backgroundSettingsContainer.style.display = 'none';
-            this.uploadSettingsContainer.style.display = 'none';
-
+          logoNameElement.on('mousedown', (event) => {
+            event.e.preventDefault();
             this.textSelectorValue = 'LogoName';
-            logoOrSloganView('LogoName');
-
+            // logoOrSloganView('LogoName');
+      
             $('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
             putAngleDownIcon('.font_style-list-item__title');
-
+      
             const letterSpacing = logoNameElement.get('charSpacing');
             $('#letter-spacing-slider').value = letterSpacing;
-
+      
             const fontFamily = logoNameElement.fontFamily;
             $('#font-selector-title').innerText = fontFamily;
-
+      
             const fontSize = logoNameElement.fontSize;
             this.fontSizeListTitle.innerText = fontSize + ' px';
-
+      
             putAngleDownIcon('#font-selector-title');
             const logoText = logoNameElement.text;
             $('.case-list-item__title').innerText = getTextCase(logoText);
             putAngleDownIcon('.case-list-item__title');
             this.canvas.requestRenderAll();
           });
-
+      
           sloganNameElement.on('mousedown', (event) => {
-            this.activeNavbarSetting = 'text';
-            this.updateActiveNavbar();
-            this.logoSettingsContainer.style.display = 'none';
-            this.textSettingsContainer.style.display = 'grid';
-            this.backgroundSettingsContainer.style.display = 'none';
-            this.uploadSettingsContainer.style.display = 'none';
+            event.e.preventDefault();
             this.textSelectorValue = 'SloganName';
-
             logoOrSloganView('SloganName');
-
+      
             $('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
             putAngleDownIcon('.font_style-list-item__title');
-
+      
             const letterSpacing = +sloganNameElement.charSpacing;
             $('#letter-spacing-slider').value = letterSpacing;
-
+      
             const fontSize = sloganNameElement.fontSize;
             this.fontSizeListTitle.innerText = fontSize + ' px';
-
+      
             const fontFamily = sloganNameElement.fontFamily;
             $('#font-selector-title').innerText = fontFamily;
-
+      
             putAngleDownIcon('#font-selector-title');
             const logoText = sloganNameElement.text;
             $('.case-list-item__title').innerText = getTextCase(logoText);
             putAngleDownIcon('.case-list-item__title');
           });
+
+          document.querySelectorAll('#solid_color').forEach((item) => {
+            item.addEventListener('click', (event) => {
+              if (this.canvas) {
+                const activeObj = this.canvas.getActiveObject();
+                if (activeObj) {
+                  const bgColor = event.target.style.backgroundColor;
+                  const match = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/.exec(bgColor);
+                  if (match) {
+                    const red = parseInt(match[1]);
+                    const green = parseInt(match[2]);
+                    const blue = parseInt(match[3]);
+                    const hexColor = convertRGBtoHex(red, green, blue);
+                    activeObj.set('fill', hexColor);
+                    console.log({hexColor})
+                    captureCanvasState();
+      
+                    const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
+                    logoColorPickers.forEach((i) => i.remove());
+                    
+                    let colorSet = new Set();
+
+                    this.canvas.getObjects().forEach((item, idx) => {
+                      let itemFill = item.get('fill');
+                      const colPicker = document.createElement('div');
+              
+                      if (getParsedColor(itemFill) !== undefined) {
+                        let color = getParsedColor(itemFill);
+                        color = color.padEnd(7, '0');
+              
+                        if (!colorSet.has(color)) {
+                          colorSet.add(color);
+                          colPicker.setAttribute('id', 'color-layers-pickers');
+              
+                          colPicker.style.background = itemFill;
+                          colPicker.className = 'color-picker';
+                          colPicker.style.borderRadius = '5px';
+                          colorPalette.append(colPicker);
+                        }
+                        colPicker.addEventListener('click', (event) => {
+                          const color = rgbToHex(event.target.style.backgroundColor);
+                          const activeElem = this.canvas.getActiveObject();
+                          activeElem.set('fill', color);
+                          this.canvas.requestRenderAll();
+                        });
+                      }
+                    });
+              
+                    updatePreview();
+                    captureCanvasState();
+
+                    this.canvas.requestRenderAll();
+                  }
+                }
+              }
+            });
+          });
+      
+          // document.querySelectorAll('#solid_color2').forEach((item) => {
+          //   item.addEventListener('click', (event) => {
+          //     if (this.canvas) {
+          //       const activeObj = this.canvas.getActiveObject();
+          //       if (activeObj) {
+          //         const bgColor = event.target.style.backgroundColor;
+          //         const match = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/.exec(bgColor);
+          //         if (match) {
+          //           const red = parseInt(match[1]);
+          //           const green = parseInt(match[2]);
+          //           const blue = parseInt(match[3]);
+          //           const hexColor = convertRGBtoHex(red, green, blue);
+          //           activeObj.set('fill', hexColor);
+          //           captureCanvasState();
+          //           this.canvas.requestRenderAll();
+          //         }
+          //       }
+          //     }
+          //   });
+          // });
+
           this.canvas.requestRenderAll();
         });
       }
@@ -1424,12 +1497,9 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    $('#copyElement').addEventListener('click', (event) => {
-      this.canvas.getActiveObject().clone((cloned) => {
-        this.canvas.add(cloned);
-        this.canvas.centerObject(cloned);
-        this.canvas.requestRenderAll();
-      });
+    $('#copyElement').addEventListener('click', () => {
+      this.canvas.getActiveObject().clone();
+      this.canvas.renderAll();
     });
 
     $('#eyeElement').addEventListener('click', () => {
@@ -1442,8 +1512,10 @@ class EditorScreen {
 
     $('#removeElement').addEventListener('click', () => {
       const activeObj = this.canvas.getActiveObject();
-      this.canvas.remove(activeObj);
-      this.canvas.requestRenderAll();
+      if (activeObj) {
+        this.canvas.remove(activeObj);
+        this.canvas.renderAll();
+      }
     });
 
     $('#bringDownElement').addEventListener('click', () => {
@@ -2007,8 +2079,8 @@ class EditorScreen {
       openTextPickerView = 'block';
     };
 
-    pickerColorEvent();
-    pickerTextColorEvent();
+    solidColorEvent();
+    solidTextColorEvent();
 
     solidColorMode.addEventListener('click', solidColorEvent);
     pickerColorMode.addEventListener('click', pickerColorEvent);
@@ -2221,7 +2293,7 @@ class EditorScreen {
       }
 
       const active = this.canvas.getActiveObject();
-      active.set('fill', color.rgbaString); 
+      active.set('fill', color.rgbaString);
       this.canvas.requestRenderAll();
 
       const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
@@ -2315,20 +2387,26 @@ class EditorScreen {
       const logoMain = objects.filter((i) => !i.text);
 
       const timeout = 5;
+
       switch (type) {
         case 'topBottom':
+          
           setTimeout(() => {
-            // const objects = this.canvas.getObjects();
-            const logoNameElement = objects.find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'mybrande');
+            const logoNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
+            );
+      
             const sloganNameElement = objects.find(
               (obj) => obj.type === 'text' && obj.text === 'Slogan goes here'
             );
+            logoNameElement.set('fontSize', 46);
+            sloganNameElement.set('fontSize', 22);
 
             logoNameElement.centerH();
             sloganNameElement.centerH();
 
-            logoNameElement.set('top', this.canvas.height / 1.5);
-            sloganNameElement.set('top', this.canvas.height / 1.35);
+            logoNameElement.set('top', this.canvas.height / 1.6);
+            sloganNameElement.set('top', this.canvas.height / 1.4);
 
             const newGrp = new fabric.Group(objects);
             this.canvas.centerObject(newGrp);
@@ -2339,10 +2417,14 @@ class EditorScreen {
           }, timeout);
           break;
         case 'bottomTop':
+          
           setTimeout(() => {
-            const logoNameElement = objects.find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'mybrande');
+            const logoNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
+            );
+      
             const sloganNameElement = objects.find(
-              (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here'
+              (obj) => obj.type === 'text' && obj.text === 'Slogan goes here'
             );
 
             logoNameElement.centerH();
@@ -2361,12 +2443,6 @@ class EditorScreen {
           break;
         case 'leftRight':
           setTimeout(() => {
-            const logoNameElement = this.canvas
-              .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'mybrande');
-            const sloganNameElement = this.canvas
-              .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here');
 
             logoNameElement.center();
             sloganNameElement.center();
@@ -2400,12 +2476,6 @@ class EditorScreen {
           break;
         case 'rightLeft':
           setTimeout(() => {
-            const logoNameElement = this.canvas
-              .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'mybrande');
-            const sloganNameElement = this.canvas
-              .getObjects()
-              .find((obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here');
 
             logoNameElement.center();
             sloganNameElement.center();
@@ -2416,9 +2486,9 @@ class EditorScreen {
             if (textPosition === 'left') {
               logoNameElement.viewportCenter();
               sloganNameElement.viewportCenter();
-              
-            logoNameElement.set('top', this.canvas.height / 2.5);
-            sloganNameElement.set('top', this.canvas.height / 2);
+
+              logoNameElement.set('top', this.canvas.height / 2.5);
+              sloganNameElement.set('top', this.canvas.height / 2);
 
               logoNameElement.set('left', this.canvas.width / 2.7);
               sloganNameElement.set('left', this.canvas.width / 4);
@@ -2469,11 +2539,11 @@ class EditorScreen {
       captureCanvasState();
     });
 
-    scaleLogo(160);
+    scaleLogo(180);
     centerAndResizeElements('topBottom', 29, 23, 'center', 150);
 
     $('#top_bottom_1').addEventListener('click', () => {
-      scaleLogo(160);
+      scaleLogo(180);
       centerAndResizeElements('topBottom', 29, 23, 'center', 150);
     });
 
