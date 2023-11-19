@@ -1104,13 +1104,13 @@ class EditorScreen {
           active.set('fontFamily', 'Poppins');
           break;
       }
+      this.canvas.renderAll();
       const title = this.fontSelector.querySelector('.font-selector-title');
       title.textContent = fontValue;
       const icon = document.createElement('i');
       icon.className = 'fa-solid fa-angle-down';
       title.append(icon);
       fontList.classList.remove('show');
-      this.canvas.requestRenderAll();
     });
 
     this.canvas.on('object:added', updatePreview);
@@ -1635,8 +1635,13 @@ class EditorScreen {
     });
 
     $('#copyElement').addEventListener('click', () => {
-      this.canvas.getActiveObject().clone();
-      this.canvas.renderAll();
+      const activeObject = this.canvas.getActiveObject();
+      activeObject.clone((cloned) => {
+        this.canvas.add(cloned);
+        cloned.top += 10;
+        cloned.left += 10;
+      });
+      this.canvas.requestRenderAll();
     });
 
     $('#eyeElement').addEventListener('click', () => {
@@ -1667,12 +1672,14 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    $('#copyElement').addEventListener('click', (event) => {
-      this.canvas.getActiveObject().clone((cloned) => {
+    $('#copyElement2').addEventListener('click', () => {
+      const activeObject = this.canvas.getActiveObject();
+      activeObject.clone((cloned) => {
         this.canvas.add(cloned);
-        this.canvas.centerObject(cloned);
-        this.canvas.requestRenderAll();
+        cloned.top += 10;
+        cloned.left += 10;
       });
+      this.canvas.requestRenderAll();
     });
 
     $('#eyeElement2').addEventListener('click', () => {
@@ -2507,6 +2514,8 @@ class EditorScreen {
       switch (type) {
         case 'topBottom':
           setTimeout(() => {
+            const selection = this.canvas.getObjects().filter((i) => !i.text);
+
             const logoNameElement = objects.find(
               (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
             );
