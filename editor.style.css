@@ -977,6 +977,7 @@ input:checked + .switch-slider:before {
   flex-direction: column;
   /* align-items: center; */
   /* justify-content: space-around; */
+  margin-left: 10px;
   animation: slideMenuAnimation 0.2s ease-out both;
 }
 
