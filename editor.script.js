@@ -381,15 +381,15 @@ class EditorScreen {
     // });
 
     this.caseListTitle.addEventListener('click', (event) => {
-      event.stopPropagation();
+      event.preventDefault();
 
-      [fontList, this.fontSizeList, fontStyleList].forEach((i) => i.classList.remove('show'));
-
+      
       if (this.caseList.classList.contains('show')) {
         this.caseList.classList.remove('show');
       } else {
         this.caseList.classList.add('show');
       }
+      [fontList, this.fontSizeList, fontStyleList].forEach((i) => i.classList.remove('show'));
     });
 
     // if (this.textSelectorValue === 'LogoName') {
@@ -966,7 +966,9 @@ class EditorScreen {
     });
 
     this.shadowBlurSlider.addEventListener('input', (e) => {
-      this.shadowBlur = e.target.value;
+      const value = e.target.value;
+      this.shadowBlur = value;
+      $('#shadow_blur_title').innerText = ` :${value}px`;
       this.shadowChanger(sloganNameElement, logoNameElement);
       this.canvas.requestRenderAll();
     });
@@ -992,7 +994,9 @@ class EditorScreen {
     });
 
     this.shadowOffsetXSlider.addEventListener('input', (e) => {
-      this.shadowOffsetX = e.target.value;
+      const val = e.target.value;
+      this.shadowOffsetX = val;
+      $('#offset_x_title').innerText = ` :${val}px`;
       this.shadowChanger(sloganNameElement, logoNameElement);
       this.canvas.requestRenderAll();
     });
@@ -1011,7 +1015,9 @@ class EditorScreen {
     });
 
     this.shadowOffsetYSlider.addEventListener('input', (e) => {
-      this.shadowOffsetY = e.target.value;
+      const val = e.target.value;
+      this.shadowOffsetY = val;
+      $('#offset_y_title').innerText = ` :${val}px`;
       this.shadowChanger(sloganNameElement, logoNameElement);
       this.canvas.requestRenderAll();
     });
@@ -1037,38 +1043,39 @@ class EditorScreen {
     fontSelectorTitle.addEventListener('click', (event) => {
       event.stopPropagation();
 
-      [fontStyleList, this.fontSizeList, this.caseList].forEach((i) => i.classList.remove('show'));
-
       if (fontList.classList.contains('show')) {
         fontList.classList.remove('show');
       } else {
         fontList.classList.add('show');
       }
+
+      [fontStyleList, this.caseList].forEach((i) => i.classList.remove('show'));
+
     });
 
     this.fontStyleListTitle.addEventListener('click', (event) => {
       event.stopPropagation();
-
-      [fontList, this.fontSizeList, this.caseList].forEach((i) => i.classList.remove('show'));
-
+      
       if (this.fontStyleList.classList.contains('show')) {
         this.fontStyleList.classList.remove('show');
       } else {
         this.fontStyleList.classList.add('show');
       }
+      [fontList, this.caseList].forEach((i) => i.classList.remove('show'));
     });
 
-    document.addEventListener('click', (event) => {
-      if (!event.target.classList.contains(fontSelectorTitle)) {
-        fontList.classList.remove('show');
-      }
-      if (!event.target.classList.contains(fontStyleListTitle)) {
-        fontStyleList.classList.remove('show');
-      }
-      if (!event.target.classList.contains(this.caseListTitle)) {
-        this.caseList.classList.remove('show');
-      }
-    });
+document.addEventListener('click', (event) => {
+  if (event.target !== fontSelectorTitle) {
+    fontList.classList.remove('show');
+  }
+  if (event.target !== this.fontStyleListTitle) {
+    this.fontStyleList.classList.remove('show');
+  }
+  if (event.target !== this.caseListTitle) {
+    this.caseList.classList.remove('show');
+  }
+});
+
 
     // for (let i = 8; i <= 80; i++) {
     //   document.querySelector('.font_size-list-items-li');
@@ -1245,35 +1252,33 @@ class EditorScreen {
       line2.set('visible', false);
     });
 
-    this.canvas.on('mouse:over', (e) => {
-      if (e.target) {
-        const activeObject = e.target;
-        
-        activeObject.set({
-          borderColor: 'blue',
-          cornerColor: 'blue',
-        });
-    
-        this.canvas.setActiveObject(activeObject);
-        this.canvas.requestRenderAll();
-      }
-    });
-    
+    // this.canvas.on('mouse:over', (e) => {
+    //   if (e.target) {
+    //     const activeObject = e.target;
 
-    this.canvas.on('mouse:down', (e) => {
-      if (e.target) {
-        const activeObject = e.target;
-        
-        activeObject.set({
-          borderColor: 'blue',
-          cornerColor: 'blue',
-        });
-    
-        this.canvas.setActiveObject(activeObject);
-        this.canvas.requestRenderAll();
-      }
-    });
-    
+    //     activeObject.set({
+    //       borderColor: 'blue',
+    //       cornerColor: 'blue',
+    //     });
+
+    //     this.canvas.setActiveObject(activeObject);
+    //     this.canvas.requestRenderAll();
+    //   }
+    // });
+
+    // this.canvas.on('mouse:down', (e) => {
+    //   if (e.target) {
+    //     const activeObject = e.target;
+
+    //     activeObject.set({
+    //       borderColor: 'blue',
+    //       cornerColor: 'blue',
+    //     });
+
+    //     this.canvas.setActiveObject(activeObject);
+    //     this.canvas.requestRenderAll();
+    //   }
+    // });
 
     // this.canvas.on('selection:created', () => {
     //   let activeObject = this.canvas.getActiveObject();
@@ -1369,10 +1374,46 @@ class EditorScreen {
       return hex;
     }
 
+    
+    const colorPickerText = new iro.ColorPicker('#open_picker_text', {
+      display: openTextPickerView,
+      width: 210,
+      marginTop: 20,
+      color: pickerDefaultColor,
+      transparency: false,
+      layout: [
+        {
+          component: iro.ui.Box,
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'hue',
+          },
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'alpha',
+          },
+        },
+      ],
+    });
+
     logoNameElement.on('mousedown', (e) => {
       e.e.preventDefault();
       this.textSelectorValue = 'LogoName';
       // logoOrSloganView('LogoName');
+
+      console.log(!!logoNameElement?.shadow?.blur);
+      $('#drop-shadow').checked = !!logoNameElement?.shadow?.blur;
+
+      if (!!logoNameElement?.shadow?.blur) {
+        $('#logo-shadow-adjust').style.display = 'block';
+        $('#logo-shadow-blur').style.display = 'block';
+        $('#logo-shadow-offsetX').style.display = 'block';
+        $('#logo-shadow-offsetY').style.display = 'block';
+      } 
 
       let fillColor;
       const color = logoNameElement.get('fill');
@@ -1394,6 +1435,7 @@ class EditorScreen {
 
       const fontFamily = logoNameElement.fontFamily;
       $('#font-selector-title').innerText = fontFamily;
+      putAngleDownIcon('#font-selector-title');
 
       const fontSize = logoNameElement.fontSize;
       $('#font_size_title').value = `${fontSize}px`;
@@ -1402,6 +1444,18 @@ class EditorScreen {
       $('.case-list-item__title').innerText = getTextCase(logoText);
       putAngleDownIcon('.case-list-item__title');
 
+      if (logoNameElement.shadow) {
+        const { blur, offsetX, offsetY } = logoNameElement.shadow;
+
+        if (blur && offsetX && offsetY) {
+          $('#shadow_blur_title').innerText = ` :${blur}px`;
+          $('#shadow-blur-slider').value = blur;
+          $('#offset_x_title').innerText = ` :${offsetX}px`;
+          $('#shadow-offsetX-slider').value = offsetX;
+          $('#offset_y_title').innerText = ` :${offsetY}px`;
+          $('#shadow-offsetY-slider').value = offsetY;
+        }
+      }
       captureCanvasState();
       this.canvas.requestRenderAll();
     });
@@ -1410,6 +1464,16 @@ class EditorScreen {
       event.e.preventDefault();
       this.textSelectorValue = 'SloganName';
       // logoOrSloganView('SloganName');
+
+      console.log(!!sloganNameElement?.shadow?.blur);
+      $('#drop-shadow').checked = !!sloganNameElement?.shadow?.blur;
+
+      if (!!sloganNameElement?.shadow?.blur) {
+        $('#logo-shadow-adjust').style.display = 'block';
+        $('#logo-shadow-blur').style.display = 'block';
+        $('#logo-shadow-offsetX').style.display = 'block';
+        $('#logo-shadow-offsetY').style.display = 'block';
+      }
 
       let fillColor;
       const color = sloganNameElement.get('fill');
@@ -1432,10 +1496,22 @@ class EditorScreen {
       const fontSize = sloganNameElement.fontSize;
       $('#font_size_title').value = `${fontSize}px`;
 
-      putAngleDownIcon('#font-selector-title');
       const logoText = sloganNameElement.text;
       $('.case-list-item__title').innerText = getTextCase(logoText);
       putAngleDownIcon('.case-list-item__title');
+
+      if (sloganNameElement.shadow) {
+        const { blur, offsetX, offsetY } = sloganNameElement.shadow;
+
+        if (blur && offsetX && offsetY) {
+          $('#shadow_blur_title').innerText = ` :${blur}px`;
+          $('#shadow-blur-slider').value = blur;
+          $('#offset_x_title').innerText = ` :${offsetX}px`;
+          $('#shadow-offsetX-slider').value = offsetX;
+          $('#offset_y_title').innerText = ` :${offsetY}px`;
+          $('#shadow-offsetY-slider').value = offsetY;
+        }
+      }
 
       captureCanvasState();
       this.canvas.requestRenderAll();
@@ -1503,6 +1579,19 @@ class EditorScreen {
 
             colorPickerText.color.hexString = fillColor;
 
+            if (logoNameElement.shadow.blur) {
+              const { blur, offsetX, offsetY } = logoNameElement.shadow;
+
+              if (blur && offsetX && offsetY) {
+                $('#shadow_blur_title').innerText = ` :${blur}px`;
+                $('#shadow-blur-slider').value = blur;
+                $('#offset_x_title').innerText = ` :${offsetX}px`;
+                $('#shadow-offsetX-slider').value = offsetX;
+                $('#offset_y_title').innerText = ` :${offsetY}px`;
+                $('#shadow-offsetY-slider').value = offsetY;
+              }
+            }
+
             $('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
             putAngleDownIcon('.font_style-list-item__title');
 
@@ -1511,6 +1600,7 @@ class EditorScreen {
 
             const fontFamily = logoNameElement.fontFamily;
             $('#font-selector-title').innerText = fontFamily;
+            putAngleDownIcon('.font-selector-title');
 
             const fontSize = logoNameElement.fontSize;
             $('#font_size_title').value = `${fontSize}px`;
@@ -1543,6 +1633,19 @@ class EditorScreen {
             }
 
             colorPickerText.color.hexString = fillColor;
+
+            if (sloganNameElement.shadow.blur) {
+              const { blur, offsetX, offsetY } = sloganNameElement.shadow;
+
+              if (blur && offsetX && offsetY) {
+                $('#shadow_blur_title').innerText = ` :${blur}px`;
+                $('#shadow-blur-slider').value = blur;
+                $('#offset_x_title').innerText = ` :${offsetX}px`;
+                $('#shadow-offsetX-slider').value = offsetX;
+                $('#offset_y_title').innerText = ` :${offsetY}px`;
+                $('#shadow-offsetY-slider').value = offsetY;
+              }
+            }
 
             $('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
             putAngleDownIcon('.font_style-list-item__title');
@@ -1659,15 +1762,15 @@ class EditorScreen {
 
     $('#font_size_title').addEventListener('keydown', (event) => {
       if (event.key === 'ArrowUp') {
-        let curr = Number(event.target.value.split("px")[0])
-        event.target.value = (curr+1) +'px';
-      } else if (event.key === 'ArrowDown'){
-        let curr = Number(event.target.value.split("px")[0])
-        event.target.value = (curr-1) +'px';        
+        let curr = Number(event.target.value.split('px')[0]);
+        event.target.value = curr + 1 + 'px';
+      } else if (event.key === 'ArrowDown') {
+        let curr = Number(event.target.value.split('px')[0]);
+        event.target.value = curr - 1 + 'px';
       }
 
       const active = this.canvas.getActiveObject();
-      active.fontSize = Number(event.target.value.split("px")[0]);
+      active.fontSize = Number(event.target.value.split('px')[0]);
 
       this.canvas.requestRenderAll();
     });
@@ -1860,6 +1963,8 @@ class EditorScreen {
     palleteComponent.addEventListener('colorChange', (e) => {
       const { colorMode, grad1Value, grad2Value, colorAngle, solidValue } = e.detail;
 
+      console.log(colorAngle);
+
       let angleColor = `${colorAngle}deg`;
       let color = null;
       if (colorMode === 'Linear') {
@@ -1897,6 +2002,7 @@ class EditorScreen {
       const { colorMode, grad1Value, grad2Value, solidValue, colorAngle } = e.detail;
       console.log(colorAngle);
 
+      let angleColor = `${colorAngle}deg`;
       let color = null;
       if (colorMode !== 'Solid') {
         color = new fabric.Gradient({
@@ -2107,9 +2213,10 @@ class EditorScreen {
       }
     });
 
-    let isShadowAdjust = false;
+    let isShadowAdjust = !!(this.canvas.getActiveObject()?.shadow?.blur);
     document.getElementById('drop-shadow').addEventListener('change', () => {
       isShadowAdjust = !isShadowAdjust;
+
       if (isShadowAdjust) {
         $('#shadow-adjust').style.display = 'block';
         const settingsView = $('.settings-view');
@@ -2471,30 +2578,6 @@ class EditorScreen {
       });
     });
 
-    const colorPickerText = new iro.ColorPicker('#open_picker_text', {
-      display: openTextPickerView,
-      width: 210,
-      marginTop: 20,
-      color: pickerDefaultColor,
-      transparency: false,
-      layout: [
-        {
-          component: iro.ui.Box,
-        },
-        {
-          component: iro.ui.Slider,
-          options: {
-            sliderType: 'hue',
-          },
-        },
-        {
-          component: iro.ui.Slider,
-          options: {
-            sliderType: 'alpha',
-          },
-        },
-      ],
-    });
 
     const updateColorTextPickers = () => {
       let itemFill, colPicker;
@@ -2625,8 +2708,6 @@ class EditorScreen {
 
     const centerAndResizeElements = (type, logoSize, sloganSize, textPosition, mainTop = -100) => {
       // this.canvas.remove(line1, line2);
-      // (logoNameElement.fontSize = logoSize), sloganSize;
-      // (sloganNameElement.fontSize = logoSize), sloganSize;
       const objects = this.canvas.getObjects();
       const logoMain = objects.filter((i) => !i.text);
 
@@ -2635,7 +2716,6 @@ class EditorScreen {
       switch (type) {
         case 'topBottom':
           setTimeout(() => {
-
             const logoNameElement = objects.find(
               (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
             );
@@ -2719,7 +2799,10 @@ class EditorScreen {
               sloganNameElement.viewportCenterH();
 
               logoNameElement.set('left', this.canvas.width / 2.5);
-              sloganNameElement.set('left', logoNameElement.left + (logoNameElement.width / 2) - (sloganNameElement.width / 2));
+              sloganNameElement.set(
+                'left',
+                logoNameElement.left + logoNameElement.width / 2 - sloganNameElement.width / 2
+              );
             }
 
             logoMain.forEach((i) => (i.left -= 200));
@@ -2758,15 +2841,19 @@ class EditorScreen {
               sloganNameElement.set('top', this.canvas.height / 1.9);
 
               logoNameElement.set('left', this.canvas.width / 6);
-              sloganNameElement.set('left', logoNameElement.left + logoNameElement.width  - sloganNameElement.width);
-              
-
+              sloganNameElement.set(
+                'left',
+                logoNameElement.left + logoNameElement.width - sloganNameElement.width
+              );
             } else {
               logoNameElement.viewportCenterH();
               sloganNameElement.viewportCenterH();
 
               logoNameElement.set('left', this.canvas.width / 6);
-              sloganNameElement.set('left', logoNameElement.left + (logoNameElement.width / 2) - (sloganNameElement.width / 2));
+              sloganNameElement.set(
+                'left',
+                logoNameElement.left + logoNameElement.width / 2 - sloganNameElement.width / 2
+              );
             }
 
             logoMain.forEach((i) => (i.left += 150));
