@@ -381,9 +381,7 @@ class EditorScreen {
     // });
 
     this.caseListTitle.addEventListener('click', (event) => {
-      event.stopPropagation();
-
-      
+      event.stopPropagation();      
 
       [fontList, this.fontSizeList, fontStyleList].forEach((i) => i.classList.remove('show'));
 
@@ -1346,6 +1344,18 @@ class EditorScreen {
       this.textSelectorValue = 'LogoName';
       // logoOrSloganView('LogoName');
 
+      let fillColor;
+      const color = logoNameElement.get('fill');
+
+      if (color.includes('#')) {
+        fillColor = color;
+      } else {
+        const newColor = rgbaToHex(color);
+        fillColor = newColor;
+      }
+
+      colorPickerText.color.hexString = fillColor;
+
       $('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
       putAngleDownIcon('.font_style-list-item__title');
 
@@ -1372,6 +1382,18 @@ class EditorScreen {
       event.e.preventDefault();
       this.textSelectorValue = 'SloganName';
       // logoOrSloganView('SloganName');
+
+      let fillColor;
+      const color = sloganNameElement.get('fill');
+
+      if (color.includes('#')) {
+        fillColor = color;
+      } else {
+        const newColor = rgbaToHex(color);
+        fillColor = newColor;
+      }
+
+      colorPickerText.color.hexString = fillColor;
 
       $('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
       putAngleDownIcon('.font_style-list-item__title');
@@ -1446,6 +1468,17 @@ class EditorScreen {
             this.uploadSettingsContainer.style.display = 'none';
             this.textSelectorValue = 'LogoName';
             // logoOrSloganView('LogoName');
+            let fillColor;
+            const color = logoNameElement.get('fill');
+      
+            if (color.includes('#')) {
+              fillColor = color;
+            } else {
+              const newColor = rgbaToHex(color);
+              fillColor = newColor;
+            }
+
+            colorPickerText.color.hexString = fillColor;
 
             $('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
             putAngleDownIcon('.font_style-list-item__title');
@@ -1477,6 +1510,18 @@ class EditorScreen {
             this.uploadSettingsContainer.style.display = 'none';
             this.textSelectorValue = 'SloganName';
             // logoOrSloganView('SloganName');
+
+            let fillColor;
+            const color = sloganNameElement.get('fill');
+      
+            if (color.includes('#')) {
+              fillColor = color;
+            } else {
+              const newColor = rgbaToHex(color);
+              fillColor = newColor;
+            }
+
+            colorPickerText.color.hexString = fillColor;
 
             $('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
             putAngleDownIcon('.font_style-list-item__title');
