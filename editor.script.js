@@ -382,7 +382,11 @@ class EditorScreen {
 
     this.caseListTitle.addEventListener('click', (event) => {
       event.stopPropagation();
-    
+
+      
+
+      [fontList, this.fontSizeList, fontStyleList].forEach((i) => i.classList.remove('show'));
+
       if (this.caseList.classList.contains('show')) {
         this.caseList.classList.remove('show');
       } else {
@@ -433,8 +437,8 @@ class EditorScreen {
       return stack.join('');
     };
 
-    this.caseList.addEventListener('click', (ev) => {
-      const selectedTextElement = ev.target.innerText;
+    this.caseList.addEventListener('click', (event) => {
+      const selectedTextElement = event.target.innerText;
 
       const active = this.canvas.getActiveObject();
       const text = active.text;
@@ -458,7 +462,7 @@ class EditorScreen {
 
     this.fontStyleList.addEventListener('click', (ev) => {
       const selectedTextElement = ev.target.innerText;
-      console.log(selectedTextElement);
+      // console.log(selectedTextElement);
 
       const active = this.canvas.getActiveObject();
       if (selectedTextElement === 'Normal') {
@@ -1029,30 +1033,33 @@ class EditorScreen {
 
     const fontList = document.querySelector('.font-selector-list');
     const fontSelectorTitle = document.querySelector('.font-selector-title');
-    const fontStyleListTitle = document.querySelector('.font_style-list-item__title')
-    const fontStyleList = document.querySelector('.font_style-list-items-li')
+    const fontStyleListTitle = document.querySelector('.font_style-list-item__title');
+    const fontStyleList = document.querySelector('.font_style-list-items-li');
 
-    
     fontSelectorTitle.addEventListener('click', (event) => {
       event.stopPropagation();
-    
+
+      [fontStyleList, this.fontSizeList, this.caseList].forEach((i) => i.classList.remove('show'));
+
       if (fontList.classList.contains('show')) {
         fontList.classList.remove('show');
       } else {
         fontList.classList.add('show');
       }
     });
-    
+
     this.fontStyleListTitle.addEventListener('click', (event) => {
       event.stopPropagation();
-    
+
+      [fontList, this.fontSizeList, this.caseList].forEach((i) => i.classList.remove('show'));
+
       if (this.fontStyleList.classList.contains('show')) {
         this.fontStyleList.classList.remove('show');
       } else {
         this.fontStyleList.classList.add('show');
       }
     });
-    
+
     document.addEventListener('click', (event) => {
       if (!event.target.classList.contains(fontSelectorTitle)) {
         fontList.classList.remove('show');
@@ -1064,7 +1071,6 @@ class EditorScreen {
         this.caseList.classList.remove('show');
       }
     });
-    
 
     for (let i = 8; i <= 80; i++) {
       document.querySelector('.font_size-list-items-li');
