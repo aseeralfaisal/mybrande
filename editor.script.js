@@ -380,7 +380,9 @@ class EditorScreen {
     //   }
     // });
 
-    this.caseListTitle.addEventListener('click', () => {
+    this.caseListTitle.addEventListener('click', (event) => {
+      event.stopPropagation();
+    
       if (this.caseList.classList.contains('show')) {
         this.caseList.classList.remove('show');
       } else {
@@ -1027,22 +1029,42 @@ class EditorScreen {
 
     const fontList = document.querySelector('.font-selector-list');
     const fontSelectorTitle = document.querySelector('.font-selector-title');
+    const fontStyleListTitle = document.querySelector('.font_style-list-item__title')
+    const fontStyleList = document.querySelector('.font_style-list-items-li')
 
-    fontSelectorTitle.addEventListener('click', () => {
+    
+    fontSelectorTitle.addEventListener('click', (event) => {
+      event.stopPropagation();
+    
       if (fontList.classList.contains('show')) {
         fontList.classList.remove('show');
       } else {
         fontList.classList.add('show');
       }
     });
-
-    this.fontStyleListTitle.addEventListener('click', () => {
+    
+    this.fontStyleListTitle.addEventListener('click', (event) => {
+      event.stopPropagation();
+    
       if (this.fontStyleList.classList.contains('show')) {
         this.fontStyleList.classList.remove('show');
       } else {
         this.fontStyleList.classList.add('show');
       }
     });
+    
+    document.addEventListener('click', (event) => {
+      if (!event.target.classList.contains(fontSelectorTitle)) {
+        fontList.classList.remove('show');
+      }
+      if (!event.target.classList.contains(fontStyleListTitle)) {
+        fontStyleList.classList.remove('show');
+      }
+      if (!event.target.classList.contains(this.caseListTitle)) {
+        this.caseList.classList.remove('show');
+      }
+    });
+    
 
     for (let i = 8; i <= 80; i++) {
       document.querySelector('.font_size-list-items-li');
@@ -1774,7 +1796,8 @@ class EditorScreen {
     const logoPalleteComponent = $('#logo-pallete');
     logoPalleteComponent.addEventListener('colorChange', (e) => {
       const selectedObject = this.canvas.getActiveObject();
-      const { colorMode, grad1Value, grad2Value, solidValue } = e.detail;
+      const { colorMode, grad1Value, grad2Value, solidValue, colorAngle } = e.detail;
+      console.log(colorAngle);
 
       let color = null;
       if (colorMode !== 'Solid') {

@@ -151,6 +151,7 @@ class Palette extends HTMLElement {
       this.querySelector('#color-angle-text').innerText = `${e.target.value}deg`;
       dispatchChangeEvent();
     });
+    
   }
 }
 
