@@ -381,7 +381,7 @@ class EditorScreen {
     // });
 
     this.caseListTitle.addEventListener('click', (event) => {
-      event.stopPropagation();      
+      event.stopPropagation();
 
       [fontList, this.fontSizeList, fontStyleList].forEach((i) => i.classList.remove('show'));
 
@@ -482,20 +482,20 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    this.fontSizeList.addEventListener('click', (event) => {
-      const text = event.target.innerText;
-      const fontSize = text.split(' ')[0];
+    // this.fontSizeList.addEventListener('click', (event) => {
+    //   const text = event.target.innerText;
+    //   const fontSize = text.split(' ')[0];
 
-      const active = this.canvas.getActiveObject();
-      active.fontSize = fontSize;
+    //   const active = this.canvas.getActiveObject();
+    //   active.fontSize = fontSize;
 
-      this.fontSizeListTitle.innerText = fontSize + ' px';
-      const icon = document.createElement('i');
-      icon.className = 'fa-solid fa-angle-down';
-      this.fontSizeListTitle.append(icon);
-      this.fontSizeList.classList.remove('show');
-      this.canvas.requestRenderAll();
-    });
+    //   this.fontSizeListTitle.innerText = fontSize + ' px';
+    //   const icon = document.createElement('i');
+    //   icon.className = 'fa-solid fa-angle-down';
+    //   this.fontSizeListTitle.append(icon);
+    //   this.fontSizeList.classList.remove('show');
+    //   this.canvas.requestRenderAll();
+    // });
 
     this.rotateRange.addEventListener('input', (e) => {
       this.isRotating = true;
@@ -1070,20 +1070,20 @@ class EditorScreen {
       }
     });
 
-    for (let i = 8; i <= 80; i++) {
-      document.querySelector('.font_size-list-items-li');
-      const li = document.createElement('li');
-      li.append(i + ' px');
-      this.fontSizeList.append(li);
-    }
+    // for (let i = 8; i <= 80; i++) {
+    //   document.querySelector('.font_size-list-items-li');
+    //   const li = document.createElement('li');
+    //   li.append(i + ' px');
+    //   this.fontSizeList.append(li);
+    // }
 
-    this.fontSizeListTitle.addEventListener('click', () => {
-      if (this.fontSizeList.classList.contains('show')) {
-        this.fontSizeList.classList.remove('show');
-      } else {
-        this.fontSizeList.classList.add('show');
-      }
-    });
+    // this.fontSizeListTitle.addEventListener('click', () => {
+    //   if (this.fontSizeList.classList.contains('show')) {
+    //     this.fontSizeList.classList.remove('show');
+    //   } else {
+    //     this.fontSizeList.classList.add('show');
+    //   }
+    // });
 
     [logoNameElement, sloganNameElement].forEach((i) => {
       i.on('mousedown', () => {
@@ -1245,68 +1245,68 @@ class EditorScreen {
       line2.set('visible', false);
     });
 
-    this.canvas.on('selection:created', () => {
-      let activeObject = this.canvas.getActiveObject();
-      if (!activeObject) return;
+    // this.canvas.on('selection:created', () => {
+    //   let activeObject = this.canvas.getActiveObject();
+    //   if (!activeObject) return;
 
-      const movementIncrement = 5;
+    //   const movementIncrement = 5;
 
-      const handler = (e) => {
-        const getPosition = (position) => activeObject.get(position);
+    //   const handler = (e) => {
+    //     const getPosition = (position) => activeObject.get(position);
 
-        switch (e.key) {
-          case 'ArrowLeft':
-            activeObject.set('left', getPosition('left') - movementIncrement);
-            break;
-          case 'ArrowUp':
-            activeObject.set('top', getPosition('top') - movementIncrement);
-            break;
-          case 'ArrowRight':
-            activeObject.set('left', getPosition('left') + movementIncrement);
-            break;
-          case 'ArrowDown':
-            activeObject.set('top', getPosition('top') + movementIncrement);
-            break;
-          default:
-            return;
-        }
+    //     switch (e.key) {
+    //       case 'ArrowLeft':
+    //         activeObject.set('left', getPosition('left') - movementIncrement);
+    //         break;
+    //       case 'ArrowUp':
+    //         activeObject.set('top', getPosition('top') - movementIncrement);
+    //         break;
+    //       case 'ArrowRight':
+    //         activeObject.set('left', getPosition('left') + movementIncrement);
+    //         break;
+    //       case 'ArrowDown':
+    //         activeObject.set('top', getPosition('top') + movementIncrement);
+    //         break;
+    //       default:
+    //         return;
+    //     }
 
-        e.preventDefault();
-        this.canvas.renderAll();
-      };
+    //     e.preventDefault();
+    //     this.canvas.renderAll();
+    //   };
 
-      document.addEventListener('keydown', handler);
+    //   document.addEventListener('keydown', handler);
 
-      this.canvas.on('selection:cleared', () => {
-        document.removeEventListener('keydown', handler);
-        activeObject = null;
-      });
-    });
+    //   this.canvas.on('selection:cleared', () => {
+    //     document.removeEventListener('keydown', handler);
+    //     activeObject = null;
+    //   });
+    // });
 
-    this.canvas.on('selection:updated', () => {
-      const activeObject = this.canvas.getActiveObject();
-      document.onkeydown = (e) => {
-        if (activeObject === undefined || activeObject === null) return;
+    // this.canvas.on('selection:updated', () => {
+    //   const activeObject = this.canvas.getActiveObject();
+    //   document.onkeydown = (e) => {
+    //     if (activeObject === undefined || activeObject === null) return;
 
-        const movementIncrement = 5;
+    //     const movementIncrement = 5;
 
-        switch (e.key) {
-          case 'ArrowLeft':
-            activeObject.set('left', activeObject.get('left') - movementIncrement);
-            break;
-          case 'ArrowUp':
-            activeObject.set('top', activeObject.get('top') - movementIncrement);
-            break;
-          case 'ArrowRight':
-            activeObject.set('left', activeObject.get('left') + movementIncrement);
-            break;
-          case 'ArrowDown':
-            activeObject.set('top', activeObject.get('top') + movementIncrement);
-            break;
-        }
-        this.canvas.renderAll();
-      };
-    });
+    //     switch (e.key) {
+    //       case 'ArrowLeft':
+    //         activeObject.set('left', activeObject.get('left') - movementIncrement);
+    //         break;
+    //       case 'ArrowUp':
+    //         activeObject.set('top', activeObject.get('top') - movementIncrement);
+    //         break;
+    //       case 'ArrowRight':
+    //         activeObject.set('left', activeObject.get('left') + movementIncrement);
+    //         break;
+    //       case 'ArrowDown':
+    //         activeObject.set('top', activeObject.get('top') + movementIncrement);
+    //         break;
+    //     }
+    //     this.canvas.renderAll();
+    //   };
+    // });
 
     // const logoOrSloganView = (element) => {
     //   if (element === 'LogoName') {
@@ -1366,10 +1366,8 @@ class EditorScreen {
       $('#font-selector-title').innerText = fontFamily;
 
       const fontSize = logoNameElement.fontSize;
-      this.fontSizeListTitle.innerText = fontSize + ' px';
-      putAngleDownIcon('.font_size-list-item__title');
+      $('#font_size_title').value = `${fontSize}px`;
 
-      putAngleDownIcon('#font-selector-title');
       const logoText = logoNameElement.text;
       $('.case-list-item__title').innerText = getTextCase(logoText);
       putAngleDownIcon('.case-list-item__title');
@@ -1402,12 +1400,7 @@ class EditorScreen {
       $('#letter-spacing-slider').value = letterSpacing;
 
       const fontSize = sloganNameElement.fontSize;
-      this.fontSizeListTitle.innerText = fontSize + ' px';
-
-      putAngleDownIcon('.font_size-list-item__title');
-
-      const fontFamily = sloganNameElement.fontFamily;
-      $('#font-selector-title').innerText = fontFamily;
+      $('#font_size_title').value = `${fontSize}px`;
 
       putAngleDownIcon('#font-selector-title');
       const logoText = sloganNameElement.text;
@@ -1470,7 +1463,7 @@ class EditorScreen {
             // logoOrSloganView('LogoName');
             let fillColor;
             const color = logoNameElement.get('fill');
-      
+
             if (color.includes('#')) {
               fillColor = color;
             } else {
@@ -1490,10 +1483,8 @@ class EditorScreen {
             $('#font-selector-title').innerText = fontFamily;
 
             const fontSize = logoNameElement.fontSize;
-            this.fontSizeListTitle.innerText = fontSize + ' px';
-            putAngleDownIcon('.font_size-list-item__title');
+            $('#font_size_title').value = `${fontSize}px`;
 
-            putAngleDownIcon('#font-selector-title');
             const logoText = logoNameElement.text;
             $('.case-list-item__title').innerText = getTextCase(logoText);
             putAngleDownIcon('.case-list-item__title');
@@ -1513,7 +1504,7 @@ class EditorScreen {
 
             let fillColor;
             const color = sloganNameElement.get('fill');
-      
+
             if (color.includes('#')) {
               fillColor = color;
             } else {
@@ -1530,8 +1521,7 @@ class EditorScreen {
             $('#letter-spacing-slider').value = letterSpacing;
 
             const fontSize = sloganNameElement.fontSize;
-            this.fontSizeListTitle.innerText = fontSize + ' px';
-            putAngleDownIcon('.font_size-list-item__title');
+            $('#font_size_title').value = `${fontSize}px`;
 
             const fontFamily = sloganNameElement.fontFamily;
             $('#font-selector-title').innerText = fontFamily;
@@ -1624,6 +1614,33 @@ class EditorScreen {
         });
       }
     };
+
+    $('#font_size_range').addEventListener('input', (event) => {
+      const textSize = event.target.value;
+      $('#font_size_title').value = `${textSize}px`;
+
+      const fontSize = textSize;
+
+      const active = this.canvas.getActiveObject();
+      active.fontSize = fontSize;
+
+      this.canvas.requestRenderAll();
+    });
+
+    $('#font_size_title').addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowUp') {
+        let curr = Number(event.target.value.split("px")[0])
+        event.target.value = (curr+1) +'px';
+      } else if (event.key === 'ArrowDown'){
+        let curr = Number(event.target.value.split("px")[0])
+        event.target.value = (curr-1) +'px';        
+      }
+
+      const active = this.canvas.getActiveObject();
+      active.fontSize = Number(event.target.value.split("px")[0]);
+
+      this.canvas.requestRenderAll();
+    });
 
     const redo = () => {
       if (undoHistory.length > 0) {
@@ -2667,13 +2684,13 @@ class EditorScreen {
               sloganNameElement.set('top', this.canvas.height / 1.9);
 
               logoNameElement.set('left', this.canvas.width / 2.4);
-              sloganNameElement.set('left', this.canvas.width / 2.4);
+              sloganNameElement.set('left', logoNameElement.left);
             } else {
               logoNameElement.viewportCenterH();
               sloganNameElement.viewportCenterH();
 
               logoNameElement.set('left', this.canvas.width / 2.5);
-              sloganNameElement.set('left', logoNameElement.width / 0.77);
+              sloganNameElement.set('left', logoNameElement.left + (logoNameElement.width / 2) - (sloganNameElement.width / 2));
             }
 
             logoMain.forEach((i) => (i.left -= 200));
@@ -2711,13 +2728,15 @@ class EditorScreen {
               sloganNameElement.set('top', this.canvas.height / 1.9);
 
               logoNameElement.set('left', this.canvas.width / 6);
-              sloganNameElement.set('left', this.canvas.width / 2.95);
+              sloganNameElement.set('left', logoNameElement.left + logoNameElement.width  - sloganNameElement.width);
+              
+
             } else {
               logoNameElement.viewportCenterH();
               sloganNameElement.viewportCenterH();
 
               logoNameElement.set('left', this.canvas.width / 6);
-              sloganNameElement.set('left', logoNameElement.width / 1.45);
+              sloganNameElement.set('left', logoNameElement.left + (logoNameElement.width / 2) - (sloganNameElement.width / 2));
             }
 
             logoMain.forEach((i) => (i.left += 150));
