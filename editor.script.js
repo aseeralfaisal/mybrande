@@ -2605,7 +2605,6 @@ class EditorScreen {
       switch (type) {
         case 'topBottom':
           setTimeout(() => {
-            const selection = this.canvas.getObjects().filter((i) => !i.text);
 
             const logoNameElement = objects.find(
               (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
@@ -2695,7 +2694,8 @@ class EditorScreen {
 
             logoMain.forEach((i) => (i.left -= 200));
             const newGrp = new fabric.Group(objects);
-            this.canvas.viewportCenterObject(newGrp);
+            this.canvas.viewportCenterObjectH(newGrp);
+            this.canvas.viewportCenterObjectV(newGrp);
             // newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
             updatePreview();
@@ -2741,7 +2741,8 @@ class EditorScreen {
 
             logoMain.forEach((i) => (i.left += 150));
             const newGrp = new fabric.Group(objects);
-            this.canvas.viewportCenterObject(newGrp);
+            this.canvas.viewportCenterObjectH(newGrp);
+            this.canvas.viewportCenterObjectV(newGrp);
             // newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
             updatePreview();
