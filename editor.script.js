@@ -1245,6 +1245,36 @@ class EditorScreen {
       line2.set('visible', false);
     });
 
+    this.canvas.on('mouse:over', (e) => {
+      if (e.target) {
+        const activeObject = e.target;
+        
+        activeObject.set({
+          borderColor: 'blue',
+          cornerColor: 'blue',
+        });
+    
+        this.canvas.setActiveObject(activeObject);
+        this.canvas.requestRenderAll();
+      }
+    });
+    
+
+    this.canvas.on('mouse:down', (e) => {
+      if (e.target) {
+        const activeObject = e.target;
+        
+        activeObject.set({
+          borderColor: 'blue',
+          cornerColor: 'blue',
+        });
+    
+        this.canvas.setActiveObject(activeObject);
+        this.canvas.requestRenderAll();
+      }
+    });
+    
+
     // this.canvas.on('selection:created', () => {
     //   let activeObject = this.canvas.getActiveObject();
     //   if (!activeObject) return;

@@ -1275,5 +1275,8 @@ body {
   text-indent: 5px;
   outline: none;
   border: none;
+  border-radius: 5px;
+  color: #555;
+  font-weight: 600;
   background-color: #eeeeee;
 }
