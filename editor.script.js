@@ -1759,6 +1759,8 @@ class EditorScreen {
       }
     };
 
+
+
     $('#font_size_range').addEventListener('input', (event) => {
       const textSize = event.target.value;
       $('#font_size_title').value = `${textSize}px`;
@@ -1770,6 +1772,15 @@ class EditorScreen {
 
       this.canvas.requestRenderAll();
     });
+
+    $('#font_size_title').addEventListener('input', (event) => {
+      const text = event.target.value;
+      const fontSize = Number(text.split("px")[0])
+      const active = this.canvas.getActiveObject();
+      active.fontSize = fontSize;
+
+      this.canvas.requestRenderAll();      
+    })
 
     $('#font_size_title').addEventListener('keydown', (event) => {
       if (event.key === 'ArrowUp') {
