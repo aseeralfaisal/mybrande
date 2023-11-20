@@ -481,20 +481,20 @@
                 <button id="logo-shadow-adjust" class="btn-main" style="width: 200px; display: none;"><i
                         class="fa-solid fa-sun"></i> Adjust</button>
                 <div id="logo-shadow-blur" class="setting-item" style="display: none;">
-                    <span>Shadow Blur</span>
+                    <span>Shadow Blur</span><span id="logo-shadow_blur_title"> :1px</span>
                     <div class="slider-container">
                         <input class="slider" id="logo-shadow-blur-slider" type="range" value="0" min="0" max="100">
                     </div>
                 </div>
                 <div id="logo-shadow-offsetX" class="setting-item" style="display: none;">
-                    <span>Shadow OffsetX</span>
+                    <span>Shadow OffsetX</span><span id="logo-shadow_offsetX"> :0px</span>
                     <div class="slider-container">
                         <input class="slider" id="logo-shadow-offsetX-slider" type="range" value="0" min="-100"
                             max="100">
                     </div>
                 </div>
                 <div id="logo-shadow-offsetY" class="setting-item" style="display: none;">
-                    <span>Shadow OffsetY</span>
+                    <span>Shadow OffsetY</span><span id="logo-shadow_offsetY"> :0px</span>
                     <div class="slider-container">
                         <input class="slider" id="logo-shadow-offsetY-slider" type="range" value="0" min="-100"
                             max="100">
@@ -1071,6 +1071,7 @@
             </div>
             <div id="canvas-container" tabindex="0">
                 <canvas id="c" height="600vh" width="980vw"></canvas>
+                <!-- <canvas id="c" height="1000vh" width="1580vw"></canvas> -->
             </div>
 
         </div>

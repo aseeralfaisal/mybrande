@@ -383,7 +383,6 @@ class EditorScreen {
     this.caseListTitle.addEventListener('click', (event) => {
       event.preventDefault();
 
-      
       if (this.caseList.classList.contains('show')) {
         this.caseList.classList.remove('show');
       } else {
@@ -765,9 +764,11 @@ class EditorScreen {
 
           obj.on('mousedown', (e) => {
             let fillColor;
-            const color = e.target.fill;
+            const color = e?.target?.fill;
 
-            if (color.includes('#')) {
+            if (typeof color === 'object') {
+              fillColor = color.colorStops[0].color;
+            } else if (color && color.includes('#')) {
               fillColor = color;
             } else {
               const newColor = rgbaToHex(color);
@@ -983,6 +984,7 @@ class EditorScreen {
     $('#logo-shadow-blur-slider').addEventListener('input', (e) => {
       this.logoShadowBlur = e.target.value;
       const active = this.canvas.getActiveObjects();
+      $('#logo-shadow_blur_title').innerText = ` :${e.target.value}px`;
       active.forEach((item) => {
         item.set('shadow', {
           offsetX: this.logoShadowOffsetX,
@@ -1003,6 +1005,8 @@ class EditorScreen {
 
     this.logoShadowOffsetXSlider.addEventListener('input', (e) => {
       this.logoShadowOffsetX = e.target.value;
+      
+      $('#logo-shadow_offsetX').innerText = ` :${e.target.value}px`;
       const active = this.canvas.getActiveObjects();
       active.forEach((item) => {
         item.set('shadow', {
@@ -1024,6 +1028,7 @@ class EditorScreen {
 
     this.logoShadowOffsetYSlider.addEventListener('input', (e) => {
       this.logoShadowOffsetY = e.target.value;
+      $('#logo-shadow_offsetY').innerText = ` :${e.target.value}px`;
       const active = this.canvas.getActiveObjects();
       active.forEach((item) => {
         item.set('shadow', {
@@ -1050,12 +1055,11 @@ class EditorScreen {
       }
 
       [fontStyleList, this.caseList].forEach((i) => i.classList.remove('show'));
-
     });
 
     this.fontStyleListTitle.addEventListener('click', (event) => {
       event.stopPropagation();
-      
+
       if (this.fontStyleList.classList.contains('show')) {
         this.fontStyleList.classList.remove('show');
       } else {
@@ -1064,18 +1068,17 @@ class EditorScreen {
       [fontList, this.caseList].forEach((i) => i.classList.remove('show'));
     });
 
-document.addEventListener('click', (event) => {
-  if (event.target !== fontSelectorTitle) {
-    fontList.classList.remove('show');
-  }
-  if (event.target !== this.fontStyleListTitle) {
-    this.fontStyleList.classList.remove('show');
-  }
-  if (event.target !== this.caseListTitle) {
-    this.caseList.classList.remove('show');
-  }
-});
-
+    document.addEventListener('click', (event) => {
+      if (event.target !== fontSelectorTitle) {
+        fontList.classList.remove('show');
+      }
+      if (event.target !== this.fontStyleListTitle) {
+        this.fontStyleList.classList.remove('show');
+      }
+      if (event.target !== this.caseListTitle) {
+        this.caseList.classList.remove('show');
+      }
+    });
 
     // for (let i = 8; i <= 80; i++) {
     //   document.querySelector('.font_size-list-items-li');
@@ -1374,7 +1377,6 @@ document.addEventListener('click', (event) => {
       return hex;
     }
 
-    
     const colorPickerText = new iro.ColorPicker('#open_picker_text', {
       display: openTextPickerView,
       width: 210,
@@ -1413,7 +1415,7 @@ document.addEventListener('click', (event) => {
         $('#logo-shadow-blur').style.display = 'block';
         $('#logo-shadow-offsetX').style.display = 'block';
         $('#logo-shadow-offsetY').style.display = 'block';
-      } 
+      }
 
       let fillColor;
       const color = logoNameElement.get('fill');
@@ -1557,16 +1559,21 @@ document.addEventListener('click', (event) => {
             }
           });
 
-          logoNameElement.on('mousedown', (event) => {
-            event.e.preventDefault();
-            this.activeNavbarSetting = 'text';
-            this.updateActiveNavbar();
-            this.logoSettingsContainer.style.display = 'none';
-            this.textSettingsContainer.style.display = 'grid';
-            this.backgroundSettingsContainer.style.display = 'none';
-            this.uploadSettingsContainer.style.display = 'none';
+          logoNameElement.on('mousedown', (e) => {
+            e.e.preventDefault();
             this.textSelectorValue = 'LogoName';
             // logoOrSloganView('LogoName');
+
+            console.log(!!logoNameElement?.shadow?.blur);
+            $('#drop-shadow').checked = !!logoNameElement?.shadow?.blur;
+
+            if (!!logoNameElement?.shadow?.blur) {
+              $('#logo-shadow-adjust').style.display = 'block';
+              $('#logo-shadow-blur').style.display = 'block';
+              $('#logo-shadow-offsetX').style.display = 'block';
+              $('#logo-shadow-offsetY').style.display = 'block';
+            }
+
             let fillColor;
             const color = logoNameElement.get('fill');
 
@@ -1579,7 +1586,24 @@ document.addEventListener('click', (event) => {
 
             colorPickerText.color.hexString = fillColor;
 
-            if (logoNameElement.shadow.blur) {
+            $('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
+            putAngleDownIcon('.font_style-list-item__title');
+
+            const letterSpacing = logoNameElement.get('charSpacing');
+            $('#letter-spacing-slider').value = letterSpacing;
+
+            const fontFamily = logoNameElement.fontFamily;
+            $('#font-selector-title').innerText = fontFamily;
+            putAngleDownIcon('#font-selector-title');
+
+            const fontSize = logoNameElement.fontSize;
+            $('#font_size_title').value = `${fontSize}px`;
+
+            const logoText = logoNameElement.text;
+            $('.case-list-item__title').innerText = getTextCase(logoText);
+            putAngleDownIcon('.case-list-item__title');
+
+            if (logoNameElement.shadow) {
               const { blur, offsetX, offsetY } = logoNameElement.shadow;
 
               if (blur && offsetX && offsetY) {
@@ -1591,36 +1615,24 @@ document.addEventListener('click', (event) => {
                 $('#shadow-offsetY-slider').value = offsetY;
               }
             }
-
-            $('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
-            putAngleDownIcon('.font_style-list-item__title');
-
-            const letterSpacing = logoNameElement.get('charSpacing');
-            $('#letter-spacing-slider').value = letterSpacing;
-
-            const fontFamily = logoNameElement.fontFamily;
-            $('#font-selector-title').innerText = fontFamily;
-            putAngleDownIcon('.font-selector-title');
-
-            const fontSize = logoNameElement.fontSize;
-            $('#font_size_title').value = `${fontSize}px`;
-
-            const logoText = logoNameElement.text;
-            $('.case-list-item__title').innerText = getTextCase(logoText);
-            putAngleDownIcon('.case-list-item__title');
+            captureCanvasState();
             this.canvas.requestRenderAll();
           });
 
           sloganNameElement.on('mousedown', (event) => {
             event.e.preventDefault();
-            this.activeNavbarSetting = 'text';
-            this.updateActiveNavbar();
-            this.logoSettingsContainer.style.display = 'none';
-            this.textSettingsContainer.style.display = 'grid';
-            this.backgroundSettingsContainer.style.display = 'none';
-            this.uploadSettingsContainer.style.display = 'none';
             this.textSelectorValue = 'SloganName';
             // logoOrSloganView('SloganName');
+
+            console.log(!!sloganNameElement?.shadow?.blur);
+            $('#drop-shadow').checked = !!sloganNameElement?.shadow?.blur;
+
+            if (!!sloganNameElement?.shadow?.blur) {
+              $('#logo-shadow-adjust').style.display = 'block';
+              $('#logo-shadow-blur').style.display = 'block';
+              $('#logo-shadow-offsetX').style.display = 'block';
+              $('#logo-shadow-offsetY').style.display = 'block';
+            }
 
             let fillColor;
             const color = sloganNameElement.get('fill');
@@ -1634,7 +1646,20 @@ document.addEventListener('click', (event) => {
 
             colorPickerText.color.hexString = fillColor;
 
-            if (sloganNameElement.shadow.blur) {
+            $('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
+            putAngleDownIcon('.font_style-list-item__title');
+
+            const letterSpacing = +sloganNameElement.charSpacing;
+            $('#letter-spacing-slider').value = letterSpacing;
+
+            const fontSize = sloganNameElement.fontSize;
+            $('#font_size_title').value = `${fontSize}px`;
+
+            const logoText = sloganNameElement.text;
+            $('.case-list-item__title').innerText = getTextCase(logoText);
+            putAngleDownIcon('.case-list-item__title');
+
+            if (sloganNameElement.shadow) {
               const { blur, offsetX, offsetY } = sloganNameElement.shadow;
 
               if (blur && offsetX && offsetY) {
@@ -1647,22 +1672,8 @@ document.addEventListener('click', (event) => {
               }
             }
 
-            $('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
-            putAngleDownIcon('.font_style-list-item__title');
-
-            const letterSpacing = +sloganNameElement.charSpacing;
-            $('#letter-spacing-slider').value = letterSpacing;
-
-            const fontSize = sloganNameElement.fontSize;
-            $('#font_size_title').value = `${fontSize}px`;
-
-            const fontFamily = sloganNameElement.fontFamily;
-            $('#font-selector-title').innerText = fontFamily;
-
-            putAngleDownIcon('#font-selector-title');
-            const logoText = sloganNameElement.text;
-            $('.case-list-item__title').innerText = getTextCase(logoText);
-            putAngleDownIcon('.case-list-item__title');
+            captureCanvasState();
+            this.canvas.requestRenderAll();
           });
 
           document.querySelectorAll('#solid_color').forEach((item) => {
@@ -1975,6 +1986,7 @@ document.addEventListener('click', (event) => {
             y1: 0,
             x2: this.canvas.width,
             y2: this.canvas.height,
+            angle: colorAngle,
           },
           colorStops: [
             { offset: 0, color: grad1Value },
@@ -1988,11 +2000,24 @@ document.addEventListener('click', (event) => {
       } else {
         color = solidValue;
       }
+
       this.canvas.backgroundColor = color;
       $(
         '.color-palette-gradient'
       ).style.background = `linear-gradient(${angleColor}, ${grad1Value}, ${grad2Value})`;
       updatePreview();
+
+      const rect = new fabric.Rect({
+        left: 150,
+        top: 100,
+        fill: color,
+        width: 150,
+        height: 250,
+      });
+
+      this.canvas.add(rect);
+      rect.center();
+
       this.canvas.requestRenderAll();
     });
 
@@ -2213,7 +2238,7 @@ document.addEventListener('click', (event) => {
       }
     });
 
-    let isShadowAdjust = !!(this.canvas.getActiveObject()?.shadow?.blur);
+    let isShadowAdjust = !!this.canvas.getActiveObject()?.shadow?.blur;
     document.getElementById('drop-shadow').addEventListener('change', () => {
       isShadowAdjust = !isShadowAdjust;
 
@@ -2409,8 +2434,22 @@ document.addEventListener('click', (event) => {
       });
     });
 
+    let inputCount1 = 0;
+    let inputCount2 = 0;
+
     $('#HEX').addEventListener('input', (e) => {
       let hex = e.target.value;
+
+      if (hex.length > 0 && hex[0] !== '#') {
+        if (inputCount1 >= 3) {
+          hex = '#' + hex;
+          $('#HEX').value = hex;
+          inputCount1 = 0;
+        } else {
+          inputCount1++;
+        }
+      }
+
       colorPicker.color.hexString = hex;
       const a = this.canvas.getActiveObject();
       a.set('fill', hex);
@@ -2419,6 +2458,17 @@ document.addEventListener('click', (event) => {
 
     $('#HEX2').addEventListener('input', (e) => {
       let hex = e.target.value;
+
+      if (hex.length > 0 && hex[0] !== '#') {
+        if (inputCount2 >= 3) {
+          hex = '#' + hex;
+          $('#HEX2').value = hex;
+          inputCount2 = 0;
+        } else {
+          inputCount2++;
+        }
+      }
+
       colorPicker.color.hexString = hex;
       const a = this.canvas.getActiveObject();
       a.set('fill', hex);
@@ -2578,7 +2628,6 @@ document.addEventListener('click', (event) => {
       });
     });
 
-
     const updateColorTextPickers = () => {
       let itemFill, colPicker;
       canvasObjects.forEach((item) => {
@@ -2706,9 +2755,11 @@ document.addEventListener('click', (event) => {
 
     handleColorModeClick('#HEX2', '#RGB2', '#HSL2');
 
-    const centerAndResizeElements = (type, logoSize, sloganSize, textPosition, mainTop = -100) => {
+    const centerAndResizeElements = (type, logoSize, sloganSize, textPosition, mainTop = -100, sloganTop) => {
       // this.canvas.remove(line1, line2);
       const objects = this.canvas.getObjects();
+      logoNameElement.charSpacing = 0;
+      sloganNameElement.charSpacing = 0;
       const logoMain = objects.filter((i) => !i.text);
 
       const timeout = 5;
@@ -2729,8 +2780,10 @@ document.addEventListener('click', (event) => {
             logoNameElement.centerH();
             sloganNameElement.centerH();
 
-            logoNameElement.set('top', this.canvas.height / 1.6);
-            sloganNameElement.set('top', this.canvas.height / 1.4);
+            console.log(logoMain[logoMain.length - 1].top)
+
+            logoNameElement.set('top', this.canvas.height / 1.5);
+            sloganNameElement.set('top', this.canvas.height / sloganTop);
 
             const newGrp = new fabric.Group(objects);
             this.canvas.viewportCenterObject(newGrp);
@@ -2756,8 +2809,8 @@ document.addEventListener('click', (event) => {
             logoNameElement.centerH();
             sloganNameElement.centerH();
 
-            logoNameElement.set('top', this.canvas.height / 4);
-            sloganNameElement.set('top', this.canvas.height / 3);
+            logoNameElement.set('top', this.canvas.height / 5);
+            sloganNameElement.set('top', this.canvas.height / 3.5);
 
             const newGrp = new fabric.Group(objects);
             this.canvas.viewportCenterObject(newGrp);
@@ -2898,66 +2951,66 @@ document.addEventListener('click', (event) => {
     });
 
     scaleLogo(200);
-    centerAndResizeElements('topBottom', 46, 22, 'center', 150);
+    centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.32);
 
     $('#top_bottom_1').addEventListener('click', () => {
       scaleLogo(200);
-      centerAndResizeElements('topBottom', 46, 22, 'center', 150);
+      centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.32);
     });
 
     $('#top_bottom_2').addEventListener('click', () => {
       scaleLogo(200);
-      centerAndResizeElements('topBottom', 40, 18, 'center', 150);
+      centerAndResizeElements('topBottom', 40, 20, 'center', 150, 1.35);
     });
 
     $('#top_bottom_3').addEventListener('click', () => {
       scaleLogo(180);
-      centerAndResizeElements('topBottom', 46, 22, 'center', 150);
+      centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.32);
     });
 
     $('#bottom_top_1').addEventListener('click', () => {
       scaleLogo(200);
-      centerAndResizeElements('bottomTop', 46, 22, 'center', 150);
+      centerAndResizeElements('bottomTop', 46, 22, 'center', 150, 1.32);
     });
 
     $('#bottom_top_2').addEventListener('click', () => {
       scaleLogo(180);
-      centerAndResizeElements('bottomTop', 46, 22, 'center', 150);
+      centerAndResizeElements('bottomTop', 46, 22, 'center', 150, 1.32);
     });
 
     $('#bottom_top_3').addEventListener('click', () => {
       scaleLogo(180);
-      centerAndResizeElements('bottomTop', 46, 22, 'center', 150);
+      centerAndResizeElements('bottomTop', 46, 22, 'center', 150, 1.32);
     });
 
     $('#left_right_1').addEventListener('click', () => {
       scaleLogo(200);
-      centerAndResizeElements('leftRight', 32, 25, 'center', 200);
+      centerAndResizeElements('leftRight', 32, 25, 'center', 200, 1.32);
     });
 
     $('#left_right_2').addEventListener('click', () => {
       scaleLogo(200);
-      centerAndResizeElements('leftRight', 32, 25, 'left', 200);
+      centerAndResizeElements('leftRight', 32, 25, 'left', 200, 1.32);
     });
 
     $('#left_right_3').addEventListener('click', () => {
       scaleLogo(160);
-      centerAndResizeElements('leftRight', 32, 25, 'left', 200);
+      centerAndResizeElements('leftRight', 32, 25, 'left', 200, 1.32);
     });
 
     $('#right_left_1').addEventListener('click', () => {
       scaleLogo(200);
-      centerAndResizeElements('rightLeft', 32, 25, 'center', 200);
+      centerAndResizeElements('rightLeft', 32, 25, 'center', 200, 1.32);
     });
 
     $('#right_left_2').addEventListener('click', () => {
       scaleLogo(160);
-      centerAndResizeElements('rightLeft', 32, 25, 'left', 210);
+      centerAndResizeElements('rightLeft', 32, 25, 'left', 210, 1.32);
     });
 
     $('#right_left_3').addEventListener('click', () => {
       scaleLogo(200);
-      centerAndResizeElements('rightLeft', 32, 25, 'left', 200);
+      centerAndResizeElements('rightLeft', 32, 25, 'left', 200, 1.32);
     });
   }
 }
