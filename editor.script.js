@@ -1778,6 +1778,7 @@ class EditorScreen {
       const fontSize = Number(text.split("px")[0])
       const active = this.canvas.getActiveObject();
       active.fontSize = fontSize;
+      $('#font_size_range').value = fontSize;
 
       this.canvas.requestRenderAll();      
     })
