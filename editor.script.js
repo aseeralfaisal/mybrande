@@ -79,7 +79,6 @@ class EditorScreen {
     this.logoFillColor = null;
     this.zoomSlider = $('#zoom-slider');
     this.colorMode = 'Solid';
-    this.activeNavbarSetting = 'logo';
 
     $('#back-main_3').addEventListener('click', () => {
       localStorage.setItem('mainEditorCounter', 1);
@@ -360,9 +359,9 @@ class EditorScreen {
 
     this.canvas.requestRenderAll();
 
-    this.updateActiveNavbar = () => {
+    this.updateActiveNavbar = (activeNav = 'logo') => {
       document.querySelectorAll('.nav-item').forEach((item) => {
-        if (this.activeNavbarSetting.includes(item.innerText.toLowerCase())) {
+        if (activeNav.includes(item.innerText.toLowerCase())) {
           item.style.backgroundColor = 'var(--gold-darker)';
         } else {
           item.style.backgroundColor = 'var(--gold)';
@@ -805,8 +804,7 @@ class EditorScreen {
               $('#L').value = hslValues[2];
             }
 
-            this.activeNavbarSetting = 'logo';
-            this.updateActiveNavbar();
+            this.updateActiveNavbar('logo');
             this.logoSettingsContainer.style.display = 'grid';
             this.textSettingsContainer.style.display = 'none';
             this.backgroundSettingsContainer.style.display = 'none';
@@ -917,8 +915,7 @@ class EditorScreen {
     this.uploadSettingsContainer.style.display = 'none';
     this.backgroundSettingsContainer.style.display = 'none';
     this.textMode.addEventListener('click', () => {
-      this.activeNavbarSetting = 'text';
-      this.updateActiveNavbar();
+      this.updateActiveNavbar('text');
       this.logoSettingsContainer.style.display = 'none';
       this.textSettingsContainer.style.display = 'grid';
       this.backgroundSettingsContainer.style.display = 'none';
@@ -927,8 +924,7 @@ class EditorScreen {
     });
 
     this.logoMode.addEventListener('click', () => {
-      this.activeNavbarSetting = 'logo';
-      this.updateActiveNavbar();
+      this.updateActiveNavbar('logo');
       this.logoSettingsContainer.style.display = 'grid';
       this.textSettingsContainer.style.display = 'none';
       this.backgroundSettingsContainer.style.display = 'none';
@@ -937,18 +933,15 @@ class EditorScreen {
     });
 
     this.backgroundMode.addEventListener('click', () => {
-      this.activeNavbarSetting = 'background';
       this.backgroundSettingsContainer.style.display = 'none';
       this.logoSettingsContainer.style.display = 'none';
       this.textSettingsContainer.style.display = 'none';
       this.backgroundSettingsContainer.style.display = 'grid';
       this.uploadSettingsContainer.style.display = 'none';
-      this.updateActiveNavbar();
+      this.updateActiveNavbar('background');
     });
 
     this.previewMode.addEventListener('click', () => {
-      this.activeNavbarSetting = 'preview';
-
       const bgColor = this.canvas.get('backgroundColor');
       if (bgColor === '#efefef') {
         this.canvas.setBackgroundColor(null, this.canvas.renderAll.bind(this.canvas));
@@ -1107,8 +1100,7 @@ class EditorScreen {
 
     [logoNameElement, sloganNameElement].forEach((i) => {
       i.on('mousedown', () => {
-        this.activeNavbarSetting = 'text';
-        this.updateActiveNavbar();
+        this.updateActiveNavbar('text');
         this.logoSettingsContainer.style.display = 'none';
         this.textSettingsContainer.style.display = 'grid';
         this.backgroundSettingsContainer.style.display = 'none';
@@ -1569,10 +1561,16 @@ class EditorScreen {
           this.canvas.getObjects().forEach((item) => {
             if (!item.text) {
               item.on('mousedown', () => {
-                this.logoSettingsContainer.style.display = 'grid';
-                this.textSettingsContainer.style.display = 'none';
-                this.backgroundSettingsContainer.style.display = 'none';
-                this.uploadSettingsContainer.style.display = 'none';
+                const updateActiveNavbar = (activeNav = 'logo') => {
+                  document.querySelectorAll('.nav-item').forEach((item) => {
+                    if (activeNav.includes(item.innerText.toLowerCase())) {
+                      item.style.backgroundColor = 'var(--gold-darker)';
+                    } else {
+                      item.style.backgroundColor = 'var(--gold)';
+                    }
+                  });
+                };
+                updateActiveNavbar();
               });
             }
           });
@@ -1637,8 +1635,17 @@ class EditorScreen {
             captureCanvasState();
             this.canvas.requestRenderAll();
 
-            this.activeNavbarSetting = 'text';
-            this.updateActiveNavbar();
+            const updateActiveNavbar = (activeNav = 'logo') => {
+              document.querySelectorAll('.nav-item').forEach((item) => {
+                if (activeNav.includes(item.innerText.toLowerCase())) {
+                  item.style.backgroundColor = 'var(--gold-darker)';
+                } else {
+                  item.style.backgroundColor = 'var(--gold)';
+                }
+              });
+            };
+            updateActiveNavbar('text');
+
             this.logoSettingsContainer.style.display = 'none';
             this.textSettingsContainer.style.display = 'grid';
             this.backgroundSettingsContainer.style.display = 'none';
@@ -1701,8 +1708,17 @@ class EditorScreen {
             captureCanvasState();
             this.canvas.requestRenderAll();
             
-            this.activeNavbarSetting = 'text';
-            this.updateActiveNavbar();
+            const updateActiveNavbar = (activeNav = 'logo') => {
+              document.querySelectorAll('.nav-item').forEach((item) => {
+                if (activeNav.includes(item.innerText.toLowerCase())) {
+                  item.style.backgroundColor = 'var(--gold-darker)';
+                } else {
+                  item.style.backgroundColor = 'var(--gold)';
+                }
+              });
+            };
+            updateActiveNavbar('text');
+
             this.logoSettingsContainer.style.display = 'none';
             this.textSettingsContainer.style.display = 'grid';
             this.backgroundSettingsContainer.style.display = 'none';
