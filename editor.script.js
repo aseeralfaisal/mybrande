@@ -1354,16 +1354,6 @@ class EditorScreen {
     //   };
     // });
 
-    // const logoOrSloganView = (element) => {
-    //   if (element === 'LogoName') {
-    //     this.sloganNameInput.style.display = 'none';
-    //     this.logoNameInput.style.display = 'block';
-    //   } else {
-    //     this.logoNameInput.style.display = 'none';
-    //     this.sloganNameInput.style.display = 'block';
-    //   }
-    // };
-
     function rgbaToHex(rgbaString) {
       var match = rgbaString.match(/^rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)$/);
 
@@ -1413,9 +1403,7 @@ class EditorScreen {
     logoNameElement.on('mousedown', (e) => {
       e.e.preventDefault();
       this.textSelectorValue = 'LogoName';
-      // logoOrSloganView('LogoName');
 
-      console.log(!!logoNameElement?.shadow?.blur);
       $('#drop-shadow').checked = !!logoNameElement?.shadow?.blur;
 
       if (!!logoNameElement?.shadow?.blur) {
@@ -1474,9 +1462,7 @@ class EditorScreen {
     sloganNameElement.on('mousedown', (event) => {
       event.e.preventDefault();
       this.textSelectorValue = 'SloganName';
-      // logoOrSloganView('SloganName');
 
-      console.log(!!sloganNameElement?.shadow?.blur);
       $('#drop-shadow').checked = !!sloganNameElement?.shadow?.blur;
 
       if (!!sloganNameElement?.shadow?.blur) {
@@ -1578,9 +1564,7 @@ class EditorScreen {
           logoNameElement.on('mousedown', (e) => {
             e.e.preventDefault();
             this.textSelectorValue = 'LogoName';
-            // logoOrSloganView('LogoName');
 
-            console.log(!!logoNameElement?.shadow?.blur);
             $('#drop-shadow').checked = !!logoNameElement?.shadow?.blur;
 
             if (!!logoNameElement?.shadow?.blur) {
@@ -1654,9 +1638,7 @@ class EditorScreen {
           sloganNameElement.on('mousedown', (event) => {
             event.e.preventDefault();
             this.textSelectorValue = 'SloganName';
-            // logoOrSloganView('SloganName');
-
-            console.log(!!sloganNameElement?.shadow?.blur);
+            
             $('#drop-shadow').checked = !!sloganNameElement?.shadow?.blur;
 
             if (!!sloganNameElement?.shadow?.blur) {
