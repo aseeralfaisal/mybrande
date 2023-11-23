@@ -759,6 +759,7 @@ class EditorScreen {
     if (this.logoFile) {
       fabric.loadSVGFromString(this.logoFile, (objects, options) => {
         const layerGroup = fabric.util.groupSVGElements(objects, options);
+
         objects.forEach((obj, idx) => {
           this.canvas.add(obj);
           const layerSection = new CreateLayerSection(this.layers);
@@ -815,15 +816,19 @@ class EditorScreen {
 
         const originalWidth = layerGroup.width;
         const originalHeight = layerGroup.height;
-        const scaleFactor = Math.min(200 / originalWidth, 200 / originalHeight);
+
+        const fixedWidth = 200;
+        const fixedHeight = 200;
+
+        const widthScaleFactor = fixedWidth / originalWidth;
+        const heightScaleFactor = fixedHeight / originalHeight;
+
+        const scaleFactor = Math.min(widthScaleFactor, heightScaleFactor);
         layerGroup.scale(scaleFactor);
+
         this.canvas.centerObject(layerGroup);
         this.canvas.viewportCenterObject(layerGroup);
-        if (layerGroup) {
-          layerGroup.height = 200;
-          layerGroup.ungroupOnCanvas();
-        }
-
+        layerGroup.ungroupOnCanvas();
         this.canvas.requestRenderAll();
       });
 
@@ -831,8 +836,6 @@ class EditorScreen {
       this.canvas.add(sloganNameElement);
       logoNameElement.viewportCenter();
       sloganNameElement.viewportCenter();
-      logoNameElement.set('top', (logoNameElement.top += 60));
-      sloganNameElement.set('top', (sloganNameElement.top += 100));
 
       const selection = new fabric.ActiveSelection(this.canvas.getObjects(), {
         canvas: this.canvas,
@@ -2053,6 +2056,7 @@ class EditorScreen {
 
       this.canvas.add(rect);
       rect.center();
+      this.canvas.remove(rect);
 
       this.canvas.requestRenderAll();
     });
@@ -2518,7 +2522,7 @@ class EditorScreen {
       colorPicker.color.hexString = hex;
       const a = this.canvas.getActiveObject();
       a.set('fill', hex);
-      
+
       let r = $('#R2').value;
       let g = $('#G2').value;
       let b = $('#B2').value;
@@ -2566,7 +2570,7 @@ class EditorScreen {
     };
 
     let openPickerViewBG = 'block';
-    let pickerDefaultColorBG = "#fff";
+    let pickerDefaultColorBG = '#fff';
 
     let colorPickerBG = new iro.ColorPicker('#openTextPickerViewBG', {
       display: openPickerViewBG,
@@ -2609,20 +2613,19 @@ class EditorScreen {
       $('#picker_color_text_modeBG').classList.add('category_selected');
 
       $('#bg_picker_color_items_text').style.marginTop = '8px';
-      openPickerViewBG = 'block'
+      openPickerViewBG = 'block';
     };
 
     solidTextColorEventBG();
 
-    $("#solid_color_text_modeBG").addEventListener('click', () => {
+    $('#solid_color_text_modeBG').addEventListener('click', () => {
       solidTextColorEventBG();
-    })
+    });
 
-    $("#picker_color_text_modeBG").addEventListener('click', () => {
+    $('#picker_color_text_modeBG').addEventListener('click', () => {
       pickerTextColorEventBG();
     });
 
-    
     [('#R_BG', '#G_BG', '#B_BG')].forEach((id) => {
       $(id).addEventListener('input', () => {
         const r = $('#R_BG').value;
@@ -2646,7 +2649,7 @@ class EditorScreen {
         this.canvas.requestRenderAll();
       });
     });
- 
+
     $('#HEX_BG').addEventListener('input', (e) => {
       let inputCountBG = 0;
       let inputValue = e.target.value;
@@ -2665,7 +2668,7 @@ class EditorScreen {
       const g = $('#G_BG').value;
       const b = $('#B_BG').value;
       colorPickerBG.color.rgb = { r, g, b };
-      
+
       const h = $('#H_BG').value;
       const s = $('#S_BG').value;
       const l = $('#L_BG').value;
@@ -2949,6 +2952,7 @@ class EditorScreen {
     $('#HEX_mode').addEventListener('click', () => {
       handleColorModeClick('#HEX', '#RGB', '#HSL');
     });
+
     handleColorModeClick('#HEX', '#RGB', '#HSL');
 
     function handleColorModeClick(activeElement, element1, element2) {
@@ -2976,7 +2980,7 @@ class EditorScreen {
 
     handleColorModeClick('#HEX2', '#RGB2', '#HSL2');
 
-    const centerAndResizeElements = (type, logoSize, sloganSize, textPosition, mainTop = -100, sloganTop) => {
+    const centerAndResizeElements = (type, logoSize, sloganSize, textPosition, mainTop = -100, sloganTop, logoNameTop) => {
       // this.canvas.remove(line1, line2);
       const objects = this.canvas.getObjects();
       logoNameElement.charSpacing = 0;
@@ -3001,7 +3005,7 @@ class EditorScreen {
             logoNameElement.centerH();
             sloganNameElement.centerH();
 
-            logoNameElement.set('top', this.canvas.height / 1.5);
+            logoNameElement.set('top', this.canvas.height / logoNameTop);
             sloganNameElement.set('top', this.canvas.height / sloganTop);
 
             const newGrp = new fabric.Group(objects);
@@ -3175,78 +3179,78 @@ class EditorScreen {
     };
 
     scaleLogo(200);
-    centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.32);
+    centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.32, 1.5);
 
     $('#top_bottom_1').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.32);
+      centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.32, 1.5);
     });
 
     $('#top_bottom_2').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('topBottom', 40, 20, 'center', 150, 1.35);
+      centerAndResizeElements('topBottom', 40, 20, 'center', 150, 1.35, 1.52);
     });
 
     $('#top_bottom_3').addEventListener('click', () => {
       discardSelectionForAlignments();
-      scaleLogo(180);
-      centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.32);
+      scaleLogo(160);
+      centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.42, 1.6);
     });
 
     $('#bottom_top_1').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('bottomTop', 46, 22, 'center', 150, 1.32);
+      centerAndResizeElements('bottomTop', 46, 22, 'center', 150, 1.32, 1.5);
     });
 
     $('#bottom_top_2').addEventListener('click', () => {
       discardSelectionForAlignments();
-      scaleLogo(180);
-      centerAndResizeElements('bottomTop', 46, 22, 'center', 150, 1.32);
+      scaleLogo(200);
+      centerAndResizeElements('bottomTop', 40, 18, 'center', 150, 1.35, 1.5);
     });
 
     $('#bottom_top_3').addEventListener('click', () => {
       discardSelectionForAlignments();
-      scaleLogo(180);
-      centerAndResizeElements('bottomTop', 46, 22, 'center', 150, 1.32);
+      scaleLogo(160);
+      centerAndResizeElements('bottomTop', 46, 22, 'center', 150, 1.32, 1.5);
     });
 
     $('#left_right_1').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('leftRight', 32, 25, 'center', 200, 1.32);
+      centerAndResizeElements('leftRight', 32, 25, 'center', 200, 1.32, 1.5);
     });
 
     $('#left_right_2').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('leftRight', 32, 25, 'left', 200, 1.32);
+      centerAndResizeElements('leftRight', 32, 25, 'left', 200, 1.32, 1.5);
     });
 
     $('#left_right_3').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(160);
-      centerAndResizeElements('leftRight', 32, 25, 'left', 200, 1.32);
+      centerAndResizeElements('leftRight', 32, 25, 'left', 200, 1.32, 1.5);
     });
 
     $('#right_left_1').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('rightLeft', 32, 25, 'center', 200, 1.32);
+      centerAndResizeElements('rightLeft', 32, 25, 'center', 200, 1.32, 1.5);
     });
 
     $('#right_left_2').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(160);
-      centerAndResizeElements('rightLeft', 32, 25, 'left', 210, 1.32);
+      centerAndResizeElements('rightLeft', 32, 25, 'left', 210, 1.32, 1.5);
     });
 
     $('#right_left_3').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('rightLeft', 32, 25, 'left', 200, 1.32);
+      centerAndResizeElements('rightLeft', 32, 25, 'left', 200, 1.32, 1.5);
     });
   }
 }

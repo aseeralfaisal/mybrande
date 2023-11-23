@@ -635,7 +635,7 @@ input:checked + .switch-slider:before {
   /* background-color: var(--lighter); */
   border: 1px solid transparent;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 14px;
   width: 175px;
   border-radius: 5px;
   padding: 0 10px;
@@ -647,9 +647,9 @@ input:checked + .switch-slider:before {
   cursor: context-menu;
 }
 
-.color-mode-title:hover {
+/* .color-mode-title:hover {
   background-color: var(--light);
-}
+} */
 
 .color-mode-list {
   background-color: #f6f6f6;
