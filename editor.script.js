@@ -673,7 +673,7 @@ class EditorScreen {
         l = (max + min) / 2;
 
       if (max == min) {
-        h = s = 0; // achromatic
+        h = s = 0;
       } else {
         let d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
@@ -704,7 +704,8 @@ class EditorScreen {
       const color = Array.isArray(element.get('fill').colorStops)
         ? rgbToHex(element.get('fill').colorStops[0].color)
         : element.get('fill');
-      // colorPicker?.color?.hexString = color;
+      colorPicker.color.set(color);
+      captureCanvasState();
     };
 
     const updatePickerHandler = (element) => {
@@ -772,7 +773,7 @@ class EditorScreen {
             $('#rotate-bar').value = obj.get('angle');
 
             let fillColor;
-            const color = e?.target?.fill;
+            const color = e.target.fill;
 
             if (typeof color === 'object') {
               fillColor = color.colorStops[0].color;
@@ -783,7 +784,7 @@ class EditorScreen {
               fillColor = newColor;
             }
 
-            colorPicker.color.hexString = fillColor;
+            colorPicker.color.set(fillColor);
             $('#HEX').value = fillColor;
 
             let rgbValue = hexToRgb(fillColor);
@@ -809,7 +810,6 @@ class EditorScreen {
             this.logoSettingsContainer.style.display = 'grid';
             this.textSettingsContainer.style.display = 'none';
             this.backgroundSettingsContainer.style.display = 'none';
-            this.uploadSettingsContainer.style.display = 'none';
             this.canvas.requestRenderAll();
           });
         });
@@ -1159,8 +1159,14 @@ class EditorScreen {
       fontList.classList.remove('show');
     });
 
-    this.canvas.on('object:added', updatePreview);
-    this.canvas.on('object:removed', updatePreview);
+    this.canvas.on('object:added', () => {
+      captureCanvasState();
+      updatePreview();
+    });
+    this.canvas.on('object:removed', () => {
+      captureCanvasState();
+      updatePreview();
+    });
     this.canvas.on('object:modified', () => {
       captureCanvasState();
       updatePreview();
@@ -1437,7 +1443,7 @@ class EditorScreen {
         fillColor = newColor;
       }
 
-      colorPickerText.color.hexString = fillColor;
+      colorPickerText.color.set(fillColor);
 
       $('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
       putAngleDownIcon('.font_style-list-item__title');
@@ -1498,7 +1504,7 @@ class EditorScreen {
         fillColor = newColor;
       }
 
-      colorPickerText.color.hexString = fillColor;
+      colorPickerText.color.set(fillColor);
 
       $('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
       putAngleDownIcon('.font_style-list-item__title');
@@ -1596,7 +1602,7 @@ class EditorScreen {
               fillColor = newColor;
             }
 
-            colorPickerText.color.hexString = fillColor;
+            colorPickerText.color.set(fillColor);
 
             $('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
             putAngleDownIcon('.font_style-list-item__title');
@@ -1630,6 +1636,12 @@ class EditorScreen {
             }
             captureCanvasState();
             this.canvas.requestRenderAll();
+
+            this.activeNavbarSetting = 'text';
+            this.updateActiveNavbar();
+            this.logoSettingsContainer.style.display = 'none';
+            this.textSettingsContainer.style.display = 'grid';
+            this.backgroundSettingsContainer.style.display = 'none';
           });
 
           sloganNameElement.on('mousedown', (event) => {
@@ -1657,16 +1669,16 @@ class EditorScreen {
               fillColor = newColor;
             }
 
-            colorPickerText.color.hexString = fillColor;
+            colorPickerText.color.set(fillColor);
 
             $('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
             putAngleDownIcon('.font_style-list-item__title');
+            const fontSize = sloganNameElement.fontSize;
             $('#font_size_range').value = fontSize;
 
             const letterSpacing = +sloganNameElement.charSpacing;
             $('#letter-spacing-slider').value = letterSpacing;
 
-            const fontSize = sloganNameElement.fontSize;
             $('#font_size_title').value = `${fontSize}px`;
 
             const logoText = sloganNameElement.text;
@@ -1688,6 +1700,12 @@ class EditorScreen {
 
             captureCanvasState();
             this.canvas.requestRenderAll();
+            
+            this.activeNavbarSetting = 'text';
+            this.updateActiveNavbar();
+            this.logoSettingsContainer.style.display = 'none';
+            this.textSettingsContainer.style.display = 'grid';
+            this.backgroundSettingsContainer.style.display = 'none';
           });
 
           document.querySelectorAll('#solid_color').forEach((item) => {
@@ -2490,7 +2508,7 @@ class EditorScreen {
         }
       }
 
-      colorPicker.color.hexString = hex;
+      colorPicker.color.set(hex);
       const a = this.canvas.getActiveObject();
       a.set('fill', hex);
 
@@ -2519,7 +2537,7 @@ class EditorScreen {
         }
       }
 
-      colorPicker.color.hexString = hex;
+      colorPicker.color.set(hex);
       const a = this.canvas.getActiveObject();
       a.set('fill', hex);
 
@@ -2674,7 +2692,7 @@ class EditorScreen {
       const l = $('#L_BG').value;
       colorPickerBG.color.hsl = { h, s, l };
 
-      colorPickerBG.color.hexString = inputValue;
+      colorPickerBG.color.set(inputValue);
       this.canvas.setBackgroundColor(colorPickerBG.color.hexString);
 
       this.canvas.requestRenderAll();
@@ -2980,7 +2998,15 @@ class EditorScreen {
 
     handleColorModeClick('#HEX2', '#RGB2', '#HSL2');
 
-    const centerAndResizeElements = (type, logoSize, sloganSize, textPosition, mainTop = -100, sloganTop, logoNameTop) => {
+    const centerAndResizeElements = (
+      type,
+      logoSize,
+      sloganSize,
+      textPosition,
+      mainTop = -100,
+      sloganTop,
+      logoNameTop
+    ) => {
       // this.canvas.remove(line1, line2);
       const objects = this.canvas.getObjects();
       logoNameElement.charSpacing = 0;
