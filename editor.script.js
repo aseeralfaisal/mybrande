@@ -2489,6 +2489,16 @@ class EditorScreen {
       colorPicker.color.hexString = hex;
       const a = this.canvas.getActiveObject();
       a.set('fill', hex);
+
+      let r = $('#R').value;
+      let g = $('#G').value;
+      let b = $('#B').value;
+      colorPicker.color.rgb = { r, g, b };
+      let h = $('#H').value;
+      let s = $('#S').value;
+      let l = $('#L').value;
+      colorPicker.color.hsl = { h, s, l };
+
       this.canvas.requestRenderAll();
     });
 
@@ -2508,6 +2518,16 @@ class EditorScreen {
       colorPicker.color.hexString = hex;
       const a = this.canvas.getActiveObject();
       a.set('fill', hex);
+      
+      let r = $('#R2').value;
+      let g = $('#G2').value;
+      let b = $('#B2').value;
+      colorPicker.color.rgb = { r, g, b };
+      let h = $('#H2').value;
+      let s = $('#S2').value;
+      let l = $('#L2').value;
+      colorPicker.color.hsl = { h, s, l };
+
       this.canvas.requestRenderAll();
     });
 
@@ -2605,10 +2625,10 @@ class EditorScreen {
     
     [('#R_BG', '#G_BG', '#B_BG')].forEach((id) => {
       $(id).addEventListener('input', () => {
-        let r = $('#R').value;
-        let g = $('#G').value;
-        let b = $('#B').value;
-        colorPicker.color.rgb = { r, g, b };
+        const r = $('#R_BG').value;
+        const g = $('#G_BG').value;
+        const b = $('#B_BG').value;
+        colorPickerBG.color.rgb = { r, g, b };
         const bgColor = colorPickerBG.color.hexString;
         this.canvas.setBackgroundColor(bgColor);
         this.canvas.requestRenderAll();
@@ -2617,10 +2637,10 @@ class EditorScreen {
 
     ['#H_BG', '#S_BG', '#L_BG'].forEach((id) => {
       $(id).addEventListener('input', () => {
-        let h = $('#H').value;
-        let s = $('#S').value;
-        let l = $('#L').value;
-        colorPicker.color.hsl = { h, s, l };
+        const h = $('#H_BG').value;
+        const s = $('#S_BG').value;
+        const l = $('#L_BG').value;
+        colorPickerBG.color.hsl = { h, s, l };
         const bgColor = colorPickerBG.color.hexString;
         this.canvas.setBackgroundColor(bgColor);
         this.canvas.requestRenderAll();
@@ -2641,9 +2661,19 @@ class EditorScreen {
         }
       }
 
+      const r = $('#R_BG').value;
+      const g = $('#G_BG').value;
+      const b = $('#B_BG').value;
+      colorPickerBG.color.rgb = { r, g, b };
+      
+      const h = $('#H_BG').value;
+      const s = $('#S_BG').value;
+      const l = $('#L_BG').value;
+      colorPickerBG.color.hsl = { h, s, l };
+
       colorPickerBG.color.hexString = inputValue;
-      const bgColor = colorPickerBG.color.hexString;
-      this.canvas.setBackgroundColor(bgColor);
+      this.canvas.setBackgroundColor(colorPickerBG.color.hexString);
+
       this.canvas.requestRenderAll();
     });
 
@@ -2679,7 +2709,7 @@ class EditorScreen {
     colorPickerBG.on('input:change', (color) => {
       colorChangingBG = true;
 
-      pickerDefaultColor = color.rgbaString;
+      pickerDefaultColorBG = color.rgbaString;
 
       if (color.index === 0) {
         const hsl = color.hsl;
