@@ -499,6 +499,8 @@ class EditorScreen {
     this.rotateRange.addEventListener('input', (e) => {
       this.isRotating = true;
       this.rotateValue = parseInt(e.target.value, 10);
+      console.log(this.rotateValue);
+      $('#rotate_info').innerText = ` :${this.rotateValue}deg`;
       this.rotateObject();
     });
 
@@ -763,6 +765,11 @@ class EditorScreen {
           layerSection.create(obj, idx);
 
           obj.on('mousedown', (e) => {
+            $('#logo-drop-shadow').checked = !!obj?.shadow?.blur;
+
+            $('#rotate_info').innerText = ` :${obj.get('angle')}deg`;
+            $('#rotate-bar').value = obj.get('angle');
+
             let fillColor;
             const color = e?.target?.fill;
 
@@ -774,7 +781,7 @@ class EditorScreen {
               const newColor = rgbaToHex(color);
               fillColor = newColor;
             }
-            // console.log({ fillColor });
+
             colorPicker.color.hexString = fillColor;
             $('#HEX').value = fillColor;
 
@@ -1005,7 +1012,7 @@ class EditorScreen {
 
     this.logoShadowOffsetXSlider.addEventListener('input', (e) => {
       this.logoShadowOffsetX = e.target.value;
-      
+
       $('#logo-shadow_offsetX').innerText = ` :${e.target.value}px`;
       const active = this.canvas.getActiveObjects();
       active.forEach((item) => {
@@ -1441,6 +1448,7 @@ class EditorScreen {
 
       const fontSize = logoNameElement.fontSize;
       $('#font_size_title').value = `${fontSize}px`;
+      $('#font_size_range').value = fontSize;
 
       const logoText = logoNameElement.text;
       $('.case-list-item__title').innerText = getTextCase(logoText);
@@ -1497,6 +1505,7 @@ class EditorScreen {
 
       const fontSize = sloganNameElement.fontSize;
       $('#font_size_title').value = `${fontSize}px`;
+      $('#font_size_range').value = fontSize;
 
       const logoText = sloganNameElement.text;
       $('.case-list-item__title').innerText = getTextCase(logoText);
@@ -1598,6 +1607,7 @@ class EditorScreen {
 
             const fontSize = logoNameElement.fontSize;
             $('#font_size_title').value = `${fontSize}px`;
+            $('#font_size_range').value = fontSize;
 
             const logoText = logoNameElement.text;
             $('.case-list-item__title').innerText = getTextCase(logoText);
@@ -1648,6 +1658,7 @@ class EditorScreen {
 
             $('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
             putAngleDownIcon('.font_style-list-item__title');
+            $('#font_size_range').value = fontSize;
 
             const letterSpacing = +sloganNameElement.charSpacing;
             $('#letter-spacing-slider').value = letterSpacing;
@@ -1759,8 +1770,6 @@ class EditorScreen {
       }
     };
 
-
-
     $('#font_size_range').addEventListener('input', (event) => {
       const textSize = event.target.value;
       $('#font_size_title').value = `${textSize}px`;
@@ -1775,13 +1784,28 @@ class EditorScreen {
 
     $('#font_size_title').addEventListener('input', (event) => {
       const text = event.target.value;
-      const fontSize = Number(text.split("px")[0])
+      const fontSize = Number(text.split('px')[0]);
       const active = this.canvas.getActiveObject();
       active.fontSize = fontSize;
       $('#font_size_range').value = fontSize;
 
-      this.canvas.requestRenderAll();      
-    })
+      this.canvas.requestRenderAll();
+    });
+
+    const arrowFontResizer = (type = 'increment') => {
+      const active = this.canvas.getActiveObject();
+      const increment = active.fontSize + 1;
+      const decrement = active.fontSize - 1;
+
+      const fontResizer =
+        type === 'increment' ? (active.fontSize = increment) : (active.fontSize = decrement);
+      $('#font_size_range').value = fontResizer;
+      $('#font_size_title').value = fontResizer + 'px';
+      this.canvas.requestRenderAll();
+    };
+
+    $('#font_size_up').addEventListener('click', () => void arrowFontResizer('increment'));
+    $('#font_size_down').addEventListener('click', () => void arrowFontResizer('decrement'));
 
     $('#font_size_title').addEventListener('keydown', (event) => {
       if (event.key === 'ArrowUp') {
@@ -2410,24 +2434,24 @@ class EditorScreen {
       });
     });
 
-    [('#R2', '#G2', '#B2')].forEach((id) => {
-      $(id).addEventListener('input', () => {
-        let r = $('#R2').value;
-        let g = $('#G2').value;
-        let b = $('#B2').value;
-        colorPicker.color.rgb = { r, g, b };
-        const a = this.canvas.getActiveObject();
-        a.set('fill', colorPicker.color.hexString);
-        this.canvas.requestRenderAll();
-      });
-    });
-
     ['#H', '#S', '#L'].forEach((id) => {
       $(id).addEventListener('input', () => {
         let h = $('#H').value;
         let s = $('#S').value;
         let l = $('#L').value;
         colorPicker.color.hsl = { h, s, l };
+        const a = this.canvas.getActiveObject();
+        a.set('fill', colorPicker.color.hexString);
+        this.canvas.requestRenderAll();
+      });
+    });
+
+    [('#R2', '#G2', '#B2')].forEach((id) => {
+      $(id).addEventListener('input', () => {
+        let r = $('#R2').value;
+        let g = $('#G2').value;
+        let b = $('#B2').value;
+        colorPicker.color.rgb = { r, g, b };
         const a = this.canvas.getActiveObject();
         a.set('fill', colorPicker.color.hexString);
         this.canvas.requestRenderAll();
@@ -2446,19 +2470,19 @@ class EditorScreen {
       });
     });
 
-    let inputCount1 = 0;
+    let inputCountBG = 0;
     let inputCount2 = 0;
 
     $('#HEX').addEventListener('input', (e) => {
       let hex = e.target.value;
 
       if (hex.length > 0 && hex[0] !== '#') {
-        if (inputCount1 >= 3) {
+        if (inputCountBG >= 3) {
           hex = '#' + hex;
           $('#HEX').value = hex;
-          inputCount1 = 0;
+          inputCountBG = 0;
         } else {
-          inputCount1++;
+          inputCountBG++;
         }
       }
 
@@ -2520,6 +2544,161 @@ class EditorScreen {
       $('#picker_color_items_text').style.marginTop = '8px';
       openTextPickerView = 'block';
     };
+
+    let openPickerViewBG = 'block';
+    let pickerDefaultColorBG = "#fff";
+
+    let colorPickerBG = new iro.ColorPicker('#openTextPickerViewBG', {
+      display: openPickerViewBG,
+      width: 210,
+      marginTop: 20,
+      color: pickerDefaultColorBG,
+      layout: [
+        {
+          component: iro.ui.Box,
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'hue',
+          },
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'alpha',
+          },
+        },
+      ],
+    });
+
+    const solidTextColorEventBG = () => {
+      $('#picker_color_text_modeBG').classList.remove('category_selected');
+      $('#solid_color_text_modeBG').classList.add('category_selected');
+
+      $('#bg_solid_color_items_text').style.display = 'flex';
+      $('#bg_picker_color_items_text').style.display = 'none';
+      openPickerViewBG = 'none';
+    };
+
+    const pickerTextColorEventBG = () => {
+      $('#bg_solid_color_items_text').style.display = 'none';
+      $('#bg_picker_color_items_text').style.display = 'flex';
+
+      $('#solid_color_text_modeBG').classList.remove('category_selected');
+      $('#picker_color_text_modeBG').classList.add('category_selected');
+
+      $('#bg_picker_color_items_text').style.marginTop = '8px';
+      openPickerViewBG = 'block'
+    };
+
+    solidTextColorEventBG();
+
+    $("#solid_color_text_modeBG").addEventListener('click', () => {
+      solidTextColorEventBG();
+    })
+
+    $("#picker_color_text_modeBG").addEventListener('click', () => {
+      pickerTextColorEventBG();
+    });
+
+    
+    [('#R_BG', '#G_BG', '#B_BG')].forEach((id) => {
+      $(id).addEventListener('input', () => {
+        let r = $('#R').value;
+        let g = $('#G').value;
+        let b = $('#B').value;
+        colorPicker.color.rgb = { r, g, b };
+        const bgColor = colorPickerBG.color.hexString;
+        this.canvas.setBackgroundColor(bgColor);
+        this.canvas.requestRenderAll();
+      });
+    });
+
+    ['#H_BG', '#S_BG', '#L_BG'].forEach((id) => {
+      $(id).addEventListener('input', () => {
+        let h = $('#H').value;
+        let s = $('#S').value;
+        let l = $('#L').value;
+        colorPicker.color.hsl = { h, s, l };
+        const bgColor = colorPickerBG.color.hexString;
+        this.canvas.setBackgroundColor(bgColor);
+        this.canvas.requestRenderAll();
+      });
+    });
+ 
+    $('#HEX_BG').addEventListener('input', (e) => {
+      let inputCountBG = 0;
+      let inputValue = e.target.value;
+
+      if (inputValue.length > 0 && inputValue[0] !== '#') {
+        if (inputValue.length >= 3) {
+          inputValue = '#' + inputValue;
+          $('#HEX_BG').value = inputValue;
+          inputCountBG = 0;
+        } else {
+          inputCountBG++;
+        }
+      }
+
+      colorPickerBG.color.hexString = inputValue;
+      const bgColor = colorPickerBG.color.hexString;
+      this.canvas.setBackgroundColor(bgColor);
+      this.canvas.requestRenderAll();
+    });
+
+    function handleColorModeClickBG(activeElement, element1, element2) {
+      $(element1 + '_view_BG').classList.remove('color_mode_title-active');
+      $(element1 + '_view_BG').style.display = 'none';
+
+      $(element2 + '_view_BG').classList.remove('color_mode_title-active');
+      $(element2 + '_view_BG').style.display = 'none';
+
+      $(activeElement + '_view_BG').classList.add('color_mode_title-active');
+      $(activeElement + '_view_BG').style.display = 'flex';
+    }
+
+    $('#HSL_mode_BG').addEventListener('click', () => {
+      handleColorModeClickBG('#HSL', '#RGB', '#HEX');
+    });
+
+    $('#RGB_mode_BG').addEventListener('click', () => {
+      handleColorModeClickBG('#RGB', '#HSL', '#HEX');
+    });
+
+    $('#HEX_mode_BG').addEventListener('click', () => {
+      handleColorModeClickBG('#HEX', '#RGB', '#HSL');
+    });
+    handleColorModeClickBG('#HEX', '#RGB', '#HSL');
+
+    colorPickerBG.on('color:init', (color) => {
+      color.set(pickerDefaultColorBG);
+    });
+
+    let colorChangingBG = false;
+    colorPickerBG.on('input:change', (color) => {
+      colorChangingBG = true;
+
+      pickerDefaultColor = color.rgbaString;
+
+      if (color.index === 0) {
+        const hsl = color.hsl;
+        const rgb = color.rgb;
+
+        $('#H_BG').value = hsl.h;
+        $('#S_BG').value = hsl.s;
+        $('#L_BG').value = hsl.l;
+        $('#R_BG').value = rgb.r;
+        $('#G_BG').value = rgb.g;
+        $('#B_BG').value = rgb.b;
+
+        $('#HEX_BG').value = color.hexString;
+      }
+
+      this.canvas.setBackgroundColor(color.rgbaString);
+      this.canvas.requestRenderAll();
+      colorChangingBG = false;
+    });
 
     solidColorEvent();
     solidTextColorEvent();
@@ -2792,8 +2971,6 @@ class EditorScreen {
             logoNameElement.centerH();
             sloganNameElement.centerH();
 
-            console.log(logoMain[logoMain.length - 1].top)
-
             logoNameElement.set('top', this.canvas.height / 1.5);
             sloganNameElement.set('top', this.canvas.height / sloganTop);
 
@@ -2962,65 +3139,82 @@ class EditorScreen {
       captureCanvasState();
     });
 
+    const discardSelectionForAlignments = () => {
+      this.canvas.discardActiveObject();
+      this.canvas.requestRenderAll();
+    };
+
     scaleLogo(200);
     centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.32);
 
     $('#top_bottom_1').addEventListener('click', () => {
+      discardSelectionForAlignments();
       scaleLogo(200);
       centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.32);
     });
 
     $('#top_bottom_2').addEventListener('click', () => {
+      discardSelectionForAlignments();
       scaleLogo(200);
       centerAndResizeElements('topBottom', 40, 20, 'center', 150, 1.35);
     });
 
     $('#top_bottom_3').addEventListener('click', () => {
+      discardSelectionForAlignments();
       scaleLogo(180);
       centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.32);
     });
 
     $('#bottom_top_1').addEventListener('click', () => {
+      discardSelectionForAlignments();
       scaleLogo(200);
       centerAndResizeElements('bottomTop', 46, 22, 'center', 150, 1.32);
     });
 
     $('#bottom_top_2').addEventListener('click', () => {
+      discardSelectionForAlignments();
       scaleLogo(180);
       centerAndResizeElements('bottomTop', 46, 22, 'center', 150, 1.32);
     });
 
     $('#bottom_top_3').addEventListener('click', () => {
+      discardSelectionForAlignments();
       scaleLogo(180);
       centerAndResizeElements('bottomTop', 46, 22, 'center', 150, 1.32);
     });
 
     $('#left_right_1').addEventListener('click', () => {
+      discardSelectionForAlignments();
       scaleLogo(200);
       centerAndResizeElements('leftRight', 32, 25, 'center', 200, 1.32);
     });
 
     $('#left_right_2').addEventListener('click', () => {
+      discardSelectionForAlignments();
       scaleLogo(200);
       centerAndResizeElements('leftRight', 32, 25, 'left', 200, 1.32);
     });
 
     $('#left_right_3').addEventListener('click', () => {
+      discardSelectionForAlignments();
       scaleLogo(160);
       centerAndResizeElements('leftRight', 32, 25, 'left', 200, 1.32);
     });
 
     $('#right_left_1').addEventListener('click', () => {
+      discardSelectionForAlignments();
       scaleLogo(200);
       centerAndResizeElements('rightLeft', 32, 25, 'center', 200, 1.32);
     });
 
     $('#right_left_2').addEventListener('click', () => {
+      discardSelectionForAlignments();
       scaleLogo(160);
       centerAndResizeElements('rightLeft', 32, 25, 'left', 210, 1.32);
     });
 
     $('#right_left_3').addEventListener('click', () => {
+      discardSelectionForAlignments();
       scaleLogo(200);
       centerAndResizeElements('rightLeft', 32, 25, 'left', 200, 1.32);
     });

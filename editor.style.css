@@ -977,7 +977,7 @@ input:checked + .switch-slider:before {
   flex-direction: column;
   /* align-items: center; */
   /* justify-content: space-around; */
-  margin-left: 10px;
+  margin-left: 0px;
   animation: slideMenuAnimation 0.2s ease-out both;
 }
 
@@ -1262,6 +1262,9 @@ body {
 .color_mode_title-active {
   border-bottom: 2px solid var(--gold);
 }
+.none-icon {
+  margin-block: 10px;
+}
 
 .none-icon:hover {
   opacity: 0.7;
@@ -1270,8 +1273,7 @@ body {
 
 .font_size {
   margin-inline: 10px;
-  width: 45px;
-  height: 35px;
+  width: 40px;
   text-indent: 5px;
   outline: none;
   border: none;
@@ -1279,4 +1281,13 @@ body {
   color: #555;
   font-weight: 600;
   background-color: #eeeeee;
+}
+
+.arrow_icons {
+  font-size: 12px;
+  color: #555;
+}
+
+.arrow_icons:hover {
+  opacity: 0.5;
 }
