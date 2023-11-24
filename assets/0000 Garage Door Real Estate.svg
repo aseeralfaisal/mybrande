@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1280 1024"
+	 style="enable-background:new 0 0 1280 1024;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#A00041;}
+	.st1{fill:#1840FF;}
+	.st2{fill:#18A6FF;}
+	.st3{fill:#008B46;}
+	.st4{fill:#06002E;}
+	.st5{fill:#CFC900;}
+	.st6{fill:#0D005C;}
+	.st7{fill:#004045;}
+	.st8{fill:#9717FF;}
+	.st9{fill:#C85BEC;}
+	.st10{fill:#FF5B00;}
+	.st11{fill:#18A700;}
+</style>
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  bottomLeftOrigin="true" height="809.4" width="1243.5" x="18.3" y="107.3"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<path class="st0" d="M747.8,782.1v-9.5H532.2v0.2h0v141.1h0v2.9h215.6v-36.8h0v-8.4h0V862h0v-8.4h0v-9.5h0v-8.4h0v-9.5h0v-8.4h0
+	v-9.5h0V800h0v-9.5h0L747.8,782.1L747.8,782.1z M738.3,879.8H541.7v-8.4h196.6V879.8z M738.3,862H541.7v-8.4h196.6V862z
+	 M738.3,844.1H541.7v-8.4h196.6V844.1z M738.3,826.2H541.7v-8.4h196.6V826.2z M738.3,808.4H541.7V800h196.6V808.4z M738.3,790.5
+	H541.7v-8.4h196.6V790.5z"/>
+<path class="st1" d="M854.5,638.6h35.3v34.7h-35.3V638.6z M896.4,638.6h35.3v34.7h-35.3V638.6z M854.5,597.4h35.3V632h-35.3V597.4z
+	 M896.4,597.4h35.3V632h-35.3V597.4z"/>
+<path class="st2" d="M601.5,371.8h35.3v34.7h-35.3V371.8z M643.4,371.8h35.3v34.7h-35.3V371.8z M601.5,330.6h35.3v34.7h-35.3V330.6z
+	 M643.4,330.6h35.3v34.7h-35.3V330.6z"/>
+<polygon class="st3" points="893.2,403.4 688.9,547.2 770.9,604.9 893.2,523.6 1101.3,662 1101.3,852.3 1191.1,852.3 1191.1,662 
+	1261.7,662.9 "/>
+<polygon class="st4" points="640.1,529.5 271.5,789 342.1,788.1 342.1,916.7 432,916.7 432,788.1 640.1,649.6 848.2,788.1 
+	848.2,916.7 938.1,916.7 938.1,788.1 1008.7,789 "/>
+<polygon class="st5" points="342.1,418.2 386.8,386.8 432,418.6 432,365.9 640.1,227.4 848.2,365.9 848.2,418.4 893.2,386.8 
+	938.1,418.4 938.1,365.9 1008.7,366.8 640.1,107.3 271.5,366.8 342.1,365.9 "/>
+<polygon class="st6" points="386.8,403.4 591.1,547.2 509.1,604.9 386.8,523.6 178.7,662 178.7,852.3 88.9,852.3 88.9,662 
+	18.3,662.9 "/>
+<polygon class="st7" points="640.1,529.5 271.5,789 342.1,788.1 640.1,576.4 938.1,788.1 1008.7,789 "/>
+<polygon class="st8" points="640.1,107.3 1008.7,366.8 938.1,365.9 640.1,154.2 342.1,365.9 271.5,366.8 "/>
+<polygon class="st9" points="1261.5,662.9 1190.9,662 892.9,450.3 722.9,571.1 688.9,547.2 892.9,403.4 "/>
+<polygon class="st10" points="18.4,662.9 89,662 386.9,450.3 557,571.1 590.9,547.2 386.9,403.4 "/>
+<path class="st11" d="M348.4,638.6h35.3v34.7h-35.3V638.6z M390.3,638.6h35.3v34.7h-35.3V638.6z M348.4,597.4h35.3V632h-35.3V597.4z
+	 M390.3,597.4h35.3V632h-35.3V597.4z"/>
+</svg>
