@@ -271,7 +271,7 @@ input:checked + .switch-slider:before {
 }
 
 .settings-view {
-  width: 250px;
+  width: 260px;
   padding-right: 4px;
   height: 100%;
   background: var(--white);

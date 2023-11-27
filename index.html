@@ -501,14 +501,24 @@
                     </div>
                 </div>
 
-                <div class="setting-item">
-                    <span>Scale: </span> <span id="scale-value"></span>
+                <div class="setting-item" style=" width: 230px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div><span style="font-size: 14px;">Scale: </span> <span style="font-size: 14px;" id="scale-value"></span></div>
+
+                        <!-- <button id="scale_reset" class="btn-main" style="transform: scale(0.8); font-size: 16px; background-color: transparent; color: #999999; border: var(--gold) 1px solid;
+">Reset</button> -->
+                    </div>
                     <div class="slider-container">
-                        <input class="slider" id="progress-bar" type="range" value="0" min="0" max="20">
+                        <input class="slider" id="progress-bar" type="range" value="10" min="0" max="20">
                     </div>
                 </div>
-                <div class="setting-item">
-                    <span>Rotate</span><span id="rotate_info"> :0deg</span>
+                <div class="setting-item" style=" width: 230px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-size: 14px;">Rotate</span><span style="font-size: 14px;" id="rotate_info"> :0deg</span>
+                        <button id="rotate_reset"
+                            class="btn-main" style="  transform: scale(0.8); font-size: 16px; background-color: transparent; color: #999999; border: var(--gold) 1px solid;">Reset</button>
+                    </div>
+
                     <div class="slider-container">
                         <input class="slider" id="rotate-bar" type="range" value="0" min="-180" max="180">
                     </div>
@@ -925,10 +935,10 @@
                     <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Text</h4>
                     <div id="logo_text_colors_pallete"
                         style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div> -->
+                        
+                                        <pallete-component id="text-pallete"
+                                            data-list="['Linear', 'Solid', 'Web 2.0', 'None']"></pallete-component>
                 </div>
-
-                <pallete-component id="bg-pallete"
-                    data-list="['Linear', 'Solid', 'Web 2.0', 'None']"></pallete-component>
 
                 <div id="picker_color_items_text" style="display: flex; flex-direction: column; margin-top: 20px;">
 
@@ -974,7 +984,7 @@
                 <span
                     style="font-weight: 600; color: var(--gray); margin-left: 5px; margin-bottom: -10px; font-size: 14px">Letter
                     Case</span>
-                <div class='case-list-item'>
+                <div id="case-list-item" class='case-list-item'>
                     <span class="case-list-item__title">Uppercase
                         <i class="fa-solid fa-angle-down"></i>
                     </span>
@@ -1002,7 +1012,7 @@
                             style="font-weight: 600; color: #555; margin-left: 5px; margin-bottom: -10px; font-size: 14px">Font
                             Size</span>
                         <div
-                            style="display: flex; align-items: center; justify-content: space-between; background-color: #eeeeee; margin-left: 12px; border-radius: 5px; height: 40px;">
+                            style="display: flex; align-items: center; justify-content: space-between; background-color: #eeeeee; margin-left: 43px; border-radius: 5px; height: 40px;">
                             <input class="font_size" id="font_size_title"></input>
                             <div style="display: grid; gap: 2px; padding-right: 10px;">
                                 <span id="font_size_up" class="fa-solid fa-chevron-up arrow_icons"></span>
@@ -1322,6 +1332,16 @@
                             <rect x="1" y="6" width="7" height="2" rx="1"></rect>
                         </svg>
                     </svg>
+                </div>
+                
+                <div id="top_bottom_4" class="svg__icon">
+                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol" aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14"><title id="layout-itn-tjn-281-title" lang="en">Icon with justified text below</title> <desc id="layout-itn-tjn-281-desc" lang="en">Icon with justified text below Icon</desc> <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="5" r="3"></circle> <rect x="2" y="13" width="12" height="1.5" rx="0.75"></rect> <rect x="2" y="9.5" width="12" height="2" rx="1"></rect></svg></svg>
+                </div>
+                <div id="left_right_4" class="svg__icon">
+                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol" aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14"><title id="layout-iln-tjn-283-title" lang="en">Icon with justified text on the right</title> <desc id="layout-iln-tjn-283-desc" lang="en">Icon with justified text on the right Icon</desc> <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><circle cx="4" cy="8" r="3"></circle> <rect x="8" y="9" width="7" height="1.5" rx="0.75"></rect> <rect x="8" y="6" width="7" height="2" rx="1"></rect></svg></svg>
+                </div>
+                <div id="right_left_4" class="svg__icon">
+                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol" aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14"><title id="layout-irn-tjn-285-title" lang="en">Icon with justified text on the left</title> <desc id="layout-irn-tjn-285-desc" lang="en">Icon with justified text on the left Icon</desc> <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="3"></circle> <rect x="1" y="9" width="7" height="1.5" rx="0.75"></rect> <rect x="1" y="6" width="7" height="2" rx="1"></rect></svg></svg>
                 </div>
             </div>
 
