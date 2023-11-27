@@ -416,8 +416,14 @@ class EditorScreen {
       } else {
         this.caseList.classList.add('show');
       }
-      [fontList, this.fontSizeList, fontStyleList].forEach((i) => i?.classList?.remove('show'));
+      [fontList, fontStyleList].forEach((i) => i.classList.remove('show'));
     });
+
+    
+
+    $('#case-i').addEventListener('click', () => {
+      $('#case-list-items-li').classList.add('show');
+    })
 
 
     // if (this.textSelectorValue === 'LogoName') {
