@@ -21,7 +21,7 @@ const paletteMarkup = /*html*/ `
         <input type="color" value="#000" class="color-picker" id="grad-solid">
     </div>
 
-    <h3 id="color-angle-text" style="display: none">0deg</h3>
+    <!-- <h3 id="color-angle-text" style="display: none">0deg</h3> -->
     <div id="slider-container" class="slider-container" style="margin-top: 20px; margin-left: -15px; display: none">
         <input class="slider" id="color-angle" type="range" value="0" min="0" max="360">
     </div>
@@ -45,10 +45,10 @@ class Palette extends HTMLElement {
       $('#bg-color-list').append(li);
     });
 
-    $('#color-angle-text').style.display = 'block';
+    // $('#color-angle-text').style.display = 'block';
     $('#color-angle').style.display = 'block';
     $('#gradient-panel').style.display = 'flex';
-    $('#slider-container').style.display = 'block';
+    // $('#slider-container').style.display = 'block';
     $('#solid-panel').style.display = 'none';
     $('#color-palette-gradient').style.background = '#000';
 
@@ -94,22 +94,22 @@ class Palette extends HTMLElement {
       if (colorMode === 'Solid') {
         $('#gradient-panel').style.display = 'none';
         $('#color-angle').style.display = 'none';
-        $('#color-angle-text').style.display = 'none';
+        // $('#color-angle-text').style.display = 'none';
         $('#solid-panel').style.display = 'block';
-        $('#slider-container').style.display = 'none';
+        // $('#slider-container').style.display = 'none';
         $('#solid-panel').style.opacity = 1;
         $('#solid-panel').style.visibility = 'visible';
         $('#solid-panel').style.marginTop = '60px';
         $('#color-palette-gradient').style.background = '#000';
       } else if (colorMode === 'Linear') {
-        $('#color-angle-text').style.display = 'block';
+        // $('#color-angle-text').style.display = 'block';
         $('#color-angle').style.display = 'block';
         $('#gradient-panel').style.display = 'flex';
-        $('#slider-container').style.display = 'block';
+        // $('#slider-container').style.display = 'block';
         $('#solid-panel').style.display = 'none';
         $('#color-palette-gradient').style.background = '#000';
       } else if (colorMode === 'Transparent') {
-        $('#color-angle-text').style.display = 'none';
+        // $('#color-angle-text').style.display = 'none';
         $('#gradient-panel').style.display = 'none';
         $('#solid-panel').style.opacity = 0;
         $('#solid-panel').style.visibility = 'hidden';
@@ -147,10 +147,10 @@ class Palette extends HTMLElement {
       dispatchChangeEvent();
     });
 
-    colorAngle.addEventListener('input', (e) => {
-      this.querySelector('#color-angle-text').innerText = `${e.target.value}deg`;
-      dispatchChangeEvent();
-    });
+    // colorAngle.addEventListener('input', (e) => {
+    //   this.querySelector('#color-angle-text').innerText = `${e.target.value}deg`;
+    //   dispatchChangeEvent();
+    // });
     
   }
 }
