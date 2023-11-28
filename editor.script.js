@@ -423,11 +423,8 @@ class EditorScreen {
       } else {
         this.caseList.classList.add('show');
       }
-      [fontList, fontStyleList].forEach((i) => i.classList.remove('show'));
-    });
 
-    $('#case-i').addEventListener('click', () => {
-      $('#case-list-items-li').classList.add('show');
+      [fontList, fontStyleList].forEach((i) => i.classList.remove('show'));
     });
 
     // if (this.textSelectorValue === 'LogoName') {
@@ -963,10 +960,14 @@ class EditorScreen {
       }
     }
 
-    const putAngleDownIcon = (className) => {
+    const putAngleDownIcon = (className, additionalFunction) => {
       const icon = document.createElement('i');
       icon.className = 'fa-solid fa-angle-down';
-      $(className)?.append(icon);
+      $(className).append(icon);
+      
+      if (typeof additionalFunction === 'function') {
+        icon.addEventListener('click', additionalFunction);
+      }
     };
 
     logoNameElement.on('mousedblclick', () => {
@@ -1155,7 +1156,7 @@ class EditorScreen {
 
     const fontList = document.querySelector('.font-selector-list');
     const fontSelectorTitle = document.querySelector('.font-selector-title');
-    const fontStyleListTitle = document.querySelector('.font_style-list-item__title');
+    const caseList = document.querySelector('.case-list-items-li');
     const fontStyleList = document.querySelector('.font_style-list-items-li');
 
     fontSelectorTitle.addEventListener('click', (event) => {
@@ -1167,7 +1168,7 @@ class EditorScreen {
         fontList.classList.add('show');
       }
 
-      [fontStyleList, this.caseList].forEach((i) => i.classList.remove('show'));
+      [fontStyleList, caseList].forEach((i) => i.classList.remove('show'));
     });
 
     this.fontStyleListTitle.addEventListener('click', (event) => {
@@ -1178,7 +1179,7 @@ class EditorScreen {
       } else {
         this.fontStyleList.classList.add('show');
       }
-      [fontList, this.caseList].forEach((i) => i.classList.remove('show'));
+      [fontList, caseList].forEach((i) => i.classList.remove('show'));
     });
 
     document.addEventListener('click', (event) => {
@@ -1584,8 +1585,11 @@ class EditorScreen {
 
       const logoText = logoNameElement.text;
       $('.case-list-item__title').innerText = getTextCase(logoText);
-      putAngleDownIcon('.case-list-item__title');
 
+      const icon = document.createElement('i');
+      icon.className = 'fa-solid fa-angle-down';
+      $('.case-list-item__title').append(icon);
+      
       if (logoNameElement.shadow) {
         const { blur, offsetX, offsetY } = logoNameElement.shadow;
 
@@ -3239,7 +3243,7 @@ class EditorScreen {
             sloganNameElement.set('top', this.canvas.height / sloganTop);
 
             if (letterSpaced) {
-              sloganNameElement.set('charSpacing', 315);
+              sloganNameElement.set('charSpacing', 322);
               sloganNameElement.set('fontSize', 27);
               sloganNameElement.centerH();
             }
@@ -3318,11 +3322,11 @@ class EditorScreen {
             }
 
             if (letterSpaced) {
-              sloganNameElement.set('charSpacing', 310);
+              sloganNameElement.set('charSpacing', 322);
               sloganNameElement.set('fontSize', 27);
               sloganNameElement.set(
                 'left',
-                logoNameElement.left + logoNameElement.width / 2 - sloganNameElement.width / 2 - 2
+                logoNameElement.left + logoNameElement.width / 2 - sloganNameElement.width / 2 
               );
             }
 
@@ -3368,11 +3372,11 @@ class EditorScreen {
               );
 
               if (letterSpaced) {
-                sloganNameElement.set('charSpacing', 310);
+                sloganNameElement.set('charSpacing', 322);
                 sloganNameElement.set('fontSize', 27);
                 sloganNameElement.set(
                   'left',
-                  logoNameElement.left + logoNameElement.width - sloganNameElement.width - 4
+                  logoNameElement.left + logoNameElement.width - sloganNameElement.width 
                 );
               }
             } else {
