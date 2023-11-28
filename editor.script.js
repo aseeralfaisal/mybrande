@@ -475,6 +475,13 @@ class EditorScreen {
     
       const active = this.canvas.getActiveObject();
       const existingFont = active.get('fontFamily');
+      const oldFill = active.get('fill');
+      const oldSelectable = active.get('selectable');
+      const oldHasRotatingPoint = active.get('hasRotatingPoint');
+      const oldDiameter = active.get('diameter');
+      const oldLeft = active.get('left');
+      const oldTop = active.get('top');
+      const oldFlipped = active.get('flipped');
       const oldFontSize = active.get('fontSize');
       active.set('fontSize', 40);
     
@@ -490,6 +497,13 @@ class EditorScreen {
       }
     
       active.set('fontFamily', existingFont);
+      active.set('fill', oldFill);
+      active.set('selectable', oldSelectable);
+      active.set('hasRotatingPoint', oldHasRotatingPoint);
+      active.set('diameter', oldDiameter);
+      active.set('left', oldLeft);
+      active.set('top', oldTop);
+      active.set('flipped', oldFlipped);
       active.set('fontSize', oldFontSize);
     
       this.canvas.renderAll();
@@ -500,6 +514,7 @@ class EditorScreen {
       this.caseListTitle.append(icon);
       this.caseList.classList.remove('show');
     });
+    
     
 
     this.fontStyleList.addEventListener('click', (ev) => {
@@ -954,9 +969,9 @@ class EditorScreen {
       } else if (text === text.toLowerCase()) {
         return 'Lowercase';
       } else if (text === text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()) {
-        return 'Title Case';
-      } else {
         return 'Sentence Case';
+      } else {
+        return 'Title Case';
       }
     }
 
