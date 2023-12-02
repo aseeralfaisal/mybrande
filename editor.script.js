@@ -80,6 +80,7 @@ class EditorScreen {
     this.zoomSlider = $('#zoom-slider');
     this.colorMode = 'Solid';
     this.activeNavbarSetting = 'logo';
+    this.initialRotation = null;
 
     $('#back-main_3').addEventListener('click', () => {
       localStorage.setItem('mainEditorCounter', 1);
@@ -88,11 +89,9 @@ class EditorScreen {
 
     this.rotateObject = () => {
       const active = this.canvas.getActiveObject();
-      // const currCoordinate = active?.getCoords();
 
       if (this.isRotating && active && this.rotateValue) {
         active.rotate(this.rotateValue);
-        // active.setCoords(currCoordinate);
         this.canvas.requestRenderAll();
       }
       this.isRotating = false;
@@ -121,26 +120,47 @@ class EditorScreen {
     // });
 
     $('#rotate_reset').addEventListener('click', () => {
-      const activeObject = this.canvas.getActiveObject();
+      const active = this.canvas.getActiveObject();
 
-      if (activeObject) {
-        const currCoordinate = activeObject.getCenterPoint();
-
-        activeObject.set('angle', 0);
-
-        activeObject.set('matrix', [1, 0, 0, 1, 0, 0]);
-
-        activeObject.set({
+      if (active) {
+        if(active._objects){
+          const groupObjects = active.getObjects();
+      
+          groupObjects.forEach((object) => {
+            const currCoordinate = object.getCenterPoint();
+            object.set('angle', 0);
+            object.set('matrix', [1, 0, 0, 1, 0, 0]);
+            object.set({
+              originX: 'center',
+              originY: 'center',
+            });
+            object.setPositionByOrigin(
+              new fabric.Point(currCoordinate.x, currCoordinate.y),
+              'center',
+              'center'
+            );
+          });
+    
+          const groupCenter = active.getCenterPoint();
+          active.setPositionByOrigin(
+            new fabric.Point(groupCenter.x, groupCenter.y),
+            'center',
+            'center'
+          );
+       } else{
+          const currCoordinate = active.getCenterPoint();
+          active.set('angle', 0);
+        active.set('matrix', [1, 0, 0, 1, 0, 0]);
+        active.set({
           originX: 'center',
           originY: 'center',
         });
-
-        activeObject.setPositionByOrigin(
+        active.setPositionByOrigin(
           new fabric.Point(currCoordinate.x, currCoordinate.y),
           'center',
           'center'
-        );
-        activeObject.setCoords();
+          );
+        }
         this.canvas.renderAll();
       }
     });
@@ -882,7 +902,6 @@ class EditorScreen {
           layerSection.create(obj, idx);
 
           obj.on('mousedown', (e) => {
-            console.log(obj.get('flipY'));
 
             this.isFlipY = obj.get('flipY');
             this.isFlipX = obj.get('flipX');
@@ -906,7 +925,7 @@ class EditorScreen {
               $('#logo-shadow-border').style.display = 'block';
             }
 
-            $('#rotate_info').innerText = `Rotate: ${obj.get('angle')}deg`;
+            $('#rotate_info').innerText = `Rotate: ${parseInt(obj.get('angle'))}deg`;
             $('#rotate-bar').value = obj.get('angle');
 
             const rotateAngle = obj.get('angle');
@@ -976,6 +995,8 @@ class EditorScreen {
 
         logoLayerGroup.setCoords();
         this.canvas.viewportCenterObject(logoLayerGroup);
+        this.initialRotation = { centerPoint: logoLayerGroup.getCenterPoint(), coords: logoLayerGroup.getCoords() };
+        console.log(this.initialRotation)
         logoLayerGroup.ungroupOnCanvas();
         this.canvas.renderAll();
       });
@@ -2164,25 +2185,19 @@ class EditorScreen {
 
     $('#copyElement').addEventListener('click', () => {
       const active = this.canvas.getActiveObject();
+
       if (active._objects) {
-        var groupOfObjs;
-
-        const objectsToClone = [];
-
-        active.forEachObject((obj) => {
-          obj.clone((cloned) => {
-            objectsToClone.push(cloned);
+        active.clone((clonedGroup) => {
+          clonedGroup._objects.forEach((object) => {
+            this.canvas.add(object);
           });
+          this.canvas.centerObject(clonedGroup)
+          clonedGroup.set('top', 100)
+          clonedGroup.set('left', 100)
+          this.canvas.setActiveObject(clonedGroup)
+          this.canvas.discardActiveObject();
+          this.canvas.requestRenderAll();
         });
-
-        groupOfObjs = new fabric.Group(objectsToClone, {
-          originX: 'center',
-          originY: 'center',
-        });
-
-        this.canvas.add(groupOfObjs);
-        this.canvas.centerObject(groupOfObjs)
-        this.canvas.renderAll();
       } else {
         active.clone((cloned) => {
           this.canvas.add(cloned);
@@ -3366,6 +3381,9 @@ class EditorScreen {
               logoNameElement.text = toTitleCase(logoNameElement.text);
               sloganNameElement.text = toSentenceCase(sloganNameElement.text);
 
+              logoNameElement.set('fontFamily', 'Poppins');
+              sloganNameElement.set('fontFamily', 'Poppins');
+
               const logoNameWidth = logoNameElement.width;
               sloganNameElement.set('width', logoNameWidth);
 
@@ -3455,6 +3473,10 @@ class EditorScreen {
             if (letterSpaced) {
               logoNameElement.text = toTitleCase(logoNameElement.text);
               sloganNameElement.text = toSentenceCase(sloganNameElement.text);
+              
+              logoNameElement.set('fontFamily', 'Poppins');
+              sloganNameElement.set('fontFamily', 'Poppins');
+
               sloganNameElement.set('charSpacing', 322);
               sloganNameElement.set('fontSize', 27);
               sloganNameElement.set(
@@ -3510,6 +3532,10 @@ class EditorScreen {
               if (letterSpaced) {
                 logoNameElement.text = toTitleCase(logoNameElement.text);
                 sloganNameElement.text = toSentenceCase(sloganNameElement.text);
+                
+              logoNameElement.set('fontFamily', 'Poppins');
+              sloganNameElement.set('fontFamily', 'Poppins');
+              
                 sloganNameElement.set('charSpacing', 322);
                 sloganNameElement.set('fontSize', 27);
                 sloganNameElement.set(
