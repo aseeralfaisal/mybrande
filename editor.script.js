@@ -1149,6 +1149,7 @@ class EditorScreen {
       active.setPositionByOrigin(new fabric.Point(currCoordinate.x, currCoordinate.y), 'center', 'center');
       active.setCoords();
       this.canvas.requestRenderAll();
+      updatePreview()
     });
 
     this.shadowBlurSlider.addEventListener('input', (e) => {
@@ -1977,7 +1978,6 @@ class EditorScreen {
                     const blue = parseInt(match[3]);
                     const hexColor = convertRGBtoHex(red, green, blue);
                     activeObj.set('fill', hexColor);
-                    captureCanvasState();
 
                     const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
                     logoColorPickers.forEach((i) => i.remove());
@@ -2011,9 +2011,9 @@ class EditorScreen {
                       }
                     });
 
-                    updatePreview();
                     captureCanvasState();
                     this.canvas.requestRenderAll();
+                    updatePreview();
                   }
                 }
               }
@@ -2022,7 +2022,6 @@ class EditorScreen {
 
           document.querySelectorAll('#solid_color2').forEach((item) => {
             item.addEventListener('click', (event) => {
-              if (this.canvas) {
                 const activeObj = this.canvas.getActiveObject();
                 if (activeObj) {
                   const bgColor = event.target.style.backgroundColor;
@@ -2033,13 +2032,12 @@ class EditorScreen {
                     const blue = parseInt(match[3]);
                     const hexColor = convertRGBtoHex(red, green, blue);
                     activeObj.set('fill', hexColor);
-
-                    updatePreview();
-                    captureCanvasState();
+                    
                     this.canvas.requestRenderAll();
+                    captureCanvasState();
+                    updatePreview();
                   }
                 }
-              }
             });
           });
         });
@@ -2080,6 +2078,7 @@ class EditorScreen {
         const fontSize = textSize;
         active.fontSize = fontSize;
         this.canvas.renderAll();
+        updatePreview()
       }
     });
 
@@ -2108,6 +2107,7 @@ class EditorScreen {
       $('#font_size_range').value = fontResizer;
       $('#font_size_title').value = fontResizer + 'px';
       this.canvas.requestRenderAll();
+      updatePreview()
     };
 
     $('#font_size_up').addEventListener('click', () => void arrowFontResizer('increment'));
@@ -2348,6 +2348,9 @@ class EditorScreen {
       this.canvas.remove(rect);
 
       this.canvas.requestRenderAll();
+      setTimeout(() => {
+        updatePreview();
+      }, 100);
     });
 
     const logoPalleteComponent = $('#logo-pallete');
@@ -2377,6 +2380,9 @@ class EditorScreen {
 
       selectedObject.set('fill', color);
       this.canvas.requestRenderAll();
+      setTimeout(() => {
+        updatePreview();
+      }, 100);
     });
 
     const textPalleteComponent = $('#text-pallete');
@@ -2405,6 +2411,9 @@ class EditorScreen {
 
       selectedObject.set('fill', color);
       this.canvas.requestRenderAll();
+      setTimeout(() => {
+        updatePreview();
+      }, 100);
     });
 
     updatePreview();
@@ -2709,6 +2718,7 @@ class EditorScreen {
             const color = rgbToHex(event.target.style.backgroundColor);
             const activeElem = this.canvas.getActiveObject();
             activeElem.set('fill', color);
+            colorPicker.color.set(color);
             this.canvas.requestRenderAll();
           });
         }
@@ -3114,7 +3124,7 @@ class EditorScreen {
         this.canvas.requestRenderAll();
       });
 
-      $('#custom_bg_colors_wrapper').append(newColor);
+      $('#custom_text_colors_wrapper').append(newColor);
     });    
     
     $('#custom_bg_color_generator').addEventListener('change', (e) => {
@@ -3177,6 +3187,7 @@ class EditorScreen {
               const hexColor = convertRGBtoHex(red, green, blue);
               activeObj.set('fill', hexColor);
               colorPickerText.color.set(hexColor);
+              updatePreview();
               this.canvas.requestRenderAll();
             }
           }
@@ -3204,6 +3215,7 @@ class EditorScreen {
             this.canvas.renderAll();
             captureCanvasState();
           }
+          updatePreview();
         }
       });
     });
@@ -3248,6 +3260,7 @@ class EditorScreen {
         // }
       });
       captureCanvasState();
+      updatePreview();
     };
 
     updateColorTextPickers();
@@ -3535,7 +3548,7 @@ class EditorScreen {
                 
               logoNameElement.set('fontFamily', 'Poppins');
               sloganNameElement.set('fontFamily', 'Poppins');
-              
+
                 sloganNameElement.set('charSpacing', 322);
                 sloganNameElement.set('fontSize', 27);
                 sloganNameElement.set(
