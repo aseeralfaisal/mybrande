@@ -13,6 +13,10 @@
 
 <body>
 
+    <div id="loader" style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; z-index: 10000; display: flex; justify-content: center; align-items: center;">
+        <img src="/assets/loader.gif" alt="" style="max-width: 100%; max-height: 100%;">
+    </div>
+    
     <div id="drag_drop_view">
         <header class="header">
             <div style="display: flex; justify-content: space-between; margin-inline: 100px; align-items: center;">
@@ -431,7 +435,7 @@
                     </div>
 
                     <div id="custom_colors_wrapper"
-                        style="display: grid; grid-template-columns: repeat(5, auto); gap: 5px; margin-block: 15px;">
+                        style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-block: 15px;">
                         <label
                             style="width: 33px; height: 33px; background-color: #eee; border-radius: 5px; justify-content: center; display: flex; align-items: center;">
                             <span style="position: absolute;">+</span>
@@ -442,7 +446,7 @@
                     <div id="logo_colors_pallete"
                         style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
                     </div>
-                    <pallete-component id="logo-pallete" data-list="['Linear']"></pallete-component>
+                        <pallete-component id="logo-pallete" data-list="['Linear']"></pallete-component>
                 </div>
 
 
@@ -500,21 +504,19 @@
                             max="100">
                     </div>
                 </div>
+                <div id="logo-shadow-border" style="border-bottom: 1px solid rgb(226, 226, 226); padding-bottom: 14px;"></div>
 
                 <div class="setting-item" style=" width: 230px;">
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <div><span style="font-size: 14px;">Scale: </span> <span style="font-size: 14px;"
                                 id="scale-value"></span></div>
-
-                        <!-- <button id="scale_reset" class="btn-main" style="transform: scale(0.8); font-size: 16px; background-color: transparent; color: #999999; border: var(--gold) 1px solid;
-">Reset</button> -->
                     </div>
                     <div class="slider-container">
                         <input class="slider" id="progress-bar" type="range" value="10" min="0" max="20">
                     </div>
                 </div>
-                <div class="setting-item" style=" width: 230px;">
 
+                <div class="setting-item" style=" width: 230px;">
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <span style="font-size: 14px;" id="rotate_info">Rotate: 0deg</span>
                         <button id="rotate_reset" style="font-size: 14px; padding: 5px 20px; background-color: transparent; color: #999999; border: var(--gold) 1px solid; 
@@ -698,16 +700,20 @@
                                 style="background-color: #f8f0ff;"></span>
                         </div>
 
-                        <pallete-component id="bg-pallete"
-                            data-list="['Linear', 'Solid', 'Web 2.0', 'None']"></pallete-component>
 
-                        <div id="custom_text_colors_wrapper"
-                            style="display: grid; grid-template-columns: repeat(5, auto); gap: 5px; margin-block: 15px;">
+                        <div id="custom_bg_colors_wrapper"
+                            style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-block: 15px;">
                             <label
                                 style="width: 33px; height: 33px; background-color: #eee; border-radius: 5px; justify-content: center; display: flex; align-items: center;">
                                 <span style="position: absolute;">+</span>
-                                <input id="custom_text_color_generator" type="color" style="visibility: hidden;">
+                                <input id="custom_bg_color_generator" type="color" style="visibility: hidden;">
                             </label>
+                        </div>
+
+                        
+                        <div style="margin-top: 20px;">
+                            <pallete-component id="bg-pallete"
+                            data-list="['Linear', 'Solid', 'Web 2.0', 'None']"></pallete-component>
                         </div>
                         <!-- 
                         <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Layer</h4>
@@ -1017,7 +1023,7 @@
                             style="font-weight: 600; color: #555; margin-left: 5px; margin-bottom: -10px; font-size: 14px">Font
                             Size</span>
                         <div
-                            style="display: flex; align-items: center; justify-content: space-between; background-color: #eeeeee; margin-left: 43px; border-radius: 5px; height: 40px;">
+                            style="display: flex; align-items: center; justify-content: space-between; background-color: #eeeeee; margin-left: 43px; border-radius: 5px; height: 36px;">
                             <input class="font_size" id="font_size_title"></input>
                             <div style="display: grid; gap: 2px; padding-right: 10px;">
                                 <span id="font_size_up" class="fa-solid fa-chevron-up arrow_icons"></span>

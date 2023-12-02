@@ -88,20 +88,24 @@ class EditorScreen {
 
     this.rotateObject = () => {
       const active = this.canvas.getActiveObject();
-      const currCoordinate = active?.getCoords();
+      // const currCoordinate = active?.getCoords();
 
       if (this.isRotating && active && this.rotateValue) {
         active.rotate(this.rotateValue);
-        active.setCoords(currCoordinate);
+        // active.setCoords(currCoordinate);
         this.canvas.requestRenderAll();
       }
       this.isRotating = false;
     };
 
     this.scaleObject = () => {
-      const activeObj = this.canvas.getActiveObject();
-      if (this.isScaling && activeObj && this.scaleValue) {
-        activeObj.scale(this.scaleValue);
+      const active = this.canvas.getActiveObject();
+      const currCoordinate = active?.getCenterPoint();
+      if (this.isScaling && active && this.scaleValue) {
+        active.scale(this.scaleValue);
+
+        active.setPositionByOrigin(new fabric.Point(currCoordinate.x, currCoordinate.y), 'center', 'center');
+        active.setCoords();
         this.canvas.requestRenderAll();
       }
       this.isScaling = false;
@@ -159,6 +163,10 @@ class EditorScreen {
       scaleX: 0.3,
       scaleY: 0.3,
     });
+    
+    this.canvas.on('after:render', () => {
+      $("#loader").style.display = "none";
+    })
 
     // (function (fabric) {
     //   fabric.TextCurved = fabric.util.createClass(fabric.Object, {
@@ -472,8 +480,9 @@ class EditorScreen {
 
     this.caseList.addEventListener('click', (event) => {
       const selectedTextElement = event.target.innerText;
-    
       const active = this.canvas.getActiveObject();
+      const currCoordinate = active.getCenterPoint();
+
       const existingFont = active.get('fontFamily');
       const oldFill = active.get('fill');
       const oldSelectable = active.get('selectable');
@@ -484,7 +493,7 @@ class EditorScreen {
       const oldFlipped = active.get('flipped');
       const oldFontSize = active.get('fontSize');
       active.set('fontSize', 40);
-    
+
       const text = active?.text;
       if (selectedTextElement === 'Uppercase') {
         active.text = text.toUpperCase();
@@ -495,7 +504,7 @@ class EditorScreen {
       } else if (selectedTextElement === 'Sentence Case') {
         active.text = toSentenceCase(text);
       }
-    
+
       active.set('fontFamily', existingFont);
       active.set('fill', oldFill);
       active.set('selectable', oldSelectable);
@@ -505,17 +514,18 @@ class EditorScreen {
       active.set('top', oldTop);
       active.set('flipped', oldFlipped);
       active.set('fontSize', oldFontSize);
-    
+
+      active.setPositionByOrigin(new fabric.Point(currCoordinate.x, currCoordinate.y), 'center', 'center');
+      active.setCoords();
+
       this.canvas.renderAll();
-    
+
       this.caseListTitle.innerText = selectedTextElement;
       const icon = document.createElement('i');
       icon.className = 'fa-solid fa-angle-down';
       this.caseListTitle.append(icon);
       this.caseList.classList.remove('show');
     });
-    
-    
 
     this.fontStyleList.addEventListener('click', (ev) => {
       const selectedTextElement = ev.target.innerText;
@@ -558,9 +568,11 @@ class EditorScreen {
     this.rotateRange.addEventListener('input', (e) => {
       this.isRotating = true;
       this.rotateValue = parseInt(e.target.value, 10);
-      $('#rotate_info').innerText = `Rotate: ${this.rotateValue}deg`;
+      $('#rotate_info').innerText = `Rotate: ${parseInt(this.rotateValue)}deg`;
       this.rotateObject();
     });
+
+    this.rotateRange.addEventListener('change', updatePreview);
 
     $('#rotate-bar-uploads').addEventListener('input', (e) => {
       this.isRotating = true;
@@ -586,7 +598,6 @@ class EditorScreen {
     this.scaleElement.textContent = 1;
     this.scaleRange.addEventListener('input', (e) => {
       const scaleValue = e.target.value;
-      const fracValue = scaleValue / 10;
 
       if (scaleValue) {
         if (this.isScaling <= 10) this.isScaling = true;
@@ -596,39 +607,39 @@ class EditorScreen {
       }
     });
 
-    // this.scaleRangeUploads.addEventListener('input', (e) => {
-    //   if (this.isScaling <= 10) this.isScaling = true;
-    //   this.scaleElement.textContent = this.scaleValue;
-    //   this.scaleValue = parseFloat(e.target.value, 10) / 10;
-    //   this.scaleObject();
-    // });
+    this.scaleRange.addEventListener('change', updatePreview);
 
     this.flipHorizontal.addEventListener('change', () => {
-      this.isFlipX = !this.isFlipX;
       const active = this.canvas.getActiveObject();
-      active.set('flipX', this.isFlipX);
-      this.canvas.requestRenderAll();
-    });
+      const currCoordinate = active.getCenterPoint();
 
-    $('#flip-x-uploads').addEventListener('change', () => {
-      this.isFlipX = !this.isFlipX;
-      const selectedObject = this.canvas.getActiveObject();
-      selectedObject.set('flipX', this.isFlipX);
-      this.canvas.requestRenderAll();
+      if (active) {
+        this.isFlipX = !this.isFlipX;
+        active.set('flipX', this.isFlipX);
+
+        active.setPositionByOrigin(new fabric.Point(currCoordinate.x, currCoordinate.y), 'center', 'center');
+        active.setCoords();
+
+        this.canvas.renderAll();
+      }
+
+      updatePreview();
     });
 
     this.flipVertical.addEventListener('change', () => {
-      this.isFlipY = !this.isFlipY;
-      const selectedObject = this.canvas.getActiveObject();
-      selectedObject.set('flipY', this.isFlipY);
-      this.canvas.requestRenderAll();
-    });
+      const active = this.canvas.getActiveObject();
+      const currCoordinate = active.getCenterPoint();
 
-    $('#flip-y-uploads').addEventListener('change', () => {
-      this.isFlipY = !this.isFlipY;
-      const selectedObject = this.canvas.getActiveObject();
-      selectedObject.set('flipY', this.isFlipY);
-      this.canvas.requestRenderAll();
+      if (active) {
+        this.isFlipY = !this.isFlipY;
+        active.set('flipY', this.isFlipY);
+
+        active.setPositionByOrigin(new fabric.Point(currCoordinate.x, currCoordinate.y), 'center', 'center');
+        active.setCoords();
+
+        this.canvas.renderAll();
+        updatePreview();
+      }
     });
 
     this.layers.addEventListener('click', (e) => {
@@ -854,25 +865,45 @@ class EditorScreen {
       fabric.loadSVGFromString(this.logoFile, (objects, options) => {
         logoLayerGroup = new fabric.Group(objects, options);
 
+        this.canvas.on('selection:created', () => {
+          const selectedObjects = this.canvas.getActiveObjects();
+          selectedObjects.forEach(() => {
+            this.activeNavbarSetting = 'logo';
+            this.updateActiveNavbar();
+            this.logoSettingsContainer.style.display = 'grid';
+            this.textSettingsContainer.style.display = 'none';
+            this.backgroundSettingsContainer.style.display = 'none';
+          });
+        });
+
         objects.forEach((obj, idx) => {
           this.canvas.add(obj);
           const layerSection = new CreateLayerSection(this.layers);
           layerSection.create(obj, idx);
 
           obj.on('mousedown', (e) => {
-            const hasShadow = !!obj?.shadow?.blur
+            console.log(obj.get('flipY'));
+
+            this.isFlipY = obj.get('flipY');
+            this.isFlipX = obj.get('flipX');
+            $('#flip-y').checked = this.isFlipY;
+            $('#flip-x').checked = this.isFlipX;
+
+            const hasShadow = !!obj?.shadow?.blur;
             $('#logo-drop-shadow').checked = hasShadow;
-            isLogoShadowAdjust = hasShadow
-            if(!hasShadow){
+            isLogoShadowAdjust = hasShadow;
+            if (!hasShadow) {
               $('#logo-shadow-adjust').style.display = 'none';
               $('#logo-shadow-blur').style.display = 'none';
               $('#logo-shadow-offsetX').style.display = 'none';
               $('#logo-shadow-offsetY').style.display = 'none';
-            }else {
+              $('#logo-shadow-border').style.display = 'none';
+            } else {
               $('#logo-shadow-adjust').style.display = 'block';
               $('#logo-shadow-blur').style.display = 'block';
               $('#logo-shadow-offsetX').style.display = 'block';
-              $('#logo-shadow-offsetY').style.display = 'block';              
+              $('#logo-shadow-offsetY').style.display = 'block';
+              $('#logo-shadow-border').style.display = 'block';
             }
 
             $('#rotate_info').innerText = `Rotate: ${obj.get('angle')}deg`;
@@ -944,7 +975,6 @@ class EditorScreen {
         });
 
         logoLayerGroup.setCoords();
-
         this.canvas.viewportCenterObject(logoLayerGroup);
         logoLayerGroup.ungroupOnCanvas();
         this.canvas.renderAll();
@@ -979,7 +1009,7 @@ class EditorScreen {
       const icon = document.createElement('i');
       icon.className = 'fa-solid fa-angle-down';
       $(className).append(icon);
-      
+
       if (typeof additionalFunction === 'function') {
         icon.addEventListener('click', additionalFunction);
       }
@@ -1005,7 +1035,7 @@ class EditorScreen {
     //   queryParams.set('logo_name', e.target.value);
     //   localStorage.setItem('logo_name', e.target.value);
     //   logoNameElement.centerH();
-    //   updatePreview();
+    //    updatePreview();
     //   this.canvas.requestRenderAll();
     // });
 
@@ -1015,7 +1045,7 @@ class EditorScreen {
     //   queryParams.set('slogan_name', e.target.value);
     //   localStorage.setItem('slogan_name', e.target.value);
     //   sloganNameElement.centerH();
-    //   updatePreview();
+    //    updatePreview();
     //   this.canvas.renderAll();
     // });
 
@@ -1090,8 +1120,13 @@ class EditorScreen {
     this.letterSpacingSlider.addEventListener('input', (e) => {
       this.letterSpacing = e.target.value;
       const active = this.canvas.getActiveObject();
+      const currCoordinate = active.getCenterPoint();
+
       active.set('charSpacing', this.letterSpacing);
       $('#l_spacing_value').innerText = ': ' + e.target.value / 10;
+
+      active.setPositionByOrigin(new fabric.Point(currCoordinate.x, currCoordinate.y), 'center', 'center');
+      active.setCoords();
       this.canvas.requestRenderAll();
     });
 
@@ -1257,7 +1292,8 @@ class EditorScreen {
     fontList.addEventListener('click', (e) => {
       const fontValue = e.target.innerText;
       let active = this.canvas.getActiveObject();
-      
+      const currCoordinate = active.getCenterPoint();
+
       switch (fontValue) {
         case 'Inter':
           active.set('fontFamily', 'Inter');
@@ -1269,32 +1305,36 @@ class EditorScreen {
           active.set('fontFamily', 'Poppins');
           break;
       }
-      this.canvas.renderAll();
       const title = this.fontSelector.querySelector('.font-selector-title');
       title.textContent = fontValue;
       const icon = document.createElement('i');
       icon.className = 'fa-solid fa-angle-down';
       title.append(icon);
       fontList.classList.remove('show');
+
+      active.setPositionByOrigin(new fabric.Point(currCoordinate.x, currCoordinate.y), 'center', 'center');
+      active.setCoords();
+      this.canvas.renderAll();
     });
 
     const handleCanvasEvent = () => {
-      captureCanvasState();
+      // captureCanvasState();
       updatePreview();
     };
 
     this.canvas.on('object:added', handleCanvasEvent);
     this.canvas.on('object:removed', handleCanvasEvent);
     // this.canvas.on('object:modified', handleCanvasEvent);
+    // this.canvas.on('object:moving', handleCanvasEvent);
 
-    let isObjectMoving = false;
-    this.canvas.on('object:moving', () => {
-      isObjectMoving = true;
-    });
+    // let isObjectMoving = false;
+    // this.canvas.on('object:moving', () => {
+    //   isObjectMoving = true;
+    // });
 
-    this.canvas.on('mouse:up', () => {
-      if (!isObjectMoving) handleCanvasEvent();
-    });
+    // this.canvas.on('mouse:up', () => {
+    //   if (!isObjectMoving) handleCanvasEvent();
+    // });
 
     let localDirFile = null;
     let localDirFiles = null;
@@ -1386,7 +1426,7 @@ class EditorScreen {
 
     // this.canvas.on('object:modified', () => {
     //   captureCanvasState();
-    //   updatePreview();
+    //    updatePreview();
     //   line1.set('visible', false);
     //   line2.set('visible', false);
     // });
@@ -1486,7 +1526,7 @@ class EditorScreen {
       var match = rgbaString.toString().match(/^rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)$/);
 
       if (!match) {
-        return 'Invalid RGBA string';
+        return 'HEX';
       }
 
       var r = parseInt(match[1]);
@@ -1535,17 +1575,17 @@ class EditorScreen {
       const hasShadow = !!logoNameElement?.shadow?.blur;
 
       $('#drop-shadow').checked = hasShadow;
-      isShadowAdjust = hasShadow
-      if(!hasShadow){
+      isShadowAdjust = hasShadow;
+      if (!hasShadow) {
         $('#shadow-adjust').style.display = 'none';
         $('#shadow-blur').style.display = 'none';
         $('#shadow-offsetX').style.display = 'none';
         $('#shadow-offsetY').style.display = 'none';
-      }else {
+      } else {
         $('#shadow-adjust').style.display = 'block';
         $('#shadow-blur').style.display = 'block';
         $('#shadow-offsetX').style.display = 'block';
-        $('#shadow-offsetY').style.display = 'block';              
+        $('#shadow-offsetY').style.display = 'block';
       }
 
       const charSpacing = logoNameElement.get('charSpacing');
@@ -1590,7 +1630,7 @@ class EditorScreen {
       const letterSpacing = logoNameElement.get('charSpacing');
       $('#letter-spacing-slider').value = letterSpacing;
 
-      const fontFamily = logoNameElement.fontFamily;
+      const fontFamily = logoNameElement.get('fontFamily');
       $('#font-selector-title').innerText = fontFamily;
       putAngleDownIcon('#font-selector-title');
 
@@ -1604,7 +1644,7 @@ class EditorScreen {
       const icon = document.createElement('i');
       icon.className = 'fa-solid fa-angle-down';
       $('.case-list-item__title').append(icon);
-      
+
       if (logoNameElement.shadow) {
         const { blur, offsetX, offsetY } = logoNameElement.shadow;
 
@@ -1631,17 +1671,17 @@ class EditorScreen {
       const hasShadow = !!sloganNameElement?.shadow?.blur;
 
       $('#drop-shadow').checked = hasShadow;
-      isShadowAdjust = hasShadow
-      if(!hasShadow){
+      isShadowAdjust = hasShadow;
+      if (!hasShadow) {
         $('#shadow-adjust').style.display = 'none';
         $('#shadow-blur').style.display = 'none';
         $('#shadow-offsetX').style.display = 'none';
         $('#shadow-offsetY').style.display = 'none';
-      }else {
+      } else {
         $('#shadow-adjust').style.display = 'block';
         $('#shadow-blur').style.display = 'block';
         $('#shadow-offsetX').style.display = 'block';
-        $('#shadow-offsetY').style.display = 'block';              
+        $('#shadow-offsetY').style.display = 'block';
       }
 
       const charSpacing = sloganNameElement.get('charSpacing');
@@ -1685,6 +1725,10 @@ class EditorScreen {
 
       const letterSpacing = +sloganNameElement.charSpacing;
       $('#letter-spacing-slider').value = letterSpacing;
+
+      const fontFamily = sloganNameElement.get('fontFamily');
+      $('#font-selector-title').innerText = fontFamily;
+      putAngleDownIcon('#font-selector-title');
 
       const fontSize = sloganNameElement.fontSize;
       $('#font_size_title').value = `${fontSize}px`;
@@ -1782,6 +1826,7 @@ class EditorScreen {
               $('#logo-shadow-blur').style.display = 'block';
               $('#logo-shadow-offsetX').style.display = 'block';
               $('#logo-shadow-offsetY').style.display = 'block';
+              $('#logo-shadow-border').style.display = 'block';
             }
 
             let fillColor;
@@ -1846,6 +1891,8 @@ class EditorScreen {
               $('#logo-shadow-blur').style.display = 'block';
               $('#logo-shadow-offsetX').style.display = 'block';
               $('#logo-shadow-offsetY').style.display = 'block';
+              $('#logo-shadow-offsetY').style.display = 'block';
+              $('#logo-shadow-border').style.display = 'block';
             }
 
             let fillColor;
@@ -1936,8 +1983,8 @@ class EditorScreen {
 
                         colPicker.addEventListener('click', (event) => {
                           const color = rgbToHex(event.target.style.backgroundColor);
-                          const activeElem = this.canvas.getActiveObject();
-                          activeElem.set('fill', color);
+                          const active = this.canvas.getActiveObject();
+                          active.set('fill', color);
                           this.canvas.requestRenderAll();
                         });
                       }
@@ -2006,11 +2053,13 @@ class EditorScreen {
 
     $('#font_size_range').addEventListener('input', (event) => {
       const textSize = event.target.value;
-      $('#font_size_title').value = `${textSize}px`;
-      const active = this.canvas.getActiveObject();
-      const fontSize = textSize;
-      active.fontSize = fontSize;
-      this.canvas.requestRenderAll();
+      if (textSize > 0) {
+        $('#font_size_title').value = `${textSize}px`;
+        const active = this.canvas.getActiveObject();
+        const fontSize = textSize;
+        active.fontSize = fontSize;
+        this.canvas.renderAll();
+      }
     });
 
     $('#font_size_title').addEventListener('input', (event) => {
@@ -2025,8 +2074,13 @@ class EditorScreen {
 
     const arrowFontResizer = (type = 'increment') => {
       const active = this.canvas.getActiveObject();
-      const increment = active.fontSize + 1;
-      const decrement = active.fontSize - 1;
+      let fontSize = parseInt(active.fontSize);
+
+      if (fontSize <= 1) {
+        fontSize = 2;
+      }
+      const increment = fontSize + 1;
+      const decrement = fontSize - 1;
 
       const fontResizer =
         type === 'increment' ? (active.fontSize = increment) : (active.fontSize = decrement);
@@ -2109,12 +2163,33 @@ class EditorScreen {
     });
 
     $('#copyElement').addEventListener('click', () => {
-      const activeObject = this.canvas.getActiveObject();
-      activeObject.clone((cloned) => {
-        this.canvas.add(cloned);
-        cloned.top += 10;
-        cloned.left += 10;
-      });
+      const active = this.canvas.getActiveObject();
+      if (active._objects) {
+        var groupOfObjs;
+
+        const objectsToClone = [];
+
+        active.forEachObject((obj) => {
+          obj.clone((cloned) => {
+            objectsToClone.push(cloned);
+          });
+        });
+
+        groupOfObjs = new fabric.Group(objectsToClone, {
+          originX: 'center',
+          originY: 'center',
+        });
+
+        this.canvas.add(groupOfObjs);
+        this.canvas.centerObject(groupOfObjs)
+        this.canvas.renderAll();
+      } else {
+        active.clone((cloned) => {
+          this.canvas.add(cloned);
+          cloned.top += 10;
+          cloned.left += 10;
+        });
+      }
       this.canvas.requestRenderAll();
     });
 
@@ -2429,7 +2504,7 @@ class EditorScreen {
     let isLogoShadowAdjust = false;
     $('#logo-drop-shadow').addEventListener('change', () => {
       const active = this.canvas.getActiveObject();
-      isLogoShadowAdjust = !isLogoShadowAdjust
+      isLogoShadowAdjust = !isLogoShadowAdjust;
 
       if (isLogoShadowAdjust) {
         $('#logo-shadow-adjust').style.display = 'block';
@@ -2458,6 +2533,7 @@ class EditorScreen {
         $('#logo-shadow-blur').style.display = 'none';
         $('#logo-shadow-offsetX').style.display = 'none';
         $('#logo-shadow-offsetY').style.display = 'none';
+        $('#logo-shadow-border').style.display = 'none';
 
         const active = this.canvas.getActiveObject();
 
@@ -2489,6 +2565,7 @@ class EditorScreen {
         $('#logo-shadow-blur').style.display = 'block';
         $('#logo-shadow-offsetX').style.display = 'block';
         $('#logo-shadow-offsetY').style.display = 'block';
+        $('#logo-shadow-border').style.display = 'block';
 
         const settingsView = $('.settings-view');
         settingsView.scrollTop = settingsView.scrollHeight;
@@ -2496,6 +2573,7 @@ class EditorScreen {
         $('#logo-shadow-blur').style.display = 'none';
         $('#logo-shadow-offsetX').style.display = 'none';
         $('#logo-shadow-offsetY').style.display = 'none';
+        $('#logo-shadow-border').style.display = 'none';
       }
     });
 
@@ -2608,6 +2686,9 @@ class EditorScreen {
             colPicker.className = 'color-picker';
             colPicker.style.borderRadius = '5px';
             colorPalette.append(colPicker);
+            if (color.includes('#ffffff')) {
+              colPicker.style.border = '1px solid #aaaaaa';
+            }
           }
           colPicker.addEventListener('click', (event) => {
             const color = rgbToHex(event.target.style.backgroundColor);
@@ -2984,15 +3065,15 @@ class EditorScreen {
     $('#custom_color_generator').addEventListener('change', (e) => {
       const color = e.target.value;
 
-      const newColor = document.createElement('input');
-      newColor.setAttribute('type', 'color');
-      newColor.setAttribute('value', color);
+      const newColor = document.createElement('div');
+      newColor.style.backgroundColor = color;
       newColor.className = 'color-picker';
       newColor.style.width = '32px';
       newColor.style.height = '32px';
       newColor.style.borderColor = color;
+      newColor.style.borderRadius = '5px';
 
-      newColor.addEventListener('input', () => {
+      newColor.addEventListener('click', () => {
         const activeObj = this.canvas.getActiveObject();
         activeObj.set('fill', color);
         this.canvas.requestRenderAll();
@@ -3004,21 +3085,40 @@ class EditorScreen {
     $('#custom_text_color_generator').addEventListener('change', (e) => {
       const color = e.target.value;
 
-      const newColor = document.createElement('input');
-      newColor.setAttribute('type', 'color');
-      newColor.setAttribute('value', color);
+      const newColor = document.createElement('div');
+      newColor.style.backgroundColor = color;
       newColor.className = 'color-picker';
       newColor.style.width = '32px';
       newColor.style.height = '32px';
       newColor.style.borderColor = color;
+      newColor.style.borderRadius = '5px';
 
-      newColor.addEventListener('input', () => {
+      newColor.addEventListener('click', () => {
         const activeObj = this.canvas.getActiveObject();
         activeObj.set('fill', color);
         this.canvas.requestRenderAll();
       });
 
-      $('#custom_text_colors_wrapper').append(newColor);
+      $('#custom_bg_colors_wrapper').append(newColor);
+    });    
+    
+    $('#custom_bg_color_generator').addEventListener('change', (e) => {
+      const color = e.target.value;
+
+      const newColor = document.createElement('div');
+      newColor.style.backgroundColor = color;
+      newColor.className = 'color-picker';
+      newColor.style.width = '32px';
+      newColor.style.height = '32px';
+      newColor.style.borderColor = color;
+      newColor.style.borderRadius = '5px';
+
+      newColor.addEventListener('click', () => {
+        this.canvas.setBackgroundColor(color)
+        this.canvas.requestRenderAll();
+      });
+
+      $('#custom_bg_colors_wrapper').append(newColor);
     });
 
     document.querySelectorAll('#solid_color').forEach((item) => {
@@ -3034,6 +3134,7 @@ class EditorScreen {
               const blue = parseInt(match[3]);
               const hexColor = convertRGBtoHex(red, green, blue);
               activeObj.set('fill', hexColor);
+              colorPicker.color.set(hexColor);
 
               const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
               logoColorPickers.forEach((i) => i.remove());
@@ -3060,6 +3161,7 @@ class EditorScreen {
               const blue = parseInt(match[3]);
               const hexColor = convertRGBtoHex(red, green, blue);
               activeObj.set('fill', hexColor);
+              colorPickerText.color.set(hexColor);
               this.canvas.requestRenderAll();
             }
           }
@@ -3080,12 +3182,12 @@ class EditorScreen {
             const blue = parseInt(match[3]);
             const hexColor = convertRGBtoHex(red, green, blue);
             this.canvas.setBackgroundColor(hexColor);
-            captureCanvasState();
-
+            
             const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
             logoColorPickers.forEach((i) => i.remove());
             updateColorPickers();
-            this.canvas.requestRenderAll();
+            this.canvas.renderAll();
+            captureCanvasState();
           }
         }
       });
@@ -3251,6 +3353,9 @@ class EditorScreen {
             logoNameElement.set('fontSize', logoSize);
             sloganNameElement.set('fontSize', sloganSize);
 
+            logoNameElement.set('charSpacing', 0);
+            sloganNameElement.set('charSpacing', 0);
+
             logoNameElement.centerH();
             sloganNameElement.centerH();
 
@@ -3258,10 +3363,18 @@ class EditorScreen {
             sloganNameElement.set('top', this.canvas.height / sloganTop);
 
             if (letterSpaced) {
+              logoNameElement.text = toTitleCase(logoNameElement.text);
+              sloganNameElement.text = toSentenceCase(sloganNameElement.text);
+
+              const logoNameWidth = logoNameElement.width;
+              sloganNameElement.set('width', logoNameWidth);
+
               sloganNameElement.set('charSpacing', 322);
               sloganNameElement.set('fontSize', 27);
-              sloganNameElement.centerH();
             }
+
+            logoNameElement.centerH();
+            sloganNameElement.centerH();
 
             const newGrp = new fabric.Group(objects);
             this.canvas.viewportCenterObject(newGrp);
@@ -3316,6 +3429,9 @@ class EditorScreen {
             logoNameElement.set('fontSize', 46);
             sloganNameElement.set('fontSize', 22);
 
+            logoNameElement.set('charSpacing', 0);
+            sloganNameElement.set('charSpacing', 0);
+
             if (textPosition === 'left') {
               logoNameElement.viewportCenter();
               sloganNameElement.viewportCenter();
@@ -3337,11 +3453,13 @@ class EditorScreen {
             }
 
             if (letterSpaced) {
+              logoNameElement.text = toTitleCase(logoNameElement.text);
+              sloganNameElement.text = toSentenceCase(sloganNameElement.text);
               sloganNameElement.set('charSpacing', 322);
               sloganNameElement.set('fontSize', 27);
               sloganNameElement.set(
                 'left',
-                logoNameElement.left + logoNameElement.width / 2 - sloganNameElement.width / 2 
+                logoNameElement.left + logoNameElement.width / 2 - sloganNameElement.width / 2
               );
             }
 
@@ -3362,7 +3480,7 @@ class EditorScreen {
             );
 
             const sloganNameElement = objects.find(
-              (obj) => obj.type === 'text' && obj.text === 'Slogan goes here'
+              (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here'
             );
             logoNameElement.center();
             sloganNameElement.center();
@@ -3372,6 +3490,9 @@ class EditorScreen {
 
             logoNameElement.set('fontSize', 46);
             sloganNameElement.set('fontSize', 22);
+
+            logoNameElement.set('charSpacing', 0);
+            sloganNameElement.set('charSpacing', 0);
 
             if (textPosition === 'left') {
               logoNameElement.viewportCenter();
@@ -3387,11 +3508,13 @@ class EditorScreen {
               );
 
               if (letterSpaced) {
+                logoNameElement.text = toTitleCase(logoNameElement.text);
+                sloganNameElement.text = toSentenceCase(sloganNameElement.text);
                 sloganNameElement.set('charSpacing', 322);
                 sloganNameElement.set('fontSize', 27);
                 sloganNameElement.set(
                   'left',
-                  logoNameElement.left + logoNameElement.width - sloganNameElement.width 
+                  logoNameElement.left + logoNameElement.width - sloganNameElement.width
                 );
               }
             } else {
@@ -3442,6 +3565,7 @@ class EditorScreen {
 
     $('#canvas-bg-none').addEventListener('click', () => {
       this.canvas.setBackgroundColor(this.canvasBG);
+      updatePreview();
       this.canvas.requestRenderAll();
       captureCanvasState();
     });

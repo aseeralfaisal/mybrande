@@ -249,7 +249,7 @@ input:checked + .switch-slider:before {
 .editor-container {
   position: absolute;
   top: 75px;
-  left: 360px;
+  left: 370px;
 }
 
 .btn-main {
@@ -471,7 +471,7 @@ input:checked + .switch-slider:before {
   border-radius: 5px;
   font-size: 14px;
   font-weight: 500;
-  border: none;
+  border: 1px solid black;
   background-color: #f5f5f5;
   padding: 7px;
   text-transform: uppercase;
@@ -1170,6 +1170,7 @@ input:checked + .switch-slider:before {
 .solid_color_section {
   width: 28px;
   height: 28px;
+  cursor: pointer;
 }
 
 .solid_color_section:hover {
