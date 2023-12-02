@@ -4,6 +4,22 @@ import clipIcons from './assets/icons/clipIcons';
 import { DeleteLayer } from './handleDeleteLayer';
 import 'alwan/dist/css/alwan.min.css';
 import iro from '@jaames/iro';
+import WebFont from 'webfontloader';
+
+
+WebFont.load({
+  google: {
+    families: ['Poppins:300,400,500,600,700', 'Inter:300,400,500,600,700', 'Roboto:400,500,700']
+  },
+  fontloading: function(familyName, fvd) {
+    $("#loader").style.display = "flex";
+  },
+  fontactive: function(familyName, fvd) {
+    if (familyName === 'Poppins' || familyName === 'Inter' || familyName === 'Roboto') {
+      $("#loader").style.display = "none";
+    }
+  }
+});
 
 const $ = (id) => document.querySelector(id);
 
@@ -185,7 +201,7 @@ class EditorScreen {
     });
     
     this.canvas.on('after:render', () => {
-      $("#loader").style.display = "none";
+        $("#loader").style.display = "none";
     })
 
     // (function (fabric) {
@@ -1149,7 +1165,9 @@ class EditorScreen {
       active.setPositionByOrigin(new fabric.Point(currCoordinate.x, currCoordinate.y), 'center', 'center');
       active.setCoords();
       this.canvas.requestRenderAll();
-      updatePreview()
+      setTimeout(() => {
+        updatePreview()
+      }, 100);
     });
 
     this.shadowBlurSlider.addEventListener('input', (e) => {
@@ -2719,12 +2737,30 @@ class EditorScreen {
             const activeElem = this.canvas.getActiveObject();
             activeElem.set('fill', color);
             colorPicker.color.set(color);
-            this.canvas.requestRenderAll();
+            $("#HEX").value = color
+
+            let rgbValue = hexToRgb(color);
+            let rgbValues = rgbValue.match(/\d+/g);
+  
+            if (rgbValues && rgbValues.length === 3) {
+              $('#R').value = rgbValues[0];
+              $('#G').value = rgbValues[1];
+              $('#B').value = rgbValues[2];
+            }
+            let hslValue = hexToHsl(color);
+            let hslValues = hslValue.match(/\d+/g);
+  
+            if (hslValues && hslValues.length === 3) {
+              $('#H').value = hslValues[0];
+              $('#S').value = hslValues[1];
+              $('#L').value = hslValues[2];
+            }
+            this.canvas.renderAll();
+            updatePreview()
           });
         }
       });
 
-      updatePreview();
       captureCanvasState();
     };
 
@@ -3101,7 +3137,27 @@ class EditorScreen {
       newColor.addEventListener('click', () => {
         const activeObj = this.canvas.getActiveObject();
         activeObj.set('fill', color);
-        this.canvas.requestRenderAll();
+        colorPicker.color.set(color);
+        $("#HEX").value = color;  
+
+        let rgbValue = hexToRgb(color);
+        let rgbValues = rgbValue.match(/\d+/g);
+
+        if (rgbValues && rgbValues.length === 3) {
+          $('#R').value = rgbValues[0];
+          $('#G').value = rgbValues[1];
+          $('#B').value = rgbValues[2];
+        }
+        let hslValue = hexToHsl(color);
+        let hslValues = hslValue.match(/\d+/g);
+
+        if (hslValues && hslValues.length === 3) {
+          $('#H').value = hslValues[0];
+          $('#S').value = hslValues[1];
+          $('#L').value = hslValues[2];
+        }        
+        this.canvas.renderAll();
+        updatePreview()
       });
 
       $('#custom_colors_wrapper').append(newColor);
@@ -3121,7 +3177,27 @@ class EditorScreen {
       newColor.addEventListener('click', () => {
         const activeObj = this.canvas.getActiveObject();
         activeObj.set('fill', color);
-        this.canvas.requestRenderAll();
+        colorPickerText.color.set(color); 
+        $("#HEX2").value = color;  
+
+        let rgbValue = hexToRgb(color);
+        let rgbValues = rgbValue.match(/\d+/g);
+
+        if (rgbValues && rgbValues.length === 3) {
+          $('#R2').value = rgbValues[0];
+          $('#G2').value = rgbValues[1];
+          $('#B2').value = rgbValues[2];
+        }
+        let hslValue = hexToHsl(color);
+        let hslValues = hslValue.match(/\d+/g);
+
+        if (hslValues && hslValues.length === 3) {
+          $('#H2').value = hslValues[0];
+          $('#S2').value = hslValues[1];
+          $('#L2').value = hslValues[2];
+        }
+        this.canvas.renderAll();
+        updatePreview()
       });
 
       $('#custom_text_colors_wrapper').append(newColor);
@@ -3139,8 +3215,28 @@ class EditorScreen {
       newColor.style.borderRadius = '5px';
 
       newColor.addEventListener('click', () => {
-        this.canvas.setBackgroundColor(color)
-        this.canvas.requestRenderAll();
+        this.canvas.setBackgroundColor(color);
+        colorPickerBG.color.set(color);   
+        $("#HEX_BG").value = color;  
+        
+        let rgbValue = hexToRgb(color);
+        let rgbValues = rgbValue.match(/\d+/g);
+
+        if (rgbValues && rgbValues.length === 3) {
+          $('#R_BG').value = rgbValues[0];
+          $('#G_BG').value = rgbValues[1];
+          $('#B_BG').value = rgbValues[2];
+        }
+        let hslValue = hexToHsl(color);
+        let hslValues = hslValue.match(/\d+/g);
+
+        if (hslValues && hslValues.length === 3) {
+          $('#H_BG').value = hslValues[0];
+          $('#S_BG').value = hslValues[1];
+          $('#L_BG').value = hslValues[2];
+        }
+        this.canvas.renderAll();
+        updatePreview()
       });
 
       $('#custom_bg_colors_wrapper').append(newColor);
@@ -3164,13 +3260,13 @@ class EditorScreen {
               const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
               logoColorPickers.forEach((i) => i.remove());
               updateColorPickers();
-              this.canvas.requestRenderAll();
+              this.canvas.renderAll();
+              updatePreview()
+              captureCanvasState();
             }
           }
         }
       });
-      captureCanvasState();
-      this.canvas.requestRenderAll();
     });
 
     document.querySelectorAll('#solid_color2').forEach((item) => {
@@ -3187,14 +3283,13 @@ class EditorScreen {
               const hexColor = convertRGBtoHex(red, green, blue);
               activeObj.set('fill', hexColor);
               colorPickerText.color.set(hexColor);
+              this.canvas.renderAll();
               updatePreview();
-              this.canvas.requestRenderAll();
+              captureCanvasState();
             }
           }
         }
       });
-      captureCanvasState();
-      this.canvas.requestRenderAll();
     });
 
     document.querySelectorAll('#solid_color-bg').forEach((item) => {
@@ -3294,6 +3389,9 @@ class EditorScreen {
       logoColorPickers.forEach((i) => i.remove());
       updateColorPickers();
       this.canvas.requestRenderAll();
+      setTimeout(() => {
+        updatePreview()
+      }, 100);
     };
 
     colorPickerText.on('input:change', changeColorPickerText);
