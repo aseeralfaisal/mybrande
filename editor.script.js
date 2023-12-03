@@ -1136,22 +1136,29 @@ class EditorScreen {
     });
 
     this.previewMode.addEventListener('click', () => {
+      $('#loader').style.display = 'flex'
+      $('#loader').style.background = '#ffffffbb'
       const bgColor = this.canvas.get('backgroundColor');
-      if (bgColor === '#efefef') {
-        this.canvas.setBackgroundColor(null, this.canvas.renderAll.bind(this.canvas));
-      }
-      this.canvas.setBackgroundImage(null, this.canvas.renderAll.bind(this.canvas));
-      this.canvas.requestRenderAll();
 
-      $('.preview-modal-bg').style.display = 'block';
+      const timeout = 1000;
+      setTimeout(() => {
+        if (bgColor === '#efefef') {
+          this.canvas.setBackgroundColor(null, this.canvas.renderAll.bind(this.canvas));
+        }
+        this.canvas.setBackgroundImage(null, this.canvas.renderAll.bind(this.canvas));
+        
+        $('.preview-modal-bg').style.display = 'block';
+        const logo = this.canvas.toDataURL({
+          format: 'png',
+          multiplier: 3,
+        });
+        
+        if (logo) {
+          $('#fixed_preview').src = logo
+          $('#loader').style.display = 'none'
+        }
 
-      const logo = this.canvas.toDataURL({
-        format: 'png',
-        multiplier: 3,
-      });
-
-      $('#fixed_preview').src = logo;
-      // document.querySelector('#right-arrow').click();
+      }, timeout);
     });
 
     this.letterSpacingSlider.addEventListener('input', (e) => {
@@ -1358,23 +1365,14 @@ class EditorScreen {
     });
 
     const handleCanvasEvent = () => {
-      // captureCanvasState();
+      captureCanvasState();
       updatePreview();
     };
 
     this.canvas.on('object:added', handleCanvasEvent);
     this.canvas.on('object:removed', handleCanvasEvent);
-    // this.canvas.on('object:modified', handleCanvasEvent);
-    // this.canvas.on('object:moving', handleCanvasEvent);
+    this.canvas.on('object:modified', handleCanvasEvent);
 
-    // let isObjectMoving = false;
-    // this.canvas.on('object:moving', () => {
-    //   isObjectMoving = true;
-    // });
-
-    // this.canvas.on('mouse:up', () => {
-    //   if (!isObjectMoving) handleCanvasEvent();
-    // });
 
     let localDirFile = null;
     let localDirFiles = null;
@@ -2466,7 +2464,7 @@ class EditorScreen {
 
     $('#close_modal').addEventListener('click', () => {
       setCanvasBackground();
-      // this.canvas.setBackgroundColor('#eee', this.canvas.renderAll.bind(this.canvas));
+      this.canvas.setBackgroundColor(this.canvasBG, this.canvas.renderAll.bind(this.canvas));
       document.querySelector('.preview-modal-bg').style.display = 'none';
     });
 
