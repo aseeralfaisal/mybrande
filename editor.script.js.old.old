@@ -1317,7 +1317,7 @@ class EditorScreen {
             });
           });
 
-          document.querySelectorAll('#solid_color2').forEach((item) => {
+          document.querySelectorAll('#solid_color_text').forEach((item) => {
             item.addEventListener('click', (event) => {
               if (this.canvas) {
                 const activeObj = this.canvas.getActiveObject();
@@ -2249,7 +2249,7 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    document.querySelectorAll('#solid_color2').forEach((item) => {
+    document.querySelectorAll('#solid_color_text').forEach((item) => {
       item.addEventListener('click', (event) => {
         if (this.canvas) {
           const activeObj = this.canvas.getActiveObject();

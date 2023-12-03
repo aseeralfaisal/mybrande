@@ -6,107 +6,24 @@ import 'alwan/dist/css/alwan.min.css';
 import iro from '@jaames/iro';
 import WebFont from 'webfontloader';
 
-const querySelect = (element) => document.querySelector(element);
-const querySelectAll = (element) => document.querySelectorAll(element);
 
 WebFont.load({
   google: {
-    families: ['Poppins:300,400,500,600,700', 'Inter:300,400,500,600,700', 'Roboto:400,500,700'],
+    families: ['Poppins:300,400,500,600,700', 'Inter:300,400,500,600,700', 'Roboto:400,500,700']
   },
-  fontloading: () => querySelect('#loader').style.display = 'flex',
-  fontactive: (familyName) => {
+  fontloading: function(familyName, fvd) {
+    selectById("#loader").style.display = "flex";
+  },
+  fontactive: function(familyName, fvd) {
     if (familyName === 'Poppins' || familyName === 'Inter' || familyName === 'Roboto') {
-      querySelect('#loader').style.display = 'none';
+      selectById("#loader").style.display = "none";
     }
-  },
+  }
 });
 
-const ColorChannelToHex = (channel) => {
-  const hex = channel.toString(16);
-  return hex.length === 1 ? '0' + hex : hex;
-};
+const selectById = (id) => document.querySelector(id);
+const selectAllById = (id) => document.querySelectorAll(id);
 
-const convertRGBtoHex = (red, green, blue) => {
-  const redHex = ColorChannelToHex(red);
-  const greenHex = ColorChannelToHex(green);
-  const blueHex = ColorChannelToHex(blue);
-  return `#${redHex}${greenHex}${blueHex}`;
-};
-
-const rgbToHex = (rgbString) => {
-  let parts = rgbString.replace('rgb(', '').replace(')', '').split(',');
-
-  let r = parseInt(parts[0], 10);
-  let g = parseInt(parts[1], 10);
-  let b = parseInt(parts[2], 10);
-
-  r = r.toString(16);
-  g = g.toString(16);
-  b = b.toString(16);
-
-  if (r.length < 2) r = '0' + r;
-  if (g.length < 2) g = '0' + g;
-  if (b.length < 2) b = '0' + b;
-
-  return '#' + r + g + b;
-};
-
-const hexToRgb = (hexString) => {
-  hexString = hexString.replace(/^#/, '');
-
-  let bigint = parseInt(hexString, 16);
-  let r = (bigint >> 16) & 255;
-  let g = (bigint >> 8) & 255;
-  let b = bigint & 255;
-
-  return `rgb(${r}, ${g}, ${b})`;
-};
-
-const hexToHsl = (hexString) => {
-  hexString = hexString.replace(/^#/, '');
-
-  let bigint = parseInt(hexString, 16);
-  let r = (bigint >> 16) & 255;
-  let g = (bigint >> 8) & 255;
-  let b = bigint & 255;
-
-  r /= 255;
-  g /= 255;
-  b /= 255;
-
-  let max = Math.max(r, g, b);
-  let min = Math.min(r, g, b);
-  let h,
-    s,
-    l = (max + min) / 2;
-
-  if (max == min) {
-    h = s = 0;
-  } else {
-    let d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
-    switch (max) {
-      case r:
-        h = (g - b) / d + (g < b ? 6 : 0);
-        break;
-      case g:
-        h = (b - r) / d + 2;
-        break;
-      case b:
-        h = (r - g) / d + 4;
-        break;
-    }
-
-    h /= 6;
-  }
-
-  h = Math.round(h * 360);
-  s = Math.round(s * 100);
-  l = Math.round(l * 100);
-
-  return `hsl(${h}, ${s}%, ${l}%)`;
-};
 
 const rgbaToHex = (rgbaString) => {
   const match = rgbaString.toString().match(/^rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)$/);
@@ -119,63 +36,64 @@ const rgbaToHex = (rgbaString) => {
   const componentToHex = (c) => {
     const hex = c.toString(16);
     return hex.length == 1 ? '0' + hex : hex;
-  };
+  }
+
   const hex = '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
 
   return hex;
-};
+}
 
 class EditorScreen {
   constructor() {
     this.canvasBG = '#efefef';
     this.canvas = new fabric.Canvas('c', { backgroundColor: this.canvasBG });
     this.magnifier = new fabric.Canvas('magnifier', { backgroundColor: this.canvasBG });
-    this.textMode = querySelect('.nav-item[data-name="text"]');
-    this.logoMode = querySelect('.nav-item[data-name="logo"]');
-    this.uploadsMode = querySelect('.nav-item[data-name="uploads"]');
-    this.backgroundMode = querySelect('.nav-item[data-name="background"]');
-    this.previewMode = querySelect('.nav-item[data-name="preview"]');
-    this.galleryMode = querySelect('.nav-item[data-name="gallery"]');
+    this.textMode = selectById('.nav-item[data-name="text"]');
+    this.logoMode = selectById('.nav-item[data-name="logo"]');
+    this.uploadsMode = selectById('.nav-item[data-name="uploads"]');
+    this.backgroundMode = selectById('.nav-item[data-name="background"]');
+    this.previewMode = selectById('.nav-item[data-name="preview"]');
+    this.galleryMode = selectById('.nav-item[data-name="gallery"]');
     this.urlParams = new URLSearchParams(document.location.search);
     this.logoName = 'My Brand Name';
     this.sloganName = 'Slogan goes here';
-    this.rotateRange = querySelect('#rotate-bar');
-    this.downloadBtn = querySelect('#save-btn');
-    this.scaleRange = querySelect('#progress-bar');
-    this.scaleRangeUploads = querySelect('#progress-bar-uploads');
-    this.scaleElement = querySelect('#scale-value');
-    this.flipHorizontal = querySelect('#flip-x');
-    this.flipVertical = querySelect('#flip-y');
+    this.rotateRange = selectById('#rotate-bar');
+    this.downloadBtn = selectById('#save-btn');
+    this.scaleRange = selectById('#progress-bar');
+    this.scaleRangeUploads = selectById('#progress-bar-uploads');
+    this.scaleElement = selectById('#scale-value');
+    this.flipHorizontal = selectById('#flip-x');
+    this.flipVertical = selectById('#flip-y');
     this.activeLayerIndex = null;
     this.logoFile = localStorage.getItem('logo-file');
-    this.layers = querySelect('#layers');
-    this.textLayers = querySelect('#text-layers');
+    this.layers = selectById('#layers');
+    this.textLayers = selectById('#text-layers');
     this.rotateValue = null;
     this.isRotating = false;
     this.scaleValue = 3;
     this.isScaling = null;
     this.isFlipX = false;
     this.isFlipY = false;
-    this.textcolorPicker = querySelect('#color-picker');
-    this.logoColorPicker = querySelect('#logo-color-picker');
-    this.logoColorPicker1 = querySelect('#logo-color-picker1');
-    this.logoColorPicker2 = querySelect('#logo-color-picker2');
-    this.logoNameInput = querySelect('#logoNameInput');
-    this.sloganNameInput = querySelect('#sloganNameInput');
-    this.logoSettingsContainer = querySelect('.setting-container');
-    this.textSettingsContainer = querySelect('.text-settings-container');
-    this.backgroundSettingsContainer = querySelect('.bg-settings-container');
-    this.uploadSettingsContainer = querySelect('.uploads-settings-container');
-    this.textColorPickerContainer = querySelect('.color-picker-container');
-    this.letterSpacingSlider = querySelect('#letter-spacing-slider');
+    this.textcolorPicker = selectById('#color-picker');
+    this.logoColorPicker = selectById('#logo-color-picker');
+    this.logoColorPicker1 = selectById('#logo-color-picker1');
+    this.logoColorPicker2 = selectById('#logo-color-picker2');
+    this.logoNameInput = selectById('#logoNameInput');
+    this.sloganNameInput = selectById('#sloganNameInput');
+    this.logoSettingsContainer = selectById('.setting-container');
+    this.textSettingsContainer = selectById('.text-settings-container');
+    this.backgroundSettingsContainer = selectById('.bg-settings-container');
+    this.uploadSettingsContainer = selectById('.uploads-settings-container');
+    this.textColorPickerContainer = selectById('.color-picker-container');
+    this.letterSpacingSlider = selectById('#letter-spacing-slider');
     this.textColorPickerValue = '#eeeeee';
     this.letterSpacing = '0';
-    this.textSelector = querySelect('#text-selector');
-    this.shadowBlurSlider = querySelect('#shadow-blur-slider');
-    this.shadowOffsetXSlider = querySelect('#shadow-offsetX-slider');
-    this.shadowOffsetYSlider = querySelect('#shadow-offsetY-slider');
-    this.logoShadowOffsetXSlider = querySelect('#logo-shadow-offsetX-slider');
-    this.logoShadowOffsetYSlider = querySelect('#logo-shadow-offsetY-slider');
+    this.textSelector = selectById('#text-selector');
+    this.shadowBlurSlider = selectById('#shadow-blur-slider');
+    this.shadowOffsetXSlider = selectById('#shadow-offsetX-slider');
+    this.shadowOffsetYSlider = selectById('#shadow-offsetY-slider');
+    this.logoShadowOffsetXSlider = selectById('#logo-shadow-offsetX-slider');
+    this.logoShadowOffsetYSlider = selectById('#logo-shadow-offsetY-slider');
     this.shadowBlur = null;
     this.shadowOffsetX = null;
     this.shadowOffsetY = null;
@@ -184,23 +102,23 @@ class EditorScreen {
     this.logoShadowOffsetY = null;
     this.textSettingsContainer.style.display = 'none';
     this.canvasZoomLevel = 1;
-    this.settingsListTitle = querySelect('.setting-list-item__title');
-    this.caseListTitle = querySelect('.case-list-item__title');
-    this.fontSizeListTitle = querySelect('.font_size-list-item__title');
-    this.fontStyleListTitle = querySelect('.font_style-list-item__title');
-    this.settingsList = querySelect('.setting-list-items-li');
-    this.fontStyleList = querySelect('.font_style-list-items-li');
-    this.fontSizeList = querySelect('.font_size-list-items-li');
-    this.caseList = querySelect('.case-list-items-li');
-    this.fontSelector = querySelect('.font-selector');
+    this.settingsListTitle = selectById('.setting-list-item__title');
+    this.caseListTitle = selectById('.case-list-item__title');
+    this.fontSizeListTitle = selectById('.font_size-list-item__title');
+    this.fontStyleListTitle = selectById('.font_style-list-item__title');
+    this.settingsList = selectById('.setting-list-items-li');
+    this.fontStyleList = selectById('.font_style-list-items-li');
+    this.fontSizeList = selectById('.font_size-list-items-li');
+    this.caseList = selectById('.case-list-items-li');
+    this.fontSelector = selectById('.font-selector');
     this.textSelectorValue = 'LogoName';
     this.logoFillColor = null;
-    this.zoomSlider = querySelect('#zoom-slider');
+    this.zoomSlider = selectById('#zoom-slider');
     this.colorMode = 'Solid';
     this.activeNavbarSetting = 'logo';
     this.initialRotation = null;
 
-    querySelect('#back-main_3').addEventListener('click', () => {
+    selectById('#back-main_3').addEventListener('click', () => {
       localStorage.setItem('mainEditorCounter', 1);
       location.reload();
     });
@@ -228,13 +146,22 @@ class EditorScreen {
       this.isScaling = false;
     };
 
-    querySelect('#rotate_reset').addEventListener('click', () => {
+    // $('#scale_reset').addEventListener('click', () => {
+    //   const activeObject = this.canvas.getActiveObject();
+
+    //   if (activeObject) {
+    //     activeObject.scale(0.2);
+    //     this.canvas.requestRenderAll();
+    //   }
+    // });
+
+    selectById('#rotate_reset').addEventListener('click', () => {
       const active = this.canvas.getActiveObject();
 
       if (active) {
-        if (active._objects) {
+        if(active._objects){
           const groupObjects = active.getObjects();
-
+      
           groupObjects.forEach((object) => {
             const currCoordinate = object.getCenterPoint();
             object.set('angle', 0);
@@ -249,21 +176,25 @@ class EditorScreen {
               'center'
             );
           });
-
+    
           const groupCenter = active.getCenterPoint();
-          active.setPositionByOrigin(new fabric.Point(groupCenter.x, groupCenter.y), 'center', 'center');
-        } else {
-          const currCoordinate = active.getCenterPoint();
-          active.set('angle', 0);
-          active.set('matrix', [1, 0, 0, 1, 0, 0]);
-          active.set({
-            originX: 'center',
-            originY: 'center',
-          });
           active.setPositionByOrigin(
-            new fabric.Point(currCoordinate.x, currCoordinate.y),
+            new fabric.Point(groupCenter.x, groupCenter.y),
             'center',
             'center'
+          );
+       } else{
+          const currCoordinate = active.getCenterPoint();
+          active.set('angle', 0);
+        active.set('matrix', [1, 0, 0, 1, 0, 0]);
+        active.set({
+          originX: 'center',
+          originY: 'center',
+        });
+        active.setPositionByOrigin(
+          new fabric.Point(currCoordinate.x, currCoordinate.y),
+          'center',
+          'center'
           );
         }
         this.canvas.renderAll();
@@ -288,10 +219,207 @@ class EditorScreen {
       scaleX: 0.3,
       scaleY: 0.3,
     });
-
+    
     this.canvas.on('after:render', () => {
-      querySelect('#loader').style.display = 'none';
-    });
+        selectById("#loader").style.display = "none";
+    })
+
+    // (function (fabric) {
+    //   fabric.TextCurved = fabric.util.createClass(fabric.Object, {
+    //     type: 'text-curved',
+    //     diameter: 250,
+    //     kerning: 0,
+    //     text: '',
+    //     flipped: false,
+    //     fill: '#000',
+    //     fontFamily: 'Times New Roman',
+    //     fontSize: 24,
+    //     fontWeight: 'normal',
+    //     fontStyle: '',
+    //     cacheProperties: fabric.Object.prototype.cacheProperties.concat(
+    //       'diameter',
+    //       'kerning',
+    //       'flipped',
+    //       'fill',
+    //       'fontFamily',
+    //       'fontSize',
+    //       'fontWeight',
+    //       'fontStyle',
+    //       'strokeStyle',
+    //       'strokeWidth'
+    //     ),
+    //     strokeStyle: null,
+    //     strokeWidth: 0,
+
+    //     initialize: function (text, options) {
+    //       options || (options = {});
+    //       this.text = text;
+    //       this.callSuper('initialize', options);
+    //       this.set('lockUniScaling', true);
+    //       var canvas = this.getCircularText();
+    //       this._trimCanvas(canvas);
+    //       this.set('width', canvas.width);
+    //       this.set('height', canvas.height);
+    //     },
+
+    //     _getFontDeclaration: function () {
+    //       return [
+    //         fabric.isLikelyNode ? this.fontWeight : this.fontStyle,
+    //         fabric.isLikelyNode ? this.fontStyle : this.fontWeight,
+    //         this.fontSize + 'px',
+    //         fabric.isLikelyNode ? '"' + this.fontFamily + '"' : this.fontFamily,
+    //       ].join(' ');
+    //     },
+
+    //     _trimCanvas: function (canvas) {
+    //       var ctx = canvas.getContext('2d'),
+    //         w = canvas.width,
+    //         h = canvas.height,
+    //         pix = { x: [], y: [] },
+    //         n,
+    //         imageData = ctx.getImageData(0, 0, w, h),
+    //         fn = function (a, b) {
+    //           return a - b;
+    //         };
+
+    //       for (var y = 0; y < h; y++) {
+    //         for (var x = 0; x < w; x++) {
+    //           if (imageData.data[(y * w + x) * 4 + 3] > 0) {
+    //             pix.x.push(x);
+    //             pix.y.push(y);
+    //           }
+    //         }
+    //       }
+    //       pix.x.sort(fn);
+    //       pix.y.sort(fn);
+    //       n = pix.x.length - 1;
+    //       w = pix.x[n] - pix.x[0];
+    //       h = pix.y[n] - pix.y[0];
+    //       var cut = ctx.getImageData(pix.x[0], pix.y[0], w, h);
+    //       canvas.width = w;
+    //       canvas.height = h;
+    //       ctx.putImageData(cut, 0, 0);
+    //     },
+
+    //     getCircularText: function () {
+    //       var text = this.text,
+    //         diameter = this.diameter,
+    //         flipped = this.flipped,
+    //         kerning = this.kerning,
+    //         fill = this.fill,
+    //         inwardFacing = true,
+    //         startAngle = 0,
+    //         canvas = fabric.util.createCanvasElement(),
+    //         ctx = canvas.getContext('2d'),
+    //         cw,
+    //         x,
+    //         clockwise = -1;
+    //       if (flipped) {
+    //         startAngle = 180;
+    //         inwardFacing = false;
+    //       }
+    //       startAngle *= Math.PI / 180;
+    //       var d = document.createElement('div');
+    //       d.style.fontFamily = this.fontFamily;
+    //       d.style.whiteSpace = 'nowrap';
+    //       d.style.fontSize = this.fontSize + 'px';
+    //       d.style.fontWeight = this.fontWeight;
+    //       d.style.fontStyle = this.fontStyle;
+    //       d.textContent = text;
+    //       document.body.appendChild(d);
+    //       var textHeight = d.offsetHeight;
+    //       document.body.removeChild(d);
+    //       canvas.width = canvas.height = diameter;
+    //       ctx.font = this._getFontDeclaration();
+    //       if (inwardFacing) {
+    //         text = text.split('').reverse().join('');
+    //       }
+    //       ctx.translate(diameter / 2, diameter / 2);
+    //       startAngle += Math.PI * !inwardFacing;
+    //       ctx.textBaseline = 'middle';
+    //       ctx.textAlign = 'center';
+    //       for (x = 0; x < text.length; x++) {
+    //         cw = ctx.measureText(text[x]).width;
+    //         startAngle +=
+    //           ((cw + (x == text.length - 1 ? 0 : kerning)) / (diameter / 2 - textHeight) / 2) * -clockwise;
+    //       }
+    //       ctx.rotate(startAngle);
+    //       for (x = 0; x < text.length; x++) {
+    //         cw = ctx.measureText(text[x]).width;
+    //         ctx.rotate((cw / 2 / (diameter / 2 - textHeight)) * clockwise);
+    //         if (this.strokeStyle && this.strokeWidth) {
+    //           ctx.strokeStyle = this.strokeStyle;
+    //           ctx.lineWidth = this.strokeWidth;
+    //           ctx.miterLimit = 2;
+    //           ctx.strokeText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
+    //         }
+    //         ctx.fillStyle = fill;
+    //         ctx.fillText(text[x], 0, (inwardFacing ? 1 : -1) * (0 - diameter / 2 + textHeight / 2));
+    //         ctx.rotate(((cw / 2 + kerning) / (diameter / 2 - textHeight)) * clockwise);
+    //       }
+    //       return canvas;
+    //     },
+
+    //     _set: function (key, value) {
+    //       switch (key) {
+    //         case 'scaleX':
+    //           this.fontSize *= value;
+    //           this.diameter *= value;
+    //           this.width *= value;
+    //           this.scaleX = 1;
+    //           if (this.width < 1) {
+    //             this.width = 1;
+    //           }
+    //           break;
+    //         case 'scaleY':
+    //           this.height *= value;
+    //           this.scaleY = 1;
+    //           if (this.height < 1) {
+    //             this.height = 1;
+    //           }
+    //           break;
+    //         default:
+    //           this.callSuper('_set', key, value);
+    //           break;
+    //       }
+    //     },
+
+    //     _render: function (ctx) {
+    //       var canvas = this.getCircularText();
+    //       this._trimCanvas(canvas);
+    //       this.set('width', canvas.width);
+    //       this.set('height', canvas.height);
+    //       ctx.drawImage(canvas, -this.width / 2, -this.height / 2, this.width, this.height);
+    //       this.setCoords();
+    //     },
+
+    //     toObject: function (propertiesToInclude) {
+    //       return this.callSuper(
+    //         'toObject',
+    //         [
+    //           'text',
+    //           'diameter',
+    //           'kerning',
+    //           'flipped',
+    //           'fill',
+    //           'fontFamily',
+    //           'fontSize',
+    //           'fontWeight',
+    //           'fontStyle',
+    //           'strokeStyle',
+    //           'strokeWidth',
+    //           'styles',
+    //         ].concat(propertiesToInclude)
+    //       );
+    //     },
+    //   });
+
+    //   fabric.TextCurved.fromObject = function (object, callback) {
+    //     return fabric.util.enlivenObjects([object], function (enlivenedObjects) {
+    //       callback && callback(enlivenedObjects[0]);
+    //     });
+    //   };
+    // })(typeof fabric !== 'undefined' ? fabric : require('fabric').fabric);
   }
 
   initialize() {
@@ -300,7 +428,7 @@ class EditorScreen {
         format: 'png',
         multiplier: 0.5,
       });
-      querySelect('#magnifier_img').src = imageURL;
+      selectById('#magnifier_img').src = imageURL;
     };
 
     const setCanvasBackground = () => {
@@ -334,7 +462,7 @@ class EditorScreen {
     this.canvas.requestRenderAll();
 
     this.updateActiveNavbar = () => {
-      querySelectAll('.nav-item').forEach((item) => {
+      document.querySelectorAll('.nav-item').forEach((item) => {
         if (this.activeNavbarSetting.includes(item.innerText.toLowerCase())) {
           item.style.backgroundColor = 'var(--gold-darker)';
         } else {
@@ -345,6 +473,14 @@ class EditorScreen {
 
     this.updateActiveNavbar();
 
+    // this.settingsListTitle.addEventListener('click', () => {
+    //   if (this.settingsList.classList.contains('show')) {
+    //     this.settingsList.classList.remove('show');
+    //   } else {
+    //     this.settingsList.classList.add('show');
+    //   }
+    // });
+
     this.caseListTitle.addEventListener('click', (e) => {
       if (this.caseList.classList.contains('show')) {
         this.caseList.classList.remove('show');
@@ -354,6 +490,36 @@ class EditorScreen {
 
       [fontList, fontStyleList].forEach((i) => i.classList.remove('show'));
     });
+
+    // if (this.textSelectorValue === 'LogoName') {
+    //   this.sloganNameInput.style.display = 'none';
+    //   this.logoNameInput.style.display = 'block';
+    // } else if (this.textSelectorValue === 'LogoName') {
+    //   this.logoNameInput.style.display = 'none';
+    //   this.sloganNameInput.style.display = 'block';
+    // }
+
+    // this.settingsList.addEventListener('click', (ev) => {
+    //   const selectedTextElement = ev.target.innerText;
+    //   if (selectedTextElement === 'Slogan Name') {
+    //     this.textSelectorValue = 'SloganName';
+    //     this.logoNameInput.style.display = 'none';
+    //     this.sloganNameInput.style.display = 'block';
+    //     this.canvas.setActiveObject(sloganNameElement);
+    //     this.canvas.requestRenderAll();
+    //   } else {
+    //     this.textSelectorValue = 'LogoName';
+    //     this.sloganNameInput.style.display = 'none';
+    //     this.logoNameInput.style.display = 'block';
+    //     this.canvas.setActiveObject(logoNameElement);
+    //     this.canvas.requestRenderAll();
+    //   }
+    //   this.settingsListTitle.innerText = selectedTextElement;
+    //   const icon = document.createElement('i');
+    //   icon.className = 'fa-solid fa-angle-down';
+    //   this.settingsListTitle.append(icon);
+    //   this.settingsList.classList.remove('show');
+    // });
 
     const toTitleCase = (str) => {
       return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
@@ -374,14 +540,14 @@ class EditorScreen {
       const currCoordinate = active.getCenterPoint();
 
       const existingFont = active.get('fontFamily');
-      const existingFill = active.get('fill');
-      const existingSelectable = active.get('selectable');
-      const HasRotatingPoint = active.get('hasRotatingPoint');
-      const existingDiameter = active.get('diameter');
-      const existingLeft = active.get('left');
-      const existingTop = active.get('top');
-      const existingFlipped = active.get('flipped');
-      const existingFontSize = active.get('fontSize');
+      const oldFill = active.get('fill');
+      const oldSelectable = active.get('selectable');
+      const oldHasRotatingPoint = active.get('hasRotatingPoint');
+      const oldDiameter = active.get('diameter');
+      const oldLeft = active.get('left');
+      const oldTop = active.get('top');
+      const oldFlipped = active.get('flipped');
+      const oldFontSize = active.get('fontSize');
       active.set('fontSize', 40);
 
       const text = active?.text;
@@ -396,14 +562,14 @@ class EditorScreen {
       }
 
       active.set('fontFamily', existingFont);
-      active.set('fill', existingFill);
-      active.set('selectable', existingSelectable);
-      active.set('hasRotatingPoint', HasRotatingPoint);
-      active.set('diameter', existingDiameter);
-      active.set('left', existingLeft);
-      active.set('top', existingTop);
-      active.set('flipped', existingFlipped);
-      active.set('fontSize', existingFontSize);
+      active.set('fill', oldFill);
+      active.set('selectable', oldSelectable);
+      active.set('hasRotatingPoint', oldHasRotatingPoint);
+      active.set('diameter', oldDiameter);
+      active.set('left', oldLeft);
+      active.set('top', oldTop);
+      active.set('flipped', oldFlipped);
+      active.set('fontSize', oldFontSize);
 
       active.setPositionByOrigin(new fabric.Point(currCoordinate.x, currCoordinate.y), 'center', 'center');
       active.setCoords();
@@ -440,16 +606,31 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
+    // this.fontSizeList.addEventListener('click', (event) => {
+    //   const text = event.target.innerText;
+    //   const fontSize = text.split(' ')[0];
+
+    //   const active = this.canvas.getActiveObject();
+    //   active.fontSize = fontSize;
+
+    //   this.fontSizeListTitle.innerText = fontSize + ' px';
+    //   const icon = document.createElement('i');
+    //   icon.className = 'fa-solid fa-angle-down';
+    //   this.fontSizeListTitle.append(icon);
+    //   this.fontSizeList.classList.remove('show');
+    //   this.canvas.requestRenderAll();
+    // });
+
     this.rotateRange.addEventListener('input', (e) => {
       this.isRotating = true;
       this.rotateValue = parseInt(e.target.value, 10);
-      querySelect('#rotate_info').innerText = `Rotate: ${parseInt(this.rotateValue)}deg`;
+      selectById('#rotate_info').innerText = `Rotate: ${parseInt(this.rotateValue)}deg`;
       this.rotateObject();
     });
 
     this.rotateRange.addEventListener('change', updatePreview);
 
-    querySelect('#rotate-bar-uploads').addEventListener('input', (e) => {
+    selectById('#rotate-bar-uploads').addEventListener('input', (e) => {
       this.isRotating = true;
       this.rotateValue = parseInt(e.target.value, 10);
       this.rotateObject();
@@ -558,6 +739,93 @@ class EditorScreen {
       ],
     });
 
+    function ColorChannelToHex(channel) {
+      const hex = channel.toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    }
+
+    function convertRGBtoHex(red, green, blue) {
+      const redHex = ColorChannelToHex(red);
+      const greenHex = ColorChannelToHex(green);
+      const blueHex = ColorChannelToHex(blue);
+      return `#${redHex}${greenHex}${blueHex}`;
+    }
+
+    function rgbToHex(rgbString) {
+      let parts = rgbString.replace('rgb(', '').replace(')', '').split(',');
+
+      let r = parseInt(parts[0], 10);
+      let g = parseInt(parts[1], 10);
+      let b = parseInt(parts[2], 10);
+
+      r = r.toString(16);
+      g = g.toString(16);
+      b = b.toString(16);
+
+      if (r.length < 2) r = '0' + r;
+      if (g.length < 2) g = '0' + g;
+      if (b.length < 2) b = '0' + b;
+
+      return '#' + r + g + b;
+    }
+
+    function hexToRgb(hexString) {
+      hexString = hexString.replace(/^#/, '');
+
+      let bigint = parseInt(hexString, 16);
+      let r = (bigint >> 16) & 255;
+      let g = (bigint >> 8) & 255;
+      let b = bigint & 255;
+
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function hexToHsl(hexString) {
+      hexString = hexString.replace(/^#/, '');
+
+      let bigint = parseInt(hexString, 16);
+      let r = (bigint >> 16) & 255;
+      let g = (bigint >> 8) & 255;
+      let b = bigint & 255;
+
+      r /= 255;
+      g /= 255;
+      b /= 255;
+
+      let max = Math.max(r, g, b);
+      let min = Math.min(r, g, b);
+      let h,
+        s,
+        l = (max + min) / 2;
+
+      if (max == min) {
+        h = s = 0;
+      } else {
+        let d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+        switch (max) {
+          case r:
+            h = (g - b) / d + (g < b ? 6 : 0);
+            break;
+          case g:
+            h = (b - r) / d + 2;
+            break;
+          case b:
+            h = (r - g) / d + 4;
+            break;
+        }
+
+        h /= 6;
+      }
+
+      h = Math.round(h * 360);
+      s = Math.round(s * 100);
+      l = Math.round(l * 100);
+
+      return `hsl(${h}, ${s}%, ${l}%)`;
+    }
+
     const changePickerColors = (element) => {
       const color = Array.isArray(element.get('fill').colorStops)
         ? rgbToHex(element.get('fill').colorStops[0].color)
@@ -577,7 +845,7 @@ class EditorScreen {
       !activeObject.text && activeObject.on('mousedown', updatePickerHandler(activeObject));
 
       if (activeObject) {
-        const layers = querySelectAll('.layer-container');
+        const layers = document.querySelectorAll('.layer-container');
         layers.forEach((layer, idx) => {
           const layerImg = layer.querySelector('.layer-img');
           const layerSpan = layer.querySelector('.layer-span');
@@ -595,24 +863,24 @@ class EditorScreen {
           }
 
           colorPicker.color.set(fillColor);
-          querySelect('#HEX').value = fillColor;
+          selectById('#HEX').value = fillColor;
 
           let rgbValue = hexToRgb(fillColor);
           let rgbValues = rgbValue.match(/\d+/g);
 
           if (rgbValues && rgbValues.length === 3) {
-            querySelect('#R').value = rgbValues[0];
-            querySelect('#G').value = rgbValues[1];
-            querySelect('#B').value = rgbValues[2];
+            selectById('#R').value = rgbValues[0];
+            selectById('#G').value = rgbValues[1];
+            selectById('#B').value = rgbValues[2];
           }
 
           let hslValue = hexToHsl(fillColor);
           let hslValues = hslValue.match(/\d+/g);
 
           if (hslValues && hslValues.length === 3) {
-            querySelect('#H').value = hslValues[0];
-            querySelect('#S').value = hslValues[1];
-            querySelect('#L').value = hslValues[2];
+            selectById('#H').value = hslValues[0];
+            selectById('#S').value = hslValues[1];
+            selectById('#L').value = hslValues[2];
           }
 
           if (idx == this.activeLayerIndex) {
@@ -670,37 +938,38 @@ class EditorScreen {
           layerSection.create(obj, idx);
 
           obj.on('mousedown', (e) => {
+
             this.isFlipY = obj.get('flipY');
             this.isFlipX = obj.get('flipX');
-            querySelect('#flip-y').checked = this.isFlipY;
-            querySelect('#flip-x').checked = this.isFlipX;
+            selectById('#flip-y').checked = this.isFlipY;
+            selectById('#flip-x').checked = this.isFlipX;
 
             const hasShadow = !!obj?.shadow?.blur;
-            querySelect('#logo-drop-shadow').checked = hasShadow;
+            selectById('#logo-drop-shadow').checked = hasShadow;
             isLogoShadowAdjust = hasShadow;
             if (!hasShadow) {
-              querySelect('#logo-shadow-adjust').style.display = 'none';
-              querySelect('#logo-shadow-blur').style.display = 'none';
-              querySelect('#logo-shadow-offsetX').style.display = 'none';
-              querySelect('#logo-shadow-offsetY').style.display = 'none';
-              querySelect('#logo-shadow-border').style.display = 'none';
+              selectById('#logo-shadow-adjust').style.display = 'none';
+              selectById('#logo-shadow-blur').style.display = 'none';
+              selectById('#logo-shadow-offsetX').style.display = 'none';
+              selectById('#logo-shadow-offsetY').style.display = 'none';
+              selectById('#logo-shadow-border').style.display = 'none';
             } else {
-              querySelect('#logo-shadow-adjust').style.display = 'block';
-              querySelect('#logo-shadow-blur').style.display = 'block';
-              querySelect('#logo-shadow-offsetX').style.display = 'block';
-              querySelect('#logo-shadow-offsetY').style.display = 'block';
-              querySelect('#logo-shadow-border').style.display = 'block';
+              selectById('#logo-shadow-adjust').style.display = 'block';
+              selectById('#logo-shadow-blur').style.display = 'block';
+              selectById('#logo-shadow-offsetX').style.display = 'block';
+              selectById('#logo-shadow-offsetY').style.display = 'block';
+              selectById('#logo-shadow-border').style.display = 'block';
             }
 
-            querySelect('#rotate_info').innerText = `Rotate: ${parseInt(obj.get('angle'))}deg`;
-            querySelect('#rotate-bar').value = obj.get('angle');
+            selectById('#rotate_info').innerText = `Rotate: ${parseInt(obj.get('angle'))}deg`;
+            selectById('#rotate-bar').value = obj.get('angle');
 
             const rotateAngle = obj.get('angle');
-            querySelect('#rotate-bar').value = rotateAngle;
+            selectById('#rotate-bar').value = rotateAngle;
 
             const scale = obj.getTotalObjectScaling().scaleX;
-            querySelect('#progress-bar').value = scale * 10;
-            querySelect('#scale-value').innerText = ` ${scale.toFixed(2)}`;
+            selectById('#progress-bar').value = scale * 10;
+            selectById('#scale-value').innerText = ` ${scale.toFixed(2)}`;
 
             let fillColor;
             const color = e.target.fill;
@@ -715,24 +984,24 @@ class EditorScreen {
             }
 
             colorPicker.color.set(fillColor);
-            querySelect('#HEX').value = fillColor;
+            selectById('#HEX').value = fillColor;
 
             let rgbValue = hexToRgb(fillColor);
             let rgbValues = rgbValue.match(/\d+/g);
 
             if (rgbValues && rgbValues.length === 3) {
-              querySelect('#R').value = rgbValues[0];
-              querySelect('#G').value = rgbValues[1];
-              querySelect('#B').value = rgbValues[2];
+              selectById('#R').value = rgbValues[0];
+              selectById('#G').value = rgbValues[1];
+              selectById('#B').value = rgbValues[2];
             }
 
             let hslValue = hexToHsl(fillColor);
             let hslValues = hslValue.match(/\d+/g);
 
             if (hslValues && hslValues.length === 3) {
-              querySelect('#H').value = hslValues[0];
-              querySelect('#S').value = hslValues[1];
-              querySelect('#L').value = hslValues[2];
+              selectById('#H').value = hslValues[0];
+              selectById('#S').value = hslValues[1];
+              selectById('#L').value = hslValues[2];
             }
 
             this.activeNavbarSetting = 'logo';
@@ -762,10 +1031,8 @@ class EditorScreen {
 
         logoLayerGroup.setCoords();
         this.canvas.viewportCenterObject(logoLayerGroup);
-        this.initialRotation = {
-          centerPoint: logoLayerGroup.getCenterPoint(),
-          coords: logoLayerGroup.getCoords(),
-        };
+        this.initialRotation = { centerPoint: logoLayerGroup.getCenterPoint(), coords: logoLayerGroup.getCoords() };
+        console.log(this.initialRotation)
         logoLayerGroup.ungroupOnCanvas();
         this.canvas.renderAll();
       });
@@ -783,7 +1050,7 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     }
 
-    const getTextCase = (text) => {
+    function getTextCase(text) {
       if (text === text.toUpperCase()) {
         return 'Uppercase';
       } else if (text === text.toLowerCase()) {
@@ -798,7 +1065,7 @@ class EditorScreen {
     const putAngleDownIcon = (className, additionalFunction) => {
       const icon = document.createElement('i');
       icon.className = 'fa-solid fa-angle-down';
-      querySelect(className).append(icon);
+      selectById(className).append(icon);
 
       if (typeof additionalFunction === 'function') {
         icon.addEventListener('click', additionalFunction);
@@ -818,6 +1085,26 @@ class EditorScreen {
         sloganNameElement.focus();
       }
     });
+
+    // this.logoNameInput.addEventListener('input', (e) => {
+    //   logoNameElement.set('text', e.target.value);
+    //   const queryParams = new URLSearchParams(window.location.search);
+    //   queryParams.set('logo_name', e.target.value);
+    //   localStorage.setItem('logo_name', e.target.value);
+    //   logoNameElement.centerH();
+    //    updatePreview();
+    //   this.canvas.requestRenderAll();
+    // });
+
+    // this.sloganNameInput.addEventListener('input', (e) => {
+    //   sloganNameElement.set('text', e.target.value);
+    //   const queryParams = new URLSearchParams(window.location.search);
+    //   queryParams.set('slogan_name', e.target.value);
+    //   localStorage.setItem('slogan_name', e.target.value);
+    //   sloganNameElement.centerH();
+    //    updatePreview();
+    //   this.canvas.renderAll();
+    // });
 
     const onMouseOver = (isMouseOver, element) => {
       let color = isMouseOver ? 'var(--gold-darker)' : 'var(--gold)';
@@ -869,8 +1156,8 @@ class EditorScreen {
     });
 
     this.previewMode.addEventListener('click', () => {
-      querySelect('#loader').style.display = 'flex';
-      querySelect('#loader').style.background = '#ffffffbb';
+      selectById('#loader').style.display = 'flex'
+      selectById('#loader').style.background = '#ffffffbb'
       const bgColor = this.canvas.get('backgroundColor');
 
       const timeout = 1000;
@@ -879,17 +1166,18 @@ class EditorScreen {
           this.canvas.setBackgroundColor(null, this.canvas.renderAll.bind(this.canvas));
         }
         this.canvas.setBackgroundImage(null, this.canvas.renderAll.bind(this.canvas));
-
-        querySelect('.preview-modal-bg').style.display = 'block';
+        
+        selectById('.preview-modal-bg').style.display = 'block';
         const logo = this.canvas.toDataURL({
           format: 'png',
           multiplier: 3,
         });
-
+        
         if (logo) {
-          querySelect('#fixed_preview').src = logo;
-          querySelect('#loader').style.display = 'none';
+          selectById('#fixed_preview').src = logo
+          selectById('#loader').style.display = 'none'
         }
+
       }, timeout);
     });
 
@@ -899,28 +1187,35 @@ class EditorScreen {
       const currCoordinate = active.getCenterPoint();
 
       active.set('charSpacing', this.letterSpacing);
-      querySelect('#l_spacing_value').innerText = ': ' + e.target.value / 10;
+      selectById('#l_spacing_value').innerText = ': ' + e.target.value / 10;
 
       active.setPositionByOrigin(new fabric.Point(currCoordinate.x, currCoordinate.y), 'center', 'center');
       active.setCoords();
       this.canvas.requestRenderAll();
       setTimeout(() => {
-        updatePreview();
+        updatePreview()
       }, 100);
     });
 
     this.shadowBlurSlider.addEventListener('input', (e) => {
       const value = e.target.value;
       this.shadowBlur = value;
-      querySelect('#shadow_blur_title').innerText = ` :${value}px`;
+      selectById('#shadow_blur_title').innerText = ` :${value}px`;
       this.shadowChanger(sloganNameElement, logoNameElement);
       this.canvas.requestRenderAll();
     });
 
-    querySelect('#logo-shadow-blur-slider').addEventListener('input', (e) => {
+    // $('#align-btn').addEventListener('click', () => {
+    //   const active = this.canvas.getActiveObject();
+    //   if (typeof active?.text === 'string') {
+    //     active.centerH();
+    //   }
+    // });
+
+    selectById('#logo-shadow-blur-slider').addEventListener('input', (e) => {
       this.logoShadowBlur = e.target.value;
       const active = this.canvas.getActiveObjects();
-      querySelect('#logo-shadow_blur_title').innerText = ` :${e.target.value}px`;
+      selectById('#logo-shadow_blur_title').innerText = ` :${e.target.value}px`;
       active.forEach((item) => {
         item.set('shadow', {
           offsetX: this.logoShadowOffsetX,
@@ -934,7 +1229,7 @@ class EditorScreen {
     this.shadowOffsetXSlider.addEventListener('input', (e) => {
       const val = e.target.value;
       this.shadowOffsetX = val;
-      querySelect('#offset_x_title').innerText = ` :${val}px`;
+      selectById('#offset_x_title').innerText = ` :${val}px`;
       this.shadowChanger(sloganNameElement, logoNameElement);
       this.canvas.requestRenderAll();
     });
@@ -942,7 +1237,7 @@ class EditorScreen {
     this.logoShadowOffsetXSlider.addEventListener('input', (e) => {
       this.logoShadowOffsetX = e.target.value;
 
-      querySelect('#logo-shadow_offsetX').innerText = ` :${e.target.value}px`;
+      selectById('#logo-shadow_offsetX').innerText = ` :${e.target.value}px`;
       const active = this.canvas.getActiveObjects();
       active.forEach((item) => {
         item.set('shadow', {
@@ -957,14 +1252,14 @@ class EditorScreen {
     this.shadowOffsetYSlider.addEventListener('input', (e) => {
       const val = e.target.value;
       this.shadowOffsetY = val;
-      querySelect('#offset_y_title').innerText = ` :${val}px`;
+      selectById('#offset_y_title').innerText = ` :${val}px`;
       this.shadowChanger(sloganNameElement, logoNameElement);
       this.canvas.requestRenderAll();
     });
 
     this.logoShadowOffsetYSlider.addEventListener('input', (e) => {
       this.logoShadowOffsetY = e.target.value;
-      querySelect('#logo-shadow_offsetY').innerText = ` :${e.target.value}px`;
+      selectById('#logo-shadow_offsetY').innerText = ` :${e.target.value}px`;
       const active = this.canvas.getActiveObjects();
       active.forEach((item) => {
         item.set('shadow', {
@@ -976,10 +1271,10 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    const fontList = querySelect('.font-selector-list');
-    const fontSelectorTitle = querySelect('.font-selector-title');
-    const caseList = querySelect('.case-list-items-li');
-    const fontStyleList = querySelect('.font_style-list-items-li');
+    const fontList = document.querySelector('.font-selector-list');
+    const fontSelectorTitle = document.querySelector('.font-selector-title');
+    const caseList = document.querySelector('.case-list-items-li');
+    const fontStyleList = document.querySelector('.font_style-list-items-li');
 
     fontSelectorTitle.addEventListener('click', (event) => {
       event.stopPropagation();
@@ -1016,6 +1311,21 @@ class EditorScreen {
       }
     });
 
+    // for (let i = 8; i <= 80; i++) {
+    //   document.querySelector('.font_size-list-items-li');
+    //   const li = document.createElement('li');
+    //   li.append(i + ' px');
+    //   this.fontSizeList.append(li);
+    // }
+
+    // this.fontSizeListTitle.addEventListener('click', () => {
+    //   if (this.fontSizeList.classList.contains('show')) {
+    //     this.fontSizeList.classList.remove('show');
+    //   } else {
+    //     this.fontSizeList.classList.add('show');
+    //   }
+    // });
+
     [logoNameElement, sloganNameElement].forEach((i) => {
       i.on('mousedown', () => {
         this.updateActiveNavbar('text');
@@ -1027,7 +1337,7 @@ class EditorScreen {
       });
     });
 
-    querySelect('#upload-file').addEventListener('input', (e) => {
+    selectById('#upload-file').addEventListener('input', (e) => {
       localDirFile = e.target.files[0];
       localDirFiles = [];
       localDirFiles.push(localDirFile);
@@ -1083,6 +1393,7 @@ class EditorScreen {
     this.canvas.on('object:removed', handleCanvasEvent);
     this.canvas.on('object:modified', handleCanvasEvent);
 
+
     let localDirFile = null;
     let localDirFiles = null;
     document.onkeydown = (event) => {
@@ -1093,6 +1404,181 @@ class EditorScreen {
       }
     };
 
+    // let verticalLine, horizontalLine;
+
+    // const canvasWidth = this.canvas.width;
+    // const canvasHeight = this.canvas.height;
+
+    // const gridSize = 12.255;
+    // const snappingThreshold = gridSize / 2;
+
+    // for (var i = 0; i < this.canvas.width / gridSize; i++) {
+    //   this.canvas.add(
+    //     new fabric.Line([i * gridSize, 0, i * gridSize, this.canvas.width], {
+    //       stroke: '#ccc',
+    //       selectable: false,
+    //     })
+    //   );
+    //   this.canvas.add(
+    //     new fabric.Line([0, i * gridSize, this.canvas.width, i * gridSize], {
+    //       stroke: '#ccc',
+    //       selectable: false,
+    //     })
+    //   );
+    // }
+
+    // let canvasCenter = {
+    //   x: this.canvas.width / 2,
+    //   y: this.canvas.height / 2,
+    // };
+
+    // const line1 = new fabric.Line([0, canvasCenter.y, this.canvas.getWidth(), canvasCenter.y], {
+    //   stroke: 'blue',
+    //   selectable: false,
+    //   visible: false,
+    //   lockMovementX: true,
+    //   lockMovementY: true,
+    //   hasControls: false,
+    //   hasRotatingPoint: false,
+    // });
+
+    // const line2 = new fabric.Line([canvasCenter.x, 0, canvasCenter.x, this.canvas.getHeight()], {
+    //   stroke: 'blue',
+    //   selectable: false,
+    //   visible: false,
+    //   lockMovementX: true,
+    //   lockMovementY: true,
+    //   hasControls: false,
+    //   hasRotatingPoint: false,
+    // });
+
+    // this.canvas.add(line1, line2);
+
+    // this.canvas.on('object:moving', (e) => {
+    //   const obj = e.target;
+
+    //   const snappedLeft = Math.round(obj.left / gridSize) * gridSize;
+    //   const snappedTop = Math.round(obj.top / gridSize) * gridSize;
+
+    //   const objectCenter = {
+    //     x: snappedLeft + (obj.width * obj.scaleX) / 2,
+    //     y: snappedTop + (obj.height * obj.scaleY) / 2,
+    //   };
+
+    //   if (
+    //     Math.abs(canvasCenter.x - objectCenter.x) <= snappingThreshold ||
+    //     Math.abs(canvasCenter.y - objectCenter.y) <= snappingThreshold
+    //   ) {
+    //     obj.set({ left: snappedLeft, top: snappedTop });
+
+    //     line1.set('visible', true);
+    //     line2.set('visible', true);
+    //   } else {
+    //     obj.setCoords();
+    //     line1.set('visible', false);
+    //     line2.set('visible', false);
+    //   }
+
+    //   this.canvas.requestRenderAll();
+    // });
+
+    // this.canvas.on('object:modified', () => {
+    //   captureCanvasState();
+    //    updatePreview();
+    //   line1.set('visible', false);
+    //   line2.set('visible', false);
+    // });
+
+    // this.canvas.on('mouse:over', (e) => {
+    //   if (e.target) {
+    //     const activeObject = e.target;
+
+    //     activeObject.set({
+    //       borderColor: 'blue',
+    //       cornerColor: 'blue',
+    //     });
+
+    //     this.canvas.setActiveObject(activeObject);
+    //     this.canvas.requestRenderAll();
+    //   }
+    // });
+
+    // this.canvas.on('mouse:down', (e) => {
+    //   if (e.target) {
+    //     const activeObject = e.target;
+
+    //     activeObject.set({
+    //       borderColor: 'blue',
+    //       cornerColor: 'blue',
+    //     });
+
+    //     this.canvas.setActiveObject(activeObject);
+    //     this.canvas.requestRenderAll();
+    //   }
+    // });
+
+    // this.canvas.on('selection:created', () => {
+    //   let activeObject = this.canvas.getActiveObject();
+    //   if (!activeObject) return;
+
+    //   const movementIncrement = 5;
+
+    //   const handler = (e) => {
+    //     const getPosition = (position) => activeObject.get(position);
+
+    //     switch (e.key) {
+    //       case 'ArrowLeft':
+    //         activeObject.set('left', getPosition('left') - movementIncrement);
+    //         break;
+    //       case 'ArrowUp':
+    //         activeObject.set('top', getPosition('top') - movementIncrement);
+    //         break;
+    //       case 'ArrowRight':
+    //         activeObject.set('left', getPosition('left') + movementIncrement);
+    //         break;
+    //       case 'ArrowDown':
+    //         activeObject.set('top', getPosition('top') + movementIncrement);
+    //         break;
+    //       default:
+    //         return;
+    //     }
+
+    //     e.preventDefault();
+    //     this.canvas.renderAll();
+    //   };
+
+    //   document.addEventListener('keydown', handler);
+
+    //   this.canvas.on('selection:cleared', () => {
+    //     document.removeEventListener('keydown', handler);
+    //     activeObject = null;
+    //   });
+    // });
+
+    // this.canvas.on('selection:updated', () => {
+    //   const activeObject = this.canvas.getActiveObject();
+    //   document.onkeydown = (e) => {
+    //     if (activeObject === undefined || activeObject === null) return;
+
+    //     const movementIncrement = 5;
+
+    //     switch (e.key) {
+    //       case 'ArrowLeft':
+    //         activeObject.set('left', activeObject.get('left') - movementIncrement);
+    //         break;
+    //       case 'ArrowUp':
+    //         activeObject.set('top', activeObject.get('top') - movementIncrement);
+    //         break;
+    //       case 'ArrowRight':
+    //         activeObject.set('left', activeObject.get('left') + movementIncrement);
+    //         break;
+    //       case 'ArrowDown':
+    //         activeObject.set('top', activeObject.get('top') + movementIncrement);
+    //         break;
+    //     }
+    //     this.canvas.renderAll();
+    //   };
+    // });
     const colorPickerText = new iro.ColorPicker('#open_picker_text', {
       display: openTextPickerView,
       width: 210,
@@ -1124,22 +1610,22 @@ class EditorScreen {
 
       const hasShadow = !!logoNameElement?.shadow?.blur;
 
-      querySelect('#drop-shadow').checked = hasShadow;
+      selectById('#drop-shadow').checked = hasShadow;
       isShadowAdjust = hasShadow;
       if (!hasShadow) {
-        querySelect('#shadow-adjust').style.display = 'none';
-        querySelect('#shadow-blur').style.display = 'none';
-        querySelect('#shadow-offsetX').style.display = 'none';
-        querySelect('#shadow-offsetY').style.display = 'none';
+        selectById('#shadow-adjust').style.display = 'none';
+        selectById('#shadow-blur').style.display = 'none';
+        selectById('#shadow-offsetX').style.display = 'none';
+        selectById('#shadow-offsetY').style.display = 'none';
       } else {
-        querySelect('#shadow-adjust').style.display = 'block';
-        querySelect('#shadow-blur').style.display = 'block';
-        querySelect('#shadow-offsetX').style.display = 'block';
-        querySelect('#shadow-offsetY').style.display = 'block';
+        selectById('#shadow-adjust').style.display = 'block';
+        selectById('#shadow-blur').style.display = 'block';
+        selectById('#shadow-offsetX').style.display = 'block';
+        selectById('#shadow-offsetY').style.display = 'block';
       }
 
       const charSpacing = logoNameElement.get('charSpacing');
-      querySelect('#l_spacing_value').innerText = ': ' + charSpacing / 10;
+      selectById('#l_spacing_value').innerText = ': ' + charSpacing / 10;
 
       let fillColor;
       const color = e.target.fill;
@@ -1154,57 +1640,57 @@ class EditorScreen {
       }
 
       colorPickerText.color.set(fillColor);
-      querySelect('#HEX2').value = fillColor;
+      selectById('#HEX2').value = fillColor;
 
       let rgbValue = hexToRgb(fillColor);
       let rgbValues = rgbValue.match(/\d+/g);
 
       if (rgbValues && rgbValues.length === 3) {
-        querySelect('#R2').value = rgbValues[0];
-        querySelect('#G2').value = rgbValues[1];
-        querySelect('#B2').value = rgbValues[2];
+        selectById('#R2').value = rgbValues[0];
+        selectById('#G2').value = rgbValues[1];
+        selectById('#B2').value = rgbValues[2];
       }
 
       let hslValue = hexToHsl(fillColor);
       let hslValues = hslValue.match(/\d+/g);
 
       if (hslValues && hslValues.length === 3) {
-        querySelect('#H2').value = hslValues[0];
-        querySelect('#S2').value = hslValues[1];
-        querySelect('#L2').value = hslValues[2];
+        selectById('#H2').value = hslValues[0];
+        selectById('#S2').value = hslValues[1];
+        selectById('#L2').value = hslValues[2];
       }
 
-      querySelect('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
+      selectById('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
       putAngleDownIcon('.font_style-list-item__title');
 
       const letterSpacing = logoNameElement.get('charSpacing');
-      querySelect('#letter-spacing-slider').value = letterSpacing;
+      selectById('#letter-spacing-slider').value = letterSpacing;
 
       const fontFamily = logoNameElement.get('fontFamily');
-      querySelect('#font-selector-title').innerText = fontFamily;
+      selectById('#font-selector-title').innerText = fontFamily;
       putAngleDownIcon('#font-selector-title');
 
       const fontSize = logoNameElement.fontSize;
-      querySelect('#font_size_title').value = `${fontSize}px`;
-      querySelect('#font_size_range').value = fontSize;
+      selectById('#font_size_title').value = `${fontSize}px`;
+      selectById('#font_size_range').value = fontSize;
 
       const logoText = logoNameElement.text;
-      querySelect('.case-list-item__title').innerText = getTextCase(logoText);
+      selectById('.case-list-item__title').innerText = getTextCase(logoText);
 
       const icon = document.createElement('i');
       icon.className = 'fa-solid fa-angle-down';
-      querySelect('.case-list-item__title').append(icon);
+      selectById('.case-list-item__title').append(icon);
 
       if (logoNameElement.shadow) {
         const { blur, offsetX, offsetY } = logoNameElement.shadow;
 
         if (blur && offsetX && offsetY) {
-          querySelect('#shadow_blur_title').innerText = ` :${blur}px`;
-          querySelect('#shadow-blur-slider').value = blur;
-          querySelect('#offset_x_title').innerText = ` :${offsetX}px`;
-          querySelect('#shadow-offsetX-slider').value = offsetX;
-          querySelect('#offset_y_title').innerText = ` :${offsetY}px`;
-          querySelect('#shadow-offsetY-slider').value = offsetY;
+          selectById('#shadow_blur_title').innerText = ` :${blur}px`;
+          selectById('#shadow-blur-slider').value = blur;
+          selectById('#offset_x_title').innerText = ` :${offsetX}px`;
+          selectById('#shadow-offsetX-slider').value = offsetX;
+          selectById('#offset_y_title').innerText = ` :${offsetY}px`;
+          selectById('#shadow-offsetY-slider').value = offsetY;
         }
       }
       captureCanvasState();
@@ -1220,22 +1706,22 @@ class EditorScreen {
 
       const hasShadow = !!sloganNameElement?.shadow?.blur;
 
-      querySelect('#drop-shadow').checked = hasShadow;
+      selectById('#drop-shadow').checked = hasShadow;
       isShadowAdjust = hasShadow;
       if (!hasShadow) {
-        querySelect('#shadow-adjust').style.display = 'none';
-        querySelect('#shadow-blur').style.display = 'none';
-        querySelect('#shadow-offsetX').style.display = 'none';
-        querySelect('#shadow-offsetY').style.display = 'none';
+        selectById('#shadow-adjust').style.display = 'none';
+        selectById('#shadow-blur').style.display = 'none';
+        selectById('#shadow-offsetX').style.display = 'none';
+        selectById('#shadow-offsetY').style.display = 'none';
       } else {
-        querySelect('#shadow-adjust').style.display = 'block';
-        querySelect('#shadow-blur').style.display = 'block';
-        querySelect('#shadow-offsetX').style.display = 'block';
-        querySelect('#shadow-offsetY').style.display = 'block';
+        selectById('#shadow-adjust').style.display = 'block';
+        selectById('#shadow-blur').style.display = 'block';
+        selectById('#shadow-offsetX').style.display = 'block';
+        selectById('#shadow-offsetY').style.display = 'block';
       }
 
       const charSpacing = sloganNameElement.get('charSpacing');
-      querySelect('#l_spacing_value').innerText = ': ' + charSpacing / 10;
+      selectById('#l_spacing_value').innerText = ': ' + charSpacing / 10;
 
       let fillColor;
       const color = e.target.fill;
@@ -1250,54 +1736,54 @@ class EditorScreen {
       }
 
       colorPickerText.color.set(fillColor);
-      querySelect('#HEX2').value = fillColor;
+      selectById('#HEX2').value = fillColor;
 
       let rgbValue = hexToRgb(fillColor);
       let rgbValues = rgbValue.match(/\d+/g);
 
       if (rgbValues && rgbValues.length === 3) {
-        querySelect('#R2').value = rgbValues[0];
-        querySelect('#G2').value = rgbValues[1];
-        querySelect('#B2').value = rgbValues[2];
+        selectById('#R2').value = rgbValues[0];
+        selectById('#G2').value = rgbValues[1];
+        selectById('#B2').value = rgbValues[2];
       }
 
       let hslValue = hexToHsl(fillColor);
       let hslValues = hslValue.match(/\d+/g);
 
       if (hslValues && hslValues.length === 3) {
-        querySelect('#H2').value = hslValues[0];
-        querySelect('#S2').value = hslValues[1];
-        querySelect('#L2').value = hslValues[2];
+        selectById('#H2').value = hslValues[0];
+        selectById('#S2').value = hslValues[1];
+        selectById('#L2').value = hslValues[2];
       }
 
-      querySelect('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
+      selectById('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
       putAngleDownIcon('.font_style-list-item__title');
 
       const letterSpacing = +sloganNameElement.charSpacing;
-      querySelect('#letter-spacing-slider').value = letterSpacing;
+      selectById('#letter-spacing-slider').value = letterSpacing;
 
       const fontFamily = sloganNameElement.get('fontFamily');
-      querySelect('#font-selector-title').innerText = fontFamily;
+      selectById('#font-selector-title').innerText = fontFamily;
       putAngleDownIcon('#font-selector-title');
 
       const fontSize = sloganNameElement.fontSize;
-      querySelect('#font_size_title').value = `${fontSize}px`;
-      querySelect('#font_size_range').value = fontSize;
+      selectById('#font_size_title').value = `${fontSize}px`;
+      selectById('#font_size_range').value = fontSize;
 
       const logoText = sloganNameElement.text;
-      querySelect('.case-list-item__title').innerText = getTextCase(logoText);
+      selectById('.case-list-item__title').innerText = getTextCase(logoText);
       putAngleDownIcon('.case-list-item__title');
 
       if (sloganNameElement.shadow) {
         const { blur, offsetX, offsetY } = sloganNameElement.shadow;
 
         if (blur && offsetX && offsetY) {
-          querySelect('#shadow_blur_title').innerText = ` :${blur}px`;
-          querySelect('#shadow-blur-slider').value = blur;
-          querySelect('#offset_x_title').innerText = ` :${offsetX}px`;
-          querySelect('#shadow-offsetX-slider').value = offsetX;
-          querySelect('#offset_y_title').innerText = ` :${offsetY}px`;
-          querySelect('#shadow-offsetY-slider').value = offsetY;
+          selectById('#shadow_blur_title').innerText = ` :${blur}px`;
+          selectById('#shadow-blur-slider').value = blur;
+          selectById('#offset_x_title').innerText = ` :${offsetX}px`;
+          selectById('#shadow-offsetX-slider').value = offsetX;
+          selectById('#offset_y_title').innerText = ` :${offsetY}px`;
+          selectById('#shadow-offsetY-slider').value = offsetY;
         }
       }
 
@@ -1316,6 +1802,11 @@ class EditorScreen {
     const captureCanvasState = () => {
       clearTimeout(captureTimeout);
 
+      // if (currIndex < undoHistory.length - 1) {
+      //   // If a new action is taken after undo, discard future redo states
+      //   undoHistory.splice(currIndex + 1);
+      // }
+
       if (undoHistory.length < undoMax) {
         captureTimeout = setTimeout(() => {
           undoHistory.push(JSON.stringify(this.canvas));
@@ -1323,7 +1814,7 @@ class EditorScreen {
         }, 100);
       } else if (undoHistory.length === undoMax) {
         currIndex = undoMax - 1;
-        undoHistory.shift(); // Remove the existingest entry when reaching undoMax
+        undoHistory.shift(); // Remove the oldest entry when reaching undoMax
         undoHistory.push(JSON.stringify(this.canvas));
       }
     };
@@ -1336,7 +1827,7 @@ class EditorScreen {
         this.canvas.clear();
 
         const updateActiveNavbar = (activeNav = 'logo') => {
-          querySelectAll('.nav-item').forEach((item) => {
+          document.querySelectorAll('.nav-item').forEach((item) => {
             if (activeNav.includes(item.innerText.toLowerCase())) {
               this.logoSettingsContainer.style.display = 'grid';
               this.textSettingsContainer.style.display = 'none';
@@ -1364,14 +1855,14 @@ class EditorScreen {
             e.e.preventDefault();
             this.textSelectorValue = 'LogoName';
 
-            querySelect('#drop-shadow').checked = !!logoNameElement?.shadow?.blur;
+            selectById('#drop-shadow').checked = !!logoNameElement?.shadow?.blur;
 
             if (!!logoNameElement?.shadow?.blur) {
-              querySelect('#logo-shadow-adjust').style.display = 'block';
-              querySelect('#logo-shadow-blur').style.display = 'block';
-              querySelect('#logo-shadow-offsetX').style.display = 'block';
-              querySelect('#logo-shadow-offsetY').style.display = 'block';
-              querySelect('#logo-shadow-border').style.display = 'block';
+              selectById('#logo-shadow-adjust').style.display = 'block';
+              selectById('#logo-shadow-blur').style.display = 'block';
+              selectById('#logo-shadow-offsetX').style.display = 'block';
+              selectById('#logo-shadow-offsetY').style.display = 'block';
+              selectById('#logo-shadow-border').style.display = 'block';
             }
 
             let fillColor;
@@ -1386,34 +1877,34 @@ class EditorScreen {
 
             colorPickerText.color.set(fillColor);
 
-            querySelect('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
+            selectById('.font_style-list-item__title').innerText = logoNameElement.fontStyle;
             putAngleDownIcon('.font_style-list-item__title');
 
             const letterSpacing = logoNameElement.get('charSpacing');
-            querySelect('#letter-spacing-slider').value = letterSpacing;
+            selectById('#letter-spacing-slider').value = letterSpacing;
 
             const fontFamily = logoNameElement.fontFamily;
-            querySelect('#font-selector-title').innerText = fontFamily;
+            selectById('#font-selector-title').innerText = fontFamily;
             putAngleDownIcon('#font-selector-title');
 
             const fontSize = logoNameElement.fontSize;
-            querySelect('#font_size_title').value = `${fontSize}px`;
-            querySelect('#font_size_range').value = fontSize;
+            selectById('#font_size_title').value = `${fontSize}px`;
+            selectById('#font_size_range').value = fontSize;
 
             const logoText = logoNameElement.text;
-            querySelect('.case-list-item__title').innerText = getTextCase(logoText);
+            selectById('.case-list-item__title').innerText = getTextCase(logoText);
             putAngleDownIcon('.case-list-item__title');
 
             if (logoNameElement.shadow) {
               const { blur, offsetX, offsetY } = logoNameElement.shadow;
 
               if (blur && offsetX && offsetY) {
-                querySelect('#shadow_blur_title').innerText = ` :${blur}px`;
-                querySelect('#shadow-blur-slider').value = blur;
-                querySelect('#offset_x_title').innerText = ` :${offsetX}px`;
-                querySelect('#shadow-offsetX-slider').value = offsetX;
-                querySelect('#offset_y_title').innerText = ` :${offsetY}px`;
-                querySelect('#shadow-offsetY-slider').value = offsetY;
+                selectById('#shadow_blur_title').innerText = ` :${blur}px`;
+                selectById('#shadow-blur-slider').value = blur;
+                selectById('#offset_x_title').innerText = ` :${offsetX}px`;
+                selectById('#shadow-offsetX-slider').value = offsetX;
+                selectById('#offset_y_title').innerText = ` :${offsetY}px`;
+                selectById('#shadow-offsetY-slider').value = offsetY;
               }
             }
             captureCanvasState();
@@ -1429,15 +1920,15 @@ class EditorScreen {
             event.e.preventDefault();
             this.textSelectorValue = 'SloganName';
 
-            querySelect('#drop-shadow').checked = !!sloganNameElement?.shadow?.blur;
+            selectById('#drop-shadow').checked = !!sloganNameElement?.shadow?.blur;
 
             if (!!sloganNameElement?.shadow?.blur) {
-              querySelect('#logo-shadow-adjust').style.display = 'block';
-              querySelect('#logo-shadow-blur').style.display = 'block';
-              querySelect('#logo-shadow-offsetX').style.display = 'block';
-              querySelect('#logo-shadow-offsetY').style.display = 'block';
-              querySelect('#logo-shadow-offsetY').style.display = 'block';
-              querySelect('#logo-shadow-border').style.display = 'block';
+              selectById('#logo-shadow-adjust').style.display = 'block';
+              selectById('#logo-shadow-blur').style.display = 'block';
+              selectById('#logo-shadow-offsetX').style.display = 'block';
+              selectById('#logo-shadow-offsetY').style.display = 'block';
+              selectById('#logo-shadow-offsetY').style.display = 'block';
+              selectById('#logo-shadow-border').style.display = 'block';
             }
 
             let fillColor;
@@ -1452,30 +1943,30 @@ class EditorScreen {
 
             colorPickerText.color.set(fillColor);
 
-            querySelect('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
+            selectById('.font_style-list-item__title').innerText = sloganNameElement.fontStyle;
             putAngleDownIcon('.font_style-list-item__title');
             const fontSize = sloganNameElement.fontSize;
-            querySelect('#font_size_range').value = fontSize;
+            selectById('#font_size_range').value = fontSize;
 
             const letterSpacing = +sloganNameElement.charSpacing;
-            querySelect('#letter-spacing-slider').value = letterSpacing;
+            selectById('#letter-spacing-slider').value = letterSpacing;
 
-            querySelect('#font_size_title').value = `${fontSize}px`;
+            selectById('#font_size_title').value = `${fontSize}px`;
 
             const logoText = sloganNameElement.text;
-            querySelect('.case-list-item__title').innerText = getTextCase(logoText);
+            selectById('.case-list-item__title').innerText = getTextCase(logoText);
             putAngleDownIcon('.case-list-item__title');
 
             if (sloganNameElement.shadow) {
               const { blur, offsetX, offsetY } = sloganNameElement.shadow;
 
               if (blur && offsetX && offsetY) {
-                querySelect('#shadow_blur_title').innerText = ` :${blur}px`;
-                querySelect('#shadow-blur-slider').value = blur;
-                querySelect('#offset_x_title').innerText = ` :${offsetX}px`;
-                querySelect('#shadow-offsetX-slider').value = offsetX;
-                querySelect('#offset_y_title').innerText = ` :${offsetY}px`;
-                querySelect('#shadow-offsetY-slider').value = offsetY;
+                selectById('#shadow_blur_title').innerText = ` :${blur}px`;
+                selectById('#shadow-blur-slider').value = blur;
+                selectById('#offset_x_title').innerText = ` :${offsetX}px`;
+                selectById('#shadow-offsetX-slider').value = offsetX;
+                selectById('#offset_y_title').innerText = ` :${offsetY}px`;
+                selectById('#shadow-offsetY-slider').value = offsetY;
               }
             }
 
@@ -1488,7 +1979,7 @@ class EditorScreen {
             this.backgroundSettingsContainer.style.display = 'none';
           });
 
-          querySelectAll('#solid_color').forEach((item) => {
+          document.querySelectorAll('#solid_color').forEach((item) => {
             item.addEventListener('click', (event) => {
               if (this.canvas) {
                 const activeObj = this.canvas.getActiveObject();
@@ -1502,7 +1993,7 @@ class EditorScreen {
                     const hexColor = convertRGBtoHex(red, green, blue);
                     activeObj.set('fill', hexColor);
 
-                    const logoColorPickers = querySelectAll('#color-layers-pickers');
+                    const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
                     logoColorPickers.forEach((i) => i.remove());
 
                     let colorSet = new Set();
@@ -1543,30 +2034,29 @@ class EditorScreen {
             });
           });
 
-          querySelectAll('#solid_color_text').forEach((item) => {
+          document.querySelectorAll('#solid_color_text').forEach((item) => {
             item.addEventListener('click', (event) => {
-              const activeObj = this.canvas.getActiveObject();
-              if (activeObj) {
-                const bgColor = event.target.style.backgroundColor;
-                const match = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/.exec(bgColor);
-                if (match) {
-                  const red = parseInt(match[1]);
-                  const green = parseInt(match[2]);
-                  const blue = parseInt(match[3]);
-                  const hexColor = convertRGBtoHex(red, green, blue);
-                  activeObj.set('fill', hexColor);
-
-                  this.canvas.requestRenderAll();
-                  captureCanvasState();
-                  updatePreview();
+                const activeObj = this.canvas.getActiveObject();
+                if (activeObj) {
+                  const bgColor = event.target.style.backgroundColor;
+                  const match = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/.exec(bgColor);
+                  if (match) {
+                    const red = parseInt(match[1]);
+                    const green = parseInt(match[2]);
+                    const blue = parseInt(match[3]);
+                    const hexColor = convertRGBtoHex(red, green, blue);
+                    activeObj.set('fill', hexColor);
+                    
+                    this.canvas.requestRenderAll();
+                    captureCanvasState();
+                    updatePreview();
+                  }
                 }
-              }
             });
           });
         });
       }
     };
-    
     const redo = () => {
       if (currIndex < undoHistory.length - 1) {
         setCanvasBackground();
@@ -1580,10 +2070,10 @@ class EditorScreen {
       }
     };
 
-    querySelect('#undo-btn').addEventListener('click', undo);
-    querySelect('#redo-btn').addEventListener('click', redo);
+    document.getElementById('undo-btn').addEventListener('click', undo);
+    document.getElementById('redo-btn').addEventListener('click', redo);
 
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', function (e) {
       if (e.ctrlKey && e.key === 'z') {
         undo();
       }
@@ -1594,24 +2084,24 @@ class EditorScreen {
       }
     });
 
-    querySelect('#font_size_range').addEventListener('input', (event) => {
+    selectById('#font_size_range').addEventListener('input', (event) => {
       const textSize = event.target.value;
       if (textSize > 0) {
-        querySelect('#font_size_title').value = `${textSize}px`;
+        selectById('#font_size_title').value = `${textSize}px`;
         const active = this.canvas.getActiveObject();
         const fontSize = textSize;
         active.fontSize = fontSize;
         this.canvas.renderAll();
-        updatePreview();
+        updatePreview()
       }
     });
 
-    querySelect('#font_size_title').addEventListener('input', (event) => {
+    selectById('#font_size_title').addEventListener('input', (event) => {
       const text = event.target.value;
       const fontSize = Number(text.split('px')[0]);
       const active = this.canvas.getActiveObject();
       active.fontSize = fontSize;
-      querySelect('#font_size_range').value = fontSize;
+      selectById('#font_size_range').value = fontSize;
 
       this.canvas.requestRenderAll();
     });
@@ -1628,16 +2118,16 @@ class EditorScreen {
 
       const fontResizer =
         type === 'increment' ? (active.fontSize = increment) : (active.fontSize = decrement);
-      querySelect('#font_size_range').value = fontResizer;
-      querySelect('#font_size_title').value = fontResizer + 'px';
+      selectById('#font_size_range').value = fontResizer;
+      selectById('#font_size_title').value = fontResizer + 'px';
       this.canvas.requestRenderAll();
-      updatePreview();
+      updatePreview()
     };
 
-    querySelect('#font_size_up').addEventListener('click', () => void arrowFontResizer('increment'));
-    querySelect('#font_size_down').addEventListener('click', () => void arrowFontResizer('decrement'));
+    selectById('#font_size_up').addEventListener('click', () => void arrowFontResizer('increment'));
+    selectById('#font_size_down').addEventListener('click', () => void arrowFontResizer('decrement'));
 
-    querySelect('#font_size_title').addEventListener('keydown', (event) => {
+    selectById('#font_size_title').addEventListener('keydown', (event) => {
       if (event.key === 'ArrowUp') {
         let curr = Number(event.target.value.split('px')[0]);
         event.target.value = curr + 1 + 'px';
@@ -1671,6 +2161,26 @@ class EditorScreen {
       return colors.filter((color) => color !== null);
     };
 
+    // this.canvas.on('mousedown', (e) => {
+    //   if (e.target) {
+    //     const currentObjColor = e.target.get('fill');
+    //     const colorPalette = $('#color-palette-gradient');
+
+    //     if (typeof currentObjColor === 'string') {
+    //       colorPalette.style.background = currentObjColor;
+    //       document.querySelector('#grad-solid').value = currentObjColor;
+    //     } else if (currentObjColor && currentObjColor.type === 'radial') {
+    //       const gradientColors = convertFabricColorsToRGB(currentObjColor);
+    //       const gradientStyle = `linear-gradient(0, ${gradientColors.join(', ')})`;
+    //       colorPalette.style.background = gradientStyle;
+    //       document.querySelector('#grad-1').value = gradientStyle;
+    //       document.querySelector('#grad-2').value = gradientStyle;
+    //       document.querySelector('#grad-solid').value = gradientStyle;
+    //     }
+    //     this.canvas.requestRenderAll();
+    //   }
+    // });
+
     this.zoomSlider.addEventListener('input', () => {
       let imgZoom = this.zoomSlider.value * 2;
       if (imgZoom <= 2) {
@@ -1687,7 +2197,7 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    querySelect('#copyElement').addEventListener('click', () => {
+    selectById('#copyElement').addEventListener('click', () => {
       const active = this.canvas.getActiveObject();
 
       if (active._objects) {
@@ -1695,10 +2205,10 @@ class EditorScreen {
           clonedGroup._objects.forEach((object) => {
             this.canvas.add(object);
           });
-          this.canvas.centerObject(clonedGroup);
-          clonedGroup.set('top', 100);
-          clonedGroup.set('left', 100);
-          this.canvas.setActiveObject(clonedGroup);
+          this.canvas.centerObject(clonedGroup)
+          clonedGroup.set('top', 100)
+          clonedGroup.set('left', 100)
+          this.canvas.setActiveObject(clonedGroup)
           this.canvas.discardActiveObject();
           this.canvas.requestRenderAll();
         });
@@ -1712,7 +2222,7 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    querySelect('#eyeElement').addEventListener('click', () => {
+    selectById('#eyeElement').addEventListener('click', () => {
       const activeObj = this.canvas.getActiveObject();
       let visibilty = Boolean(activeObj.get('opacity'));
       visibilty = !visibilty;
@@ -1720,7 +2230,7 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    querySelect('#removeElement').addEventListener('click', () => {
+    selectById('#removeElement').addEventListener('click', () => {
       const activeObj = this.canvas.getActiveObject();
       if (activeObj) {
         this.canvas.remove(activeObj);
@@ -1728,19 +2238,19 @@ class EditorScreen {
       }
     });
 
-    querySelect('#bringDownElement').addEventListener('click', () => {
+    selectById('#bringDownElement').addEventListener('click', () => {
       const selectedObject = this.canvas.getActiveObject();
       this.canvas.sendBackwards(selectedObject);
       this.canvas.requestRenderAll();
     });
 
-    querySelect('#bringUpElement').addEventListener('click', () => {
+    selectById('#bringUpElement').addEventListener('click', () => {
       const selectedObject = this.canvas.getActiveObject();
       this.canvas.bringForward(selectedObject);
       this.canvas.requestRenderAll();
     });
 
-    querySelect('#copyElement2').addEventListener('click', () => {
+    selectById('#copyElement2').addEventListener('click', () => {
       const activeObject = this.canvas.getActiveObject();
       activeObject.clone((cloned) => {
         this.canvas.add(cloned);
@@ -1750,7 +2260,7 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    querySelect('#eyeElement2').addEventListener('click', () => {
+    selectById('#eyeElement2').addEventListener('click', () => {
       const activeObj = this.canvas.getActiveObject();
       let visibilty = Boolean(activeObj.get('opacity'));
       visibilty = !visibilty;
@@ -1758,25 +2268,25 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    querySelect('#removeElement2').addEventListener('click', () => {
+    selectById('#removeElement2').addEventListener('click', () => {
       const activeObj = this.canvas.getActiveObject();
       this.canvas.remove(activeObj);
       this.canvas.requestRenderAll();
     });
 
-    querySelect('#bringDownElement2').addEventListener('click', () => {
+    selectById('#bringDownElement2').addEventListener('click', () => {
       const selectedObject = this.canvas.getActiveObject();
       this.canvas.sendBackwards(selectedObject);
       this.canvas.requestRenderAll();
     });
 
-    querySelect('#bringUpElement2').addEventListener('click', () => {
+    selectById('#bringUpElement2').addEventListener('click', () => {
       const selectedObject = this.canvas.getActiveObject();
       this.canvas.bringForward(selectedObject);
       this.canvas.requestRenderAll();
     });
 
-    querySelect('#eyeElement-uploads').addEventListener('click', () => {
+    selectById('#eyeElement-uploads').addEventListener('click', () => {
       const activeObj = this.canvas.getActiveObject();
       let visibilty = activeObj.visible;
       visibilty = !visibilty;
@@ -1784,7 +2294,7 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    querySelect('#copyElement-uploads').addEventListener('click', (event) => {
+    selectById('#copyElement-uploads').addEventListener('click', (event) => {
       this.canvas.getActiveObject().clone((cloned) => {
         this.canvas.add(cloned);
         this.canvas.centerObject(cloned);
@@ -1792,19 +2302,19 @@ class EditorScreen {
       });
     });
 
-    querySelect('#bringUpElement-uploads').addEventListener('click', () => {
+    selectById('#bringUpElement-uploads').addEventListener('click', () => {
       const selectedObject = this.canvas.getActiveObject();
       this.canvas.bringForward(selectedObject);
       this.canvas.requestRenderAll();
     });
 
-    querySelect('#bringDownElement-uploads').addEventListener('click', () => {
+    selectById('#bringDownElement-uploads').addEventListener('click', () => {
       const selectedObject = this.canvas.getActiveObject();
       this.canvas.sendBackwards(selectedObject);
       this.canvas.requestRenderAll();
     });
 
-    const palleteComponent = querySelect('#bg-pallete');
+    const palleteComponent = selectById('#bg-pallete');
     palleteComponent.addEventListener('colorChange', (e) => {
       const { colorMode, grad1Value, grad2Value, colorAngle, solidValue } = e.detail;
 
@@ -1834,7 +2344,7 @@ class EditorScreen {
       }
 
       this.canvas.backgroundColor = color;
-      querySelect(
+      selectById(
         '.color-palette-gradient'
       ).style.background = `linear-gradient(${angleColor}, ${grad1Value}, ${grad2Value})`;
       updatePreview();
@@ -1857,7 +2367,7 @@ class EditorScreen {
       }, 100);
     });
 
-    const logoPalleteComponent = querySelect('#logo-pallete');
+    const logoPalleteComponent = selectById('#logo-pallete');
     logoPalleteComponent.addEventListener('colorChange', (e) => {
       const selectedObject = this.canvas.getActiveObject();
       const { colorMode, grad1Value, grad2Value, solidValue, colorAngle } = e.detail;
@@ -1889,7 +2399,7 @@ class EditorScreen {
       }, 100);
     });
 
-    const textPalleteComponent = querySelect('#text-pallete');
+    const textPalleteComponent = selectById('#text-pallete');
     textPalleteComponent.addEventListener('colorChange', (e) => {
       const selectedObject = this.canvas.getActiveObject();
       const { colorMode, grad1Value, grad2Value, solidValue } = e.detail;
@@ -1925,7 +2435,7 @@ class EditorScreen {
     let previewImages = ['/static/mug.png', '/static/wall.png'];
     let counter = previewImages.length - 1;
 
-    querySelect('#right-arrow').addEventListener('click', () => {
+    selectById('#right-arrow').addEventListener('click', () => {
       counter++;
       if (counter >= previewImages.length) {
         counter = 0;
@@ -1933,11 +2443,11 @@ class EditorScreen {
 
       const img = previewImages[counter];
 
-      querySelect('.preview_image_wrapper').style.backgroundImage = 'url(' + img.toString() + ')';
-      querySelect('.preview_image').style.marginTop = counter === 0 ? '100px' : '-100px';
+      selectById('.preview_image_wrapper').style.backgroundImage = 'url(' + img.toString() + ')';
+      selectById('.preview_image').style.marginTop = counter === 0 ? '100px' : '-100px';
     });
 
-    querySelect('#left-arrow').addEventListener('click', () => {
+    selectById('#left-arrow').addEventListener('click', () => {
       if (counter === 0) {
         counter = previewImages.length - 1;
       } else {
@@ -1946,27 +2456,27 @@ class EditorScreen {
 
       const img = previewImages[counter];
 
-      querySelect('.preview_image_wrapper').style.backgroundImage = 'url(' + img.toString() + ')';
-      querySelect('.preview_image').style.marginTop = counter === 0 ? '100px' : '-100px';
+      selectById('.preview_image_wrapper').style.backgroundImage = 'url(' + img.toString() + ')';
+      selectById('.preview_image').style.marginTop = counter === 0 ? '100px' : '-100px';
     });
 
-    querySelect('#close_modal').addEventListener('click', () => {
+    selectById('#close_modal').addEventListener('click', () => {
       setCanvasBackground();
       this.canvas.setBackgroundColor(this.canvasBG, this.canvas.renderAll.bind(this.canvas));
-      querySelect('.preview-modal-bg').style.display = 'none';
+      document.querySelector('.preview-modal-bg').style.display = 'none';
     });
 
-    querySelect('#overlay').addEventListener('click', (e) => {
+    selectById('#overlay').addEventListener('click', (e) => {
       if (e.target.classList.contains('overlay')) {
         setCanvasBackground();
         this.canvas.setBackgroundColor('#eee', this.canvas.renderAll.bind(this.canvas));
-        querySelect('.preview-modal-bg').style.display = 'none';
+        document.querySelector('.preview-modal-bg').style.display = 'none';
       }
     });
 
-    querySelect('#icon-search-input').addEventListener('input', (event) => {
+    selectById('#icon-search-input').addEventListener('input', (event) => {
       const textInput = event.target.value;
-      querySelectAll('#clip-icon').forEach((icon) => {
+      document.querySelectorAll('#clip-icon').forEach((icon) => {
         if (!icon['name'].toLowerCase().includes(textInput.toLowerCase())) {
           icon.style.display = 'none';
         } else {
@@ -1975,14 +2485,14 @@ class EditorScreen {
       });
     });
 
-    querySelect('.popup').addEventListener('click', (e) => {
+    selectById('.popup').addEventListener('click', (e) => {
       if (e.target.classList.contains('popup')) {
-        querySelect('#popup-parent').style.display = 'none';
+        selectById('#popup-parent').style.display = 'none';
       }
     });
 
     document.getElementById('close-btn').addEventListener('click', (e) => {
-      querySelect('#popup-parent-icons').style.display = 'none';
+      selectById('#popup-parent-icons').style.display = 'none';
     });
 
     clipIcons.map((icon) => {
@@ -1992,7 +2502,7 @@ class EditorScreen {
       img.classList.add('clip-icon');
       img.setAttribute('name', icon.name);
       img.src = svgDataUrl;
-      querySelect('#clip-icons').append(img);
+      selectById('#clip-icons').append(img);
     });
 
     document.getElementById('clip-icons').addEventListener('click', (e) => {
@@ -2013,12 +2523,12 @@ class EditorScreen {
       document.getElementById('popup-parent-icons').style.display = 'none';
     });
 
-    querySelect('#clipart').addEventListener('click', (e) => {
-      querySelect('#popup-parent').style.display = 'none';
-      querySelect('#popup-parent-icons').style.display = 'block';
+    selectById('#clipart').addEventListener('click', (e) => {
+      selectById('#popup-parent').style.display = 'none';
+      selectById('#popup-parent-icons').style.display = 'block';
     });
 
-    querySelect('.item-title').addEventListener('click', (e) => {
+    selectById('.item-title').addEventListener('click', (e) => {
       const IText = new fabric.IText('Add Text', { fontFamily: 'Poppins' });
       this.canvas.add(IText);
       IText.center();
@@ -2026,17 +2536,17 @@ class EditorScreen {
       updatePreview();
       this.canvas.requestRenderAll();
       this.canvas.setActiveObject(IText);
-      querySelect('#popup-parent').style.display = 'none';
+      selectById('#popup-parent').style.display = 'none';
     });
 
     let isLogoShadowAdjust = false;
-    querySelect('#logo-drop-shadow').addEventListener('change', () => {
+    selectById('#logo-drop-shadow').addEventListener('change', () => {
       const active = this.canvas.getActiveObject();
       isLogoShadowAdjust = !isLogoShadowAdjust;
 
       if (isLogoShadowAdjust) {
-        querySelect('#logo-shadow-adjust').style.display = 'block';
-        const settingsView = querySelect('.settings-view');
+        selectById('#logo-shadow-adjust').style.display = 'block';
+        const settingsView = selectById('.settings-view');
         settingsView.scrollTop = settingsView.scrollHeight;
 
         if (active._objects) {
@@ -2057,11 +2567,11 @@ class EditorScreen {
 
         this.canvas.requestRenderAll();
       } else {
-        querySelect('#logo-shadow-adjust').style.display = 'none';
-        querySelect('#logo-shadow-blur').style.display = 'none';
-        querySelect('#logo-shadow-offsetX').style.display = 'none';
-        querySelect('#logo-shadow-offsetY').style.display = 'none';
-        querySelect('#logo-shadow-border').style.display = 'none';
+        selectById('#logo-shadow-adjust').style.display = 'none';
+        selectById('#logo-shadow-blur').style.display = 'none';
+        selectById('#logo-shadow-offsetX').style.display = 'none';
+        selectById('#logo-shadow-offsetY').style.display = 'none';
+        selectById('#logo-shadow-border').style.display = 'none';
 
         const active = this.canvas.getActiveObject();
 
@@ -2086,33 +2596,33 @@ class EditorScreen {
     });
 
     let isLogoDropShadow = false;
-    querySelect('#logo-shadow-adjust').addEventListener('click', () => {
+    selectById('#logo-shadow-adjust').addEventListener('click', () => {
       const active = this.canvas.getActiveObject();
       isLogoDropShadow = !isLogoDropShadow;
       if (isLogoDropShadow) {
-        querySelect('#logo-shadow-blur').style.display = 'block';
-        querySelect('#logo-shadow-offsetX').style.display = 'block';
-        querySelect('#logo-shadow-offsetY').style.display = 'block';
-        querySelect('#logo-shadow-border').style.display = 'block';
+        selectById('#logo-shadow-blur').style.display = 'block';
+        selectById('#logo-shadow-offsetX').style.display = 'block';
+        selectById('#logo-shadow-offsetY').style.display = 'block';
+        selectById('#logo-shadow-border').style.display = 'block';
 
-        const settingsView = querySelect('.settings-view');
+        const settingsView = selectById('.settings-view');
         settingsView.scrollTop = settingsView.scrollHeight;
       } else {
-        querySelect('#logo-shadow-blur').style.display = 'none';
-        querySelect('#logo-shadow-offsetX').style.display = 'none';
-        querySelect('#logo-shadow-offsetY').style.display = 'none';
-        querySelect('#logo-shadow-border').style.display = 'none';
+        selectById('#logo-shadow-blur').style.display = 'none';
+        selectById('#logo-shadow-offsetX').style.display = 'none';
+        selectById('#logo-shadow-offsetY').style.display = 'none';
+        selectById('#logo-shadow-border').style.display = 'none';
       }
     });
 
     let isShadowAdjust = false;
-    querySelect('#drop-shadow').addEventListener('change', () => {
+    selectById('#drop-shadow').addEventListener('change', () => {
       isShadowAdjust = !isShadowAdjust;
       const active = this.canvas.getActiveObject();
 
       if (isShadowAdjust) {
-        querySelect('#shadow-adjust').style.display = 'block';
-        const settingsView = querySelect('.settings-view');
+        selectById('#shadow-adjust').style.display = 'block';
+        const settingsView = selectById('.settings-view');
         settingsView.scrollTop = settingsView.scrollHeight;
 
         if (active._objects) {
@@ -2133,10 +2643,10 @@ class EditorScreen {
 
         this.canvas.requestRenderAll();
       } else {
-        querySelect('#shadow-adjust').style.display = 'none';
-        querySelect('#shadow-blur').style.display = 'none';
-        querySelect('#shadow-offsetX').style.display = 'none';
-        querySelect('#shadow-offsetY').style.display = 'none';
+        selectById('#shadow-adjust').style.display = 'none';
+        selectById('#shadow-blur').style.display = 'none';
+        selectById('#shadow-offsetX').style.display = 'none';
+        selectById('#shadow-offsetY').style.display = 'none';
 
         if (active._objects) {
           active.forEachObject((obj) => {
@@ -2158,30 +2668,30 @@ class EditorScreen {
     });
 
     let isDropShadow = false;
-    querySelect('#shadow-adjust').addEventListener('click', () => {
+    selectById('#shadow-adjust').addEventListener('click', () => {
       isDropShadow = !isDropShadow;
       if (isDropShadow) {
-        querySelect('#shadow-blur').style.display = 'block';
-        querySelect('#shadow-offsetX').style.display = 'block';
-        querySelect('#shadow-offsetY').style.display = 'block';
-        const settingsView = querySelect('.settings-view');
+        selectById('#shadow-blur').style.display = 'block';
+        selectById('#shadow-offsetX').style.display = 'block';
+        selectById('#shadow-offsetY').style.display = 'block';
+        const settingsView = selectById('.settings-view');
         settingsView.scrollTop = settingsView.scrollHeight;
       } else {
-        querySelect('#shadow-blur').style.display = 'none';
-        querySelect('#shadow-offsetX').style.display = 'none';
-        querySelect('#shadow-offsetY').style.display = 'none';
+        selectById('#shadow-blur').style.display = 'none';
+        selectById('#shadow-offsetX').style.display = 'none';
+        selectById('#shadow-offsetY').style.display = 'none';
       }
     });
 
     const canvasObjects = this.canvas.getObjects();
-    const colorPalette = querySelect('#logo_colors_pallete');
-    const textPalette = querySelect('#logo_text_colors_pallete');
+    const colorPalette = selectById('#logo_colors_pallete');
+    const textPalette = selectById('#logo_text_colors_pallete');
 
-    const solidColorMode = querySelect('#solid_color_mode');
-    const pickerColorMode = querySelect('#picker_color_mode');
+    const solidColorMode = selectById('#solid_color_mode');
+    const pickerColorMode = selectById('#picker_color_mode');
 
-    const solidColorTextMode = querySelect('#solid_color_text_mode');
-    const pickerColorTextMode = querySelect('#picker_color_text_mode');
+    const solidColorTextMode = selectById('#solid_color_text_mode');
+    const pickerColorTextMode = selectById('#picker_color_text_mode');
 
     const getParsedColor = (color) => {
       if (color && typeof color === 'string') {
@@ -2223,26 +2733,26 @@ class EditorScreen {
             const activeElem = this.canvas.getActiveObject();
             activeElem.set('fill', color);
             colorPicker.color.set(color);
-            querySelect('#HEX').value = color;
+            selectById("#HEX").value = color
 
             let rgbValue = hexToRgb(color);
             let rgbValues = rgbValue.match(/\d+/g);
-
+  
             if (rgbValues && rgbValues.length === 3) {
-              querySelect('#R').value = rgbValues[0];
-              querySelect('#G').value = rgbValues[1];
-              querySelect('#B').value = rgbValues[2];
+              selectById('#R').value = rgbValues[0];
+              selectById('#G').value = rgbValues[1];
+              selectById('#B').value = rgbValues[2];
             }
             let hslValue = hexToHsl(color);
             let hslValues = hslValue.match(/\d+/g);
-
+  
             if (hslValues && hslValues.length === 3) {
-              querySelect('#H').value = hslValues[0];
-              querySelect('#S').value = hslValues[1];
-              querySelect('#L').value = hslValues[2];
+              selectById('#H').value = hslValues[0];
+              selectById('#S').value = hslValues[1];
+              selectById('#L').value = hslValues[2];
             }
             this.canvas.renderAll();
-            updatePreview();
+            updatePreview()
           });
         }
       });
@@ -2266,20 +2776,20 @@ class EditorScreen {
         const hsl = color.hsl;
         const rgb = color.rgb;
 
-        querySelect('#H').value = hsl.h;
-        querySelect('#S').value = hsl.s;
-        querySelect('#L').value = hsl.l;
-        querySelect('#R').value = rgb.r;
-        querySelect('#G').value = rgb.g;
-        querySelect('#B').value = rgb.b;
+        selectById('#H').value = hsl.h;
+        selectById('#S').value = hsl.s;
+        selectById('#L').value = hsl.l;
+        selectById('#R').value = rgb.r;
+        selectById('#G').value = rgb.g;
+        selectById('#B').value = rgb.b;
 
-        querySelect('#HEX').value = color.hexString;
+        selectById('#HEX').value = color.hexString;
       }
 
       const active = this.canvas.getActiveObject();
       active.set('fill', color.rgbaString);
 
-      const logoColorPickers = querySelectAll('#color-layers-pickers');
+      const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
       logoColorPickers.forEach((i) => i.remove());
       updateColorPickers();
       this.canvas.requestRenderAll();
@@ -2287,11 +2797,17 @@ class EditorScreen {
       colorChanging = false;
     });
 
+    // this.canvas.on('object:moving', function (e) {
+    //   if (colorChanging) {
+    //     e.preventDefault();
+    //   }
+    // });
+
     [('#R', '#G', '#B')].forEach((id) => {
-      querySelect(id).addEventListener('input', () => {
-        let r = querySelect('#R').value;
-        let g = querySelect('#G').value;
-        let b = querySelect('#B').value;
+      selectById(id).addEventListener('input', () => {
+        let r = selectById('#R').value;
+        let g = selectById('#G').value;
+        let b = selectById('#B').value;
         colorPicker.color.rgb = { r, g, b };
         const a = this.canvas.getActiveObject();
         a.set('fill', colorPicker.color.hexString);
@@ -2300,10 +2816,10 @@ class EditorScreen {
     });
 
     ['#H', '#S', '#L'].forEach((id) => {
-      querySelect(id).addEventListener('input', () => {
-        let h = querySelect('#H').value;
-        let s = querySelect('#S').value;
-        let l = querySelect('#L').value;
+      selectById(id).addEventListener('input', () => {
+        let h = selectById('#H').value;
+        let s = selectById('#S').value;
+        let l = selectById('#L').value;
         colorPicker.color.hsl = { h, s, l };
         const a = this.canvas.getActiveObject();
         a.set('fill', colorPicker.color.hexString);
@@ -2312,10 +2828,10 @@ class EditorScreen {
     });
 
     [('#R2', '#G2', '#B2')].forEach((id) => {
-      querySelect(id).addEventListener('input', () => {
-        let r = querySelect('#R2').value;
-        let g = querySelect('#G2').value;
-        let b = querySelect('#B2').value;
+      selectById(id).addEventListener('input', () => {
+        let r = selectById('#R2').value;
+        let g = selectById('#G2').value;
+        let b = selectById('#B2').value;
         colorPicker.color.rgb = { r, g, b };
         const a = this.canvas.getActiveObject();
         a.set('fill', colorPicker.color.hexString);
@@ -2324,10 +2840,10 @@ class EditorScreen {
     });
 
     ['#H2', '#S2', '#L2'].forEach((id) => {
-      querySelect(id).addEventListener('input', () => {
-        let h = querySelect('#H2').value;
-        let s = querySelect('#S2').value;
-        let l = querySelect('#L2').value;
+      selectById(id).addEventListener('input', () => {
+        let h = selectById('#H2').value;
+        let s = selectById('#S2').value;
+        let l = selectById('#L2').value;
         colorPicker.color.hsl = { h, s, l };
         const a = this.canvas.getActiveObject();
         a.set('fill', colorPicker.color.hexString);
@@ -2338,13 +2854,13 @@ class EditorScreen {
     let inputCountBG = 0;
     let inputCount2 = 0;
 
-    querySelect('#HEX').addEventListener('input', (e) => {
+    selectById('#HEX').addEventListener('input', (e) => {
       let hex = e.target.value;
 
       if (hex.length > 0 && hex[0] !== '#') {
         if (inputCountBG >= 3) {
           hex = '#' + hex;
-          querySelect('#HEX').value = hex;
+          selectById('#HEX').value = hex;
           inputCountBG = 0;
         } else {
           inputCountBG++;
@@ -2355,25 +2871,25 @@ class EditorScreen {
       const a = this.canvas.getActiveObject();
       a.set('fill', hex);
 
-      let r = querySelect('#R').value;
-      let g = querySelect('#G').value;
-      let b = querySelect('#B').value;
+      let r = selectById('#R').value;
+      let g = selectById('#G').value;
+      let b = selectById('#B').value;
       colorPicker.color.rgb = { r, g, b };
-      let h = querySelect('#H').value;
-      let s = querySelect('#S').value;
-      let l = querySelect('#L').value;
+      let h = selectById('#H').value;
+      let s = selectById('#S').value;
+      let l = selectById('#L').value;
       colorPicker.color.hsl = { h, s, l };
 
       this.canvas.requestRenderAll();
     });
 
-    querySelect('#HEX2').addEventListener('input', (e) => {
+    selectById('#HEX2').addEventListener('input', (e) => {
       let hex = e.target.value;
 
       if (hex.length > 0 && hex[0] !== '#') {
         if (inputCount2 >= 3) {
           hex = '#' + hex;
-          querySelect('#HEX2').value = hex;
+          selectById('#HEX2').value = hex;
           inputCount2 = 0;
         } else {
           inputCount2++;
@@ -2384,49 +2900,49 @@ class EditorScreen {
       const a = this.canvas.getActiveObject();
       a.set('fill', hex);
 
-      let r = querySelect('#R2').value;
-      let g = querySelect('#G2').value;
-      let b = querySelect('#B2').value;
+      let r = selectById('#R2').value;
+      let g = selectById('#G2').value;
+      let b = selectById('#B2').value;
       colorPicker.color.rgb = { r, g, b };
-      let h = querySelect('#H2').value;
-      let s = querySelect('#S2').value;
-      let l = querySelect('#L2').value;
+      let h = selectById('#H2').value;
+      let s = selectById('#S2').value;
+      let l = selectById('#L2').value;
       colorPicker.color.hsl = { h, s, l };
 
       this.canvas.requestRenderAll();
     });
 
     const solidColorEvent = () => {
-      querySelect('#picker_color_mode').classList.remove('category_selected');
-      querySelect('#solid_color_mode').classList.add('category_selected');
-      querySelect('#solid_color_items').style.display = 'flex';
-      querySelect('#picker_color_items').style.display = 'none';
+      selectById('#picker_color_mode').classList.remove('category_selected');
+      selectById('#solid_color_mode').classList.add('category_selected');
+      selectById('#solid_color_items').style.display = 'flex';
+      selectById('#picker_color_items').style.display = 'none';
       openPickerView = 'none';
     };
 
     const pickerColorEvent = () => {
-      querySelect('#solid_color_items').style.display = 'none';
-      querySelect('#picker_color_items').style.display = 'flex';
-      querySelect('#solid_color_mode').classList.remove('category_selected');
-      querySelect('#picker_color_mode').classList.add('category_selected');
-      querySelect('#picker_color_items').style.marginTop = '8px';
+      selectById('#solid_color_items').style.display = 'none';
+      selectById('#picker_color_items').style.display = 'flex';
+      selectById('#solid_color_mode').classList.remove('category_selected');
+      selectById('#picker_color_mode').classList.add('category_selected');
+      selectById('#picker_color_items').style.marginTop = '8px';
       openTextPickerView = 'block';
     };
 
     const solidTextColorEvent = () => {
-      querySelect('#picker_color_text_mode').classList.remove('category_selected');
-      querySelect('#solid_color_text_mode').classList.add('category_selected');
-      querySelect('#solid_color_items_text').style.display = 'flex';
-      querySelect('#picker_color_items_text').style.display = 'none';
+      selectById('#picker_color_text_mode').classList.remove('category_selected');
+      selectById('#solid_color_text_mode').classList.add('category_selected');
+      selectById('#solid_color_items_text').style.display = 'flex';
+      selectById('#picker_color_items_text').style.display = 'none';
       openPickerView = 'none';
     };
 
     const pickerTextColorEvent = () => {
-      querySelect('#solid_color_items_text').style.display = 'none';
-      querySelect('#picker_color_items_text').style.display = 'flex';
-      querySelect('#solid_color_text_mode').classList.remove('category_selected');
-      querySelect('#picker_color_text_mode').classList.add('category_selected');
-      querySelect('#picker_color_items_text').style.marginTop = '8px';
+      selectById('#solid_color_items_text').style.display = 'none';
+      selectById('#picker_color_items_text').style.display = 'flex';
+      selectById('#solid_color_text_mode').classList.remove('category_selected');
+      selectById('#picker_color_text_mode').classList.add('category_selected');
+      selectById('#picker_color_items_text').style.marginTop = '8px';
       openTextPickerView = 'block';
     };
 
@@ -2458,40 +2974,40 @@ class EditorScreen {
     });
 
     const solidTextColorEventBG = () => {
-      querySelect('#picker_color_text_modeBG').classList.remove('category_selected');
-      querySelect('#solid_color_text_modeBG').classList.add('category_selected');
+      selectById('#picker_color_text_modeBG').classList.remove('category_selected');
+      selectById('#solid_color_text_modeBG').classList.add('category_selected');
 
-      querySelect('#bg_solid_color_items_text').style.display = 'flex';
-      querySelect('#bg_picker_color_items_text').style.display = 'none';
+      selectById('#bg_solid_color_items_text').style.display = 'flex';
+      selectById('#bg_picker_color_items_text').style.display = 'none';
       openPickerViewBG = 'none';
     };
 
     const pickerTextColorEventBG = () => {
-      querySelect('#bg_solid_color_items_text').style.display = 'none';
-      querySelect('#bg_picker_color_items_text').style.display = 'flex';
+      selectById('#bg_solid_color_items_text').style.display = 'none';
+      selectById('#bg_picker_color_items_text').style.display = 'flex';
 
-      querySelect('#solid_color_text_modeBG').classList.remove('category_selected');
-      querySelect('#picker_color_text_modeBG').classList.add('category_selected');
+      selectById('#solid_color_text_modeBG').classList.remove('category_selected');
+      selectById('#picker_color_text_modeBG').classList.add('category_selected');
 
-      querySelect('#bg_picker_color_items_text').style.marginTop = '8px';
+      selectById('#bg_picker_color_items_text').style.marginTop = '8px';
       openPickerViewBG = 'block';
     };
 
     solidTextColorEventBG();
 
-    querySelect('#solid_color_text_modeBG').addEventListener('click', () => {
+    selectById('#solid_color_text_modeBG').addEventListener('click', () => {
       solidTextColorEventBG();
     });
 
-    querySelect('#picker_color_text_modeBG').addEventListener('click', () => {
+    selectById('#picker_color_text_modeBG').addEventListener('click', () => {
       pickerTextColorEventBG();
     });
 
     [('#R_BG', '#G_BG', '#B_BG')].forEach((id) => {
-      querySelect(id).addEventListener('input', () => {
-        const r = querySelect('#R_BG').value;
-        const g = querySelect('#G_BG').value;
-        const b = querySelect('#B_BG').value;
+      selectById(id).addEventListener('input', () => {
+        const r = selectById('#R_BG').value;
+        const g = selectById('#G_BG').value;
+        const b = selectById('#B_BG').value;
         colorPickerBG.color.rgb = { r, g, b };
         const bgColor = colorPickerBG.color.hexString;
         this.canvas.setBackgroundColor(bgColor);
@@ -2500,10 +3016,10 @@ class EditorScreen {
     });
 
     ['#H_BG', '#S_BG', '#L_BG'].forEach((id) => {
-      querySelect(id).addEventListener('input', () => {
-        const h = querySelect('#H_BG').value;
-        const s = querySelect('#S_BG').value;
-        const l = querySelect('#L_BG').value;
+      selectById(id).addEventListener('input', () => {
+        const h = selectById('#H_BG').value;
+        const s = selectById('#S_BG').value;
+        const l = selectById('#L_BG').value;
         colorPickerBG.color.hsl = { h, s, l };
         const bgColor = colorPickerBG.color.hexString;
         this.canvas.setBackgroundColor(bgColor);
@@ -2511,28 +3027,28 @@ class EditorScreen {
       });
     });
 
-    querySelect('#HEX_BG').addEventListener('input', (e) => {
+    selectById('#HEX_BG').addEventListener('input', (e) => {
       let inputCountBG = 0;
       let inputValue = e.target.value;
 
       if (inputValue.length > 0 && inputValue[0] !== '#') {
         if (inputValue.length >= 3) {
           inputValue = '#' + inputValue;
-          querySelect('#HEX_BG').value = inputValue;
+          selectById('#HEX_BG').value = inputValue;
           inputCountBG = 0;
         } else {
           inputCountBG++;
         }
       }
 
-      const r = querySelect('#R_BG').value;
-      const g = querySelect('#G_BG').value;
-      const b = querySelect('#B_BG').value;
+      const r = selectById('#R_BG').value;
+      const g = selectById('#G_BG').value;
+      const b = selectById('#B_BG').value;
       colorPickerBG.color.rgb = { r, g, b };
 
-      const h = querySelect('#H_BG').value;
-      const s = querySelect('#S_BG').value;
-      const l = querySelect('#L_BG').value;
+      const h = selectById('#H_BG').value;
+      const s = selectById('#S_BG').value;
+      const l = selectById('#L_BG').value;
       colorPickerBG.color.hsl = { h, s, l };
 
       colorPickerBG.color.set(inputValue);
@@ -2541,26 +3057,26 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    const handleColorModeClickBG = (activeElement, element1, element2) => {
-      querySelect(element1 + '_view_BG').classList.remove('color_mode_title-active');
-      querySelect(element1 + '_view_BG').style.display = 'none';
+    function handleColorModeClickBG(activeElement, element1, element2) {
+      selectById(element1 + '_view_BG').classList.remove('color_mode_title-active');
+      selectById(element1 + '_view_BG').style.display = 'none';
 
-      querySelect(element2 + '_view_BG').classList.remove('color_mode_title-active');
-      querySelect(element2 + '_view_BG').style.display = 'none';
+      selectById(element2 + '_view_BG').classList.remove('color_mode_title-active');
+      selectById(element2 + '_view_BG').style.display = 'none';
 
-      querySelect(activeElement + '_view_BG').classList.add('color_mode_title-active');
-      querySelect(activeElement + '_view_BG').style.display = 'flex';
+      selectById(activeElement + '_view_BG').classList.add('color_mode_title-active');
+      selectById(activeElement + '_view_BG').style.display = 'flex';
     }
 
-    querySelect('#HSL_mode_BG').addEventListener('click', () => {
+    selectById('#HSL_mode_BG').addEventListener('click', () => {
       handleColorModeClickBG('#HSL', '#RGB', '#HEX');
     });
 
-    querySelect('#RGB_mode_BG').addEventListener('click', () => {
+    selectById('#RGB_mode_BG').addEventListener('click', () => {
       handleColorModeClickBG('#RGB', '#HSL', '#HEX');
     });
 
-    querySelect('#HEX_mode_BG').addEventListener('click', () => {
+    selectById('#HEX_mode_BG').addEventListener('click', () => {
       handleColorModeClickBG('#HEX', '#RGB', '#HSL');
     });
     handleColorModeClickBG('#HEX', '#RGB', '#HSL');
@@ -2579,14 +3095,14 @@ class EditorScreen {
         const hsl = color.hsl;
         const rgb = color.rgb;
 
-        querySelect('#H_BG').value = hsl.h;
-        querySelect('#S_BG').value = hsl.s;
-        querySelect('#L_BG').value = hsl.l;
-        querySelect('#R_BG').value = rgb.r;
-        querySelect('#G_BG').value = rgb.g;
-        querySelect('#B_BG').value = rgb.b;
+        selectById('#H_BG').value = hsl.h;
+        selectById('#S_BG').value = hsl.s;
+        selectById('#L_BG').value = hsl.l;
+        selectById('#R_BG').value = rgb.r;
+        selectById('#G_BG').value = rgb.g;
+        selectById('#B_BG').value = rgb.b;
 
-        querySelect('#HEX_BG').value = color.hexString;
+        selectById('#HEX_BG').value = color.hexString;
       }
 
       this.canvas.setBackgroundColor(color.rgbaString);
@@ -2603,7 +3119,7 @@ class EditorScreen {
     solidColorTextMode.addEventListener('click', solidTextColorEvent);
     pickerColorTextMode.addEventListener('click', pickerTextColorEvent);
 
-    querySelect('#custom_color_generator').addEventListener('change', (e) => {
+    selectById('#custom_color_generator').addEventListener('change', (e) => {
       const color = e.target.value;
 
       const newColor = document.createElement('div');
@@ -2618,32 +3134,32 @@ class EditorScreen {
         const activeObj = this.canvas.getActiveObject();
         activeObj.set('fill', color);
         colorPicker.color.set(color);
-        querySelect('#HEX').value = color;
+        selectById("#HEX").value = color;  
 
         let rgbValue = hexToRgb(color);
         let rgbValues = rgbValue.match(/\d+/g);
 
         if (rgbValues && rgbValues.length === 3) {
-          querySelect('#R').value = rgbValues[0];
-          querySelect('#G').value = rgbValues[1];
-          querySelect('#B').value = rgbValues[2];
+          selectById('#R').value = rgbValues[0];
+          selectById('#G').value = rgbValues[1];
+          selectById('#B').value = rgbValues[2];
         }
         let hslValue = hexToHsl(color);
         let hslValues = hslValue.match(/\d+/g);
 
         if (hslValues && hslValues.length === 3) {
-          querySelect('#H').value = hslValues[0];
-          querySelect('#S').value = hslValues[1];
-          querySelect('#L').value = hslValues[2];
-        }
+          selectById('#H').value = hslValues[0];
+          selectById('#S').value = hslValues[1];
+          selectById('#L').value = hslValues[2];
+        }        
         this.canvas.renderAll();
-        updatePreview();
+        updatePreview()
       });
 
-      querySelect('#custom_colors_wrapper').append(newColor);
+      selectById('#custom_colors_wrapper').append(newColor);
     });
 
-    querySelect('#custom_text_color_generator').addEventListener('change', (e) => {
+    selectById('#custom_text_color_generator').addEventListener('change', (e) => {
       const color = e.target.value;
 
       const newColor = document.createElement('div');
@@ -2657,33 +3173,33 @@ class EditorScreen {
       newColor.addEventListener('click', () => {
         const activeObj = this.canvas.getActiveObject();
         activeObj.set('fill', color);
-        colorPickerText.color.set(color);
-        querySelect('#HEX2').value = color;
+        colorPickerText.color.set(color); 
+        selectById("#HEX2").value = color;  
 
         let rgbValue = hexToRgb(color);
         let rgbValues = rgbValue.match(/\d+/g);
 
         if (rgbValues && rgbValues.length === 3) {
-          querySelect('#R2').value = rgbValues[0];
-          querySelect('#G2').value = rgbValues[1];
-          querySelect('#B2').value = rgbValues[2];
+          selectById('#R2').value = rgbValues[0];
+          selectById('#G2').value = rgbValues[1];
+          selectById('#B2').value = rgbValues[2];
         }
         let hslValue = hexToHsl(color);
         let hslValues = hslValue.match(/\d+/g);
 
         if (hslValues && hslValues.length === 3) {
-          querySelect('#H2').value = hslValues[0];
-          querySelect('#S2').value = hslValues[1];
-          querySelect('#L2').value = hslValues[2];
+          selectById('#H2').value = hslValues[0];
+          selectById('#S2').value = hslValues[1];
+          selectById('#L2').value = hslValues[2];
         }
         this.canvas.renderAll();
-        updatePreview();
+        updatePreview()
       });
 
-      querySelect('#custom_text_colors_wrapper').append(newColor);
-    });
-
-    querySelect('#custom_bg_color_generator').addEventListener('change', (e) => {
+      selectById('#custom_text_colors_wrapper').append(newColor);
+    });    
+    
+    selectById('#custom_bg_color_generator').addEventListener('change', (e) => {
       const color = e.target.value;
 
       const newColor = document.createElement('div');
@@ -2696,33 +3212,33 @@ class EditorScreen {
 
       newColor.addEventListener('click', () => {
         this.canvas.setBackgroundColor(color);
-        colorPickerBG.color.set(color);
-        querySelect('#HEX_BG').value = color;
-
+        colorPickerBG.color.set(color);   
+        selectById("#HEX_BG").value = color;  
+        
         let rgbValue = hexToRgb(color);
         let rgbValues = rgbValue.match(/\d+/g);
 
         if (rgbValues && rgbValues.length === 3) {
-          querySelect('#R_BG').value = rgbValues[0];
-          querySelect('#G_BG').value = rgbValues[1];
-          querySelect('#B_BG').value = rgbValues[2];
+          selectById('#R_BG').value = rgbValues[0];
+          selectById('#G_BG').value = rgbValues[1];
+          selectById('#B_BG').value = rgbValues[2];
         }
         let hslValue = hexToHsl(color);
         let hslValues = hslValue.match(/\d+/g);
 
         if (hslValues && hslValues.length === 3) {
-          querySelect('#H_BG').value = hslValues[0];
-          querySelect('#S_BG').value = hslValues[1];
-          querySelect('#L_BG').value = hslValues[2];
+          selectById('#H_BG').value = hslValues[0];
+          selectById('#S_BG').value = hslValues[1];
+          selectById('#L_BG').value = hslValues[2];
         }
         this.canvas.renderAll();
-        updatePreview();
+        updatePreview()
       });
 
-      querySelect('#custom_bg_colors_wrapper').append(newColor);
+      selectById('#custom_bg_colors_wrapper').append(newColor);
     });
 
-    querySelectAll('#solid_color').forEach((item) => {
+    selectAllById('#solid_color').forEach((item) => {
       item.addEventListener('click', (event) => {
         if (this.canvas) {
           const activeObj = this.canvas.getActiveObject();
@@ -2737,11 +3253,11 @@ class EditorScreen {
               activeObj.set('fill', hexColor);
               colorPicker.color.set(hexColor);
 
-              const logoColorPickers = querySelectAll('#color-layers-pickers');
+              const logoColorPickers = selectAllById('#color-layers-pickers');
               logoColorPickers.forEach((i) => i.remove());
               updateColorPickers();
               this.canvas.renderAll();
-              updatePreview();
+              updatePreview()
               captureCanvasState();
             }
           }
@@ -2749,7 +3265,7 @@ class EditorScreen {
       });
     });
 
-    querySelectAll('#solid_color_text').forEach((item) => {
+    selectAllById('#solid_color_text').forEach((item) => {
       item.addEventListener('click', (event) => {
         if (this.canvas) {
           const activeObj = this.canvas.getActiveObject();
@@ -2772,7 +3288,7 @@ class EditorScreen {
       });
     });
 
-    querySelectAll('#solid_color-bg').forEach((item) => {
+    selectAllById('#solid_color-bg').forEach((item) => {
       item.addEventListener('click', (event) => {
         if (this.canvas) {
           const bgColor = event.target.style.backgroundColor;
@@ -2783,8 +3299,8 @@ class EditorScreen {
             const blue = parseInt(match[3]);
             const hexColor = convertRGBtoHex(red, green, blue);
             this.canvas.setBackgroundColor(hexColor);
-
-            const logoColorPickers = querySelectAll('#color-layers-pickers');
+            
+            const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
             logoColorPickers.forEach((i) => i.remove());
             updateColorPickers();
             this.canvas.renderAll();
@@ -2845,26 +3361,26 @@ class EditorScreen {
         const hsl = color.hsl;
         const rgb = color.rgb;
 
-        querySelect('#H2').value = hsl.h;
-        querySelect('#S2').value = hsl.s;
-        querySelect('#L2').value = hsl.l;
-        querySelect('#R2').value = rgb.r;
-        querySelect('#G2').value = rgb.g;
-        querySelect('#B2').value = rgb.b;
+        selectById('#H2').value = hsl.h;
+        selectById('#S2').value = hsl.s;
+        selectById('#L2').value = hsl.l;
+        selectById('#R2').value = rgb.r;
+        selectById('#G2').value = rgb.g;
+        selectById('#B2').value = rgb.b;
 
-        querySelect('#HEX2').value = color.hexString;
+        selectById('#HEX2').value = color.hexString;
       }
 
       const active = this.canvas.getActiveObject();
       active.set('fill', color.rgbaString);
       this.canvas.requestRenderAll();
 
-      const logoColorPickers = querySelectAll('#color-layers-pickers');
+      const logoColorPickers = document.querySelectorAll('#color-layers-pickers');
       logoColorPickers.forEach((i) => i.remove());
       updateColorPickers();
       this.canvas.requestRenderAll();
       setTimeout(() => {
-        updatePreview();
+        updatePreview()
       }, 100);
     };
 
@@ -2872,40 +3388,41 @@ class EditorScreen {
     colorPickerText.on('input:move', changeColorPickerText);
 
     const handleColorModeClick = (activeElement, element1, element2) => {
-      querySelect(element1 + '_view').classList.remove('color_mode_title-active');
-      querySelect(element1 + '_view').style.display = 'none';
+      selectById(element1 + '_view').classList.remove('color_mode_title-active');
+      selectById(element1 + '_view').style.display = 'none';
 
-      querySelect(element2 + '_view').classList.remove('color_mode_title-active');
-      querySelect(element2 + '_view').style.display = 'none';
+      selectById(element2 + '_view').classList.remove('color_mode_title-active');
+      selectById(element2 + '_view').style.display = 'none';
 
-      querySelect(activeElement + '_view').classList.add('color_mode_title-active');
-      querySelect(activeElement + '_view').style.display = 'flex';
-    };
+      selectById(activeElement + '_view').classList.add('color_mode_title-active');
+      selectById(activeElement + '_view').style.display = 'flex';
+    }
 
-    querySelect('#HSL_mode').addEventListener('click', () => {
+    selectById('#HSL_mode').addEventListener('click', () => {
       handleColorModeClick('#HSL', '#RGB', '#HEX');
     });
 
-    querySelect('#RGB_mode').addEventListener('click', () => {
+    selectById('#RGB_mode').addEventListener('click', () => {
       handleColorModeClick('#RGB', '#HSL', '#HEX');
     });
 
-    querySelect('#HEX_mode').addEventListener('click', () => {
+    selectById('#HEX_mode').addEventListener('click', () => {
       handleColorModeClick('#HEX', '#RGB', '#HSL');
     });
 
-    querySelect('#HSL2_mode').addEventListener('click', () => {
+    
+    selectById('#HSL2_mode').addEventListener('click', () => {
       handleColorModeClick('#HSL2', '#RGB2', '#HEX2');
     });
 
-    querySelect('#RGB2_mode').addEventListener('click', () => {
+    selectById('#RGB2_mode').addEventListener('click', () => {
       handleColorModeClick('#RGB2', '#HSL2', '#HEX2');
     });
 
-    querySelect('#HEX2_mode').addEventListener('click', () => {
+    selectById('#HEX2_mode').addEventListener('click', () => {
       handleColorModeClick('#HEX2', '#RGB2', '#HSL2');
     });
-
+    
     handleColorModeClick('#HEX', '#RGB', '#HSL');
     handleColorModeClick('#HEX2', '#RGB2', '#HSL2');
 
@@ -2914,10 +3431,12 @@ class EditorScreen {
       logoSize,
       sloganSize,
       textPosition,
+      mainTop = -100,
       sloganTop,
       logoNameTop,
       letterSpaced = false
     ) => {
+      // this.canvas.remove(line1, line2);
       const objects = this.canvas.getObjects();
       logoNameElement.charSpacing = 0;
       sloganNameElement.charSpacing = 0;
@@ -2967,6 +3486,7 @@ class EditorScreen {
 
             const newGrp = new fabric.Group(objects);
             this.canvas.viewportCenterObject(newGrp);
+            // newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
             updatePreview();
             this.canvas.requestRenderAll();
@@ -2993,6 +3513,7 @@ class EditorScreen {
 
             const newGrp = new fabric.Group(objects);
             this.canvas.viewportCenterObject(newGrp);
+            // newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
             updatePreview();
             this.canvas.requestRenderAll();
@@ -3042,7 +3563,7 @@ class EditorScreen {
             if (letterSpaced) {
               logoNameElement.text = toTitleCase(logoNameElement.text);
               sloganNameElement.text = toSentenceCase(sloganNameElement.text);
-
+              
               logoNameElement.set('fontFamily', 'Poppins');
               sloganNameElement.set('fontFamily', 'Poppins');
 
@@ -3058,6 +3579,7 @@ class EditorScreen {
             const newGrp = new fabric.Group(objects);
             this.canvas.viewportCenterObjectH(newGrp);
             this.canvas.viewportCenterObjectV(newGrp);
+            // newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
             updatePreview();
             this.canvas.requestRenderAll();
@@ -3100,9 +3622,9 @@ class EditorScreen {
               if (letterSpaced) {
                 logoNameElement.text = toTitleCase(logoNameElement.text);
                 sloganNameElement.text = toSentenceCase(sloganNameElement.text);
-
-                logoNameElement.set('fontFamily', 'Poppins');
-                sloganNameElement.set('fontFamily', 'Poppins');
+                
+              logoNameElement.set('fontFamily', 'Poppins');
+              sloganNameElement.set('fontFamily', 'Poppins');
 
                 sloganNameElement.set('charSpacing', 322);
                 sloganNameElement.set('fontSize', 27);
@@ -3126,6 +3648,7 @@ class EditorScreen {
             const newGrp = new fabric.Group(objects);
             this.canvas.viewportCenterObjectH(newGrp);
             this.canvas.viewportCenterObjectV(newGrp);
+            // newGrp.set('top', mainTop);
             newGrp.ungroupOnCanvas();
             updatePreview();
             this.canvas.requestRenderAll();
@@ -3134,6 +3657,7 @@ class EditorScreen {
       }
       this.canvas.requestRenderAll();
       captureCanvasState();
+      // this.canvas.add(line1, line2);
       this.canvas.requestRenderAll();
     };
 
@@ -3155,7 +3679,7 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     };
 
-    querySelect('#canvas-bg-none').addEventListener('click', () => {
+    selectById('#canvas-bg-none').addEventListener('click', () => {
       this.canvas.setBackgroundColor(this.canvasBG);
       updatePreview();
       this.canvas.requestRenderAll();
@@ -3168,96 +3692,96 @@ class EditorScreen {
     };
 
     scaleLogo(200);
-    centerAndResizeElements('topBottom', 46, 22, 'center', 1.32, 1.5);
+    centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.32, 1.5);
 
-    querySelect('#top_bottom_1').addEventListener('click', () => {
+    selectById('#top_bottom_1').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('topBottom', 46, 22, 'center', 1.32, 1.5);
+      centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.32, 1.5);
     });
 
-    querySelect('#top_bottom_2').addEventListener('click', () => {
+    selectById('#top_bottom_2').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('topBottom', 40, 20, 'center', 1.35, 1.52);
+      centerAndResizeElements('topBottom', 40, 20, 'center', 150, 1.35, 1.52);
     });
 
-    querySelect('#top_bottom_3').addEventListener('click', () => {
+    selectById('#top_bottom_3').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(160);
-      centerAndResizeElements('topBottom', 46, 22, 'center', 1.42, 1.6);
+      centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.42, 1.6);
     });
 
-    querySelect('#bottom_top_1').addEventListener('click', () => {
+    selectById('#bottom_top_1').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('bottomTop', 46, 22, 'center', 3.8, 5.5);
+      centerAndResizeElements('bottomTop', 46, 22, 'center', 150, 3.8, 5.5);
     });
 
-    querySelect('#bottom_top_2').addEventListener('click', () => {
+    selectById('#bottom_top_2').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('bottomTop', 40, 18, 'center', 3.5, 5);
+      centerAndResizeElements('bottomTop', 40, 18, 'center', 150, 3.5, 5);
     });
 
-    querySelect('#bottom_top_3').addEventListener('click', () => {
+    selectById('#bottom_top_3').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(160);
-      centerAndResizeElements('bottomTop', 46, 22, 'center', 3.3, 4.5);
+      centerAndResizeElements('bottomTop', 46, 22, 'center', 150, 3.3, 4.5);
     });
 
-    querySelect('#left_right_1').addEventListener('click', () => {
+    selectById('#left_right_1').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('leftRight', 32, 25, 'center', 1.32, 1.5);
+      centerAndResizeElements('leftRight', 32, 25, 'center', 200, 1.32, 1.5);
     });
 
-    querySelect('#left_right_2').addEventListener('click', () => {
+    selectById('#left_right_2').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('leftRight', 32, 25, 'left', 1.32, 1.5);
+      centerAndResizeElements('leftRight', 32, 25, 'left', 200, 1.32, 1.5);
     });
 
-    querySelect('#left_right_3').addEventListener('click', () => {
+    selectById('#left_right_3').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(160);
-      centerAndResizeElements('leftRight', 32, 25, 'left', 1.32, 1.5);
+      centerAndResizeElements('leftRight', 32, 25, 'left', 200, 1.32, 1.5);
     });
 
-    querySelect('#right_left_1').addEventListener('click', () => {
+    selectById('#right_left_1').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('rightLeft', 32, 25, 'center', 1.32, 1.5);
+      centerAndResizeElements('rightLeft', 32, 25, 'center', 200, 1.32, 1.5);
     });
 
-    querySelect('#right_left_2').addEventListener('click', () => {
+    selectById('#right_left_2').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(160);
-      centerAndResizeElements('rightLeft', 32, 25, 'left', 1.32, 1.5);
+      centerAndResizeElements('rightLeft', 32, 25, 'left', 210, 1.32, 1.5);
     });
 
-    querySelect('#right_left_3').addEventListener('click', () => {
+    selectById('#right_left_3').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('rightLeft', 32, 25, 'left', 1.32, 1.5);
+      centerAndResizeElements('rightLeft', 32, 25, 'left', 200, 1.32, 1.5);
     });
 
-    querySelect('#top_bottom_4').addEventListener('click', () => {
+    selectById('#top_bottom_4').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('topBottom', 46, 22, 'center', 1.32, 1.5, true);
+      centerAndResizeElements('topBottom', 46, 22, 'center', 150, 1.32, 1.5, true);
     });
 
-    querySelect('#left_right_4').addEventListener('click', () => {
+    selectById('#left_right_4').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('leftRight', 32, 25, 'center', 1.32, 1.5, true);
+      centerAndResizeElements('leftRight', 32, 25, 'center', 200, 1.32, 1.5, true);
     });
 
-    querySelect('#right_left_4').addEventListener('click', () => {
+    selectById('#right_left_4').addEventListener('click', () => {
       discardSelectionForAlignments();
       scaleLogo(200);
-      centerAndResizeElements('rightLeft', 32, 25, 'left', 1.32, 1.5, true);
+      centerAndResizeElements('rightLeft', 32, 25, 'left', 200, 1.32, 1.5, true);
     });
   }
 }
