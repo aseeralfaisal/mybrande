@@ -13,12 +13,12 @@ const paletteMarkup = /*html*/ `
     </div>
 
     <div id="gradient-panel" style="margin-top: 60px;  display: none; justify-content: flex-start; gap: 5px;">
-        <input type="color" value="#000" class="color-picker" id="grad-1">
-        <input type="color" value="#000" class="color-picker" id="grad-2">
+        <input type="color" value="#000000" class="color-picker" id="grad-1">
+        <input type="color" value="#000000" class="color-picker" id="grad-2">
       </div>
       
       <div id="solid-panel" style="margin-top: 60px;">
-        <input type="color" value="#000" class="color-picker" id="grad-solid">
+        <input type="color" value="#000000" class="color-picker" id="grad-solid">
     </div>
 
     <!-- <h3 id="color-angle-text" style="display: none">0deg</h3> -->

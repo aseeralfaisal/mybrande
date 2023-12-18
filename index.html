@@ -13,10 +13,11 @@
 
 <body>
 
-    <div id="loader" style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; z-index: 10000; display: flex; justify-content: center; align-items: center;">
+    <div id="loader"
+        style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; z-index: 10000; display: flex; justify-content: center; align-items: center;">
         <img src="/assets/loader.gif" alt="" style="max-width: 100%; max-height: 100%;">
     </div>
-    
+
     <div id="drag_drop_view">
         <header class="header">
             <div style="display: flex; justify-content: space-between; margin-inline: 100px; align-items: center;">
@@ -25,8 +26,9 @@
                         style="width: 170px; object-fit: contain; margin-top: 10px;">
                 </div>
                 <div class="links">
-                    <a class="link" href="#">Learn</a>
-                    <a class="link" href="#">About</a>
+                    <!-- <a class="link" href="#">Learn</a>
+                    <a class="link" href="#">About</a> -->
+                    <i class="fa-solid fa-circle-user" style="font-size: 32px; color: var(--gray);"></i>
                 </div>
             </div>
         </header>
@@ -35,44 +37,75 @@
                 <img src="./assets/abs.png" alt="" width="600px" height="600px"
                     style="object-fit: cover; filter: invert();">
             </div>
-            <div style="display: flex;">
-                <div id="input_phase" style="margin: 100px;">
-                    <h1 class="title">Name your logo</h1>
-                    <p class="paragraph">Add a title to your logo design so can easily manage and track all your logos
-                    </p>
-                    <div class="input-box-primary">
-                        <input id="logo_name_input-primary" class="form-control" type="text" value=""
-                            placeholder="Name your logo">
-                    </div>
-                    <div style="margin-block: 40px;">
-                        <!-- <button id="back_btn" class="btn-main">Back </button> -->
-                        <button id="next_btn" class="btn-main">Next ></button>
-                    </div>
-                </div>
-                <div id="darg-drop-parent" style="display: grid; justify-items: flex-start;">
-                    <div id="drag-drop" class="drag_drop">
-                        <div id="drag-drop-child" style="display: grid; align-items: center;">
-                            <div class="icon-container">
-                                <i class="fa-solid fa-images" style="font-size: 80px; color: #4d4e4e;"></i>
-                            </div>
-                            <div>
-                                <h2 style="color: #4d4e4e;">Drag & Drop</h2>
-                                <p style="color: #4d4e4e; font-size: 20px;">Logo Symbol</p>
-                            </div>
+            <div>
+                <div style="display: flex;">
+                    <div id="input_phase" style="margin: 100px;">
+                        <div class="input-box-primary" style="padding: 10px;">
+                            <input id="logo_name_input-primary" class="form-control" type="text" value=""
+                                placeholder="Title your logo" style="font-size: 28px; font-weight: 400;">
                         </div>
-                        <div id="img-view-container"
-                            style="display: flex; justify-content: center; align-items: center;">
-                            <img id="img-view" style="width: 500px; height: 500px; object-fit: contain;"></img>
-                        </div>
-                    </div>
-                    <input type="file" id="upload_file_btn" name="upload_file_btn" style="display: none;">
-                    <button class="btn-main" style="margin-left: 50px;">
-                        <label for="upload_file_btn">Upload file</label>
-                    </button>
-                    <!-- <button id="crop">Crop</button>
-                    <img id="imger" alt=""> -->
-                </div>
+                        <p class="paragraph" style="width: 700px; font-size: 16px; padding-block: 10px;">Add a title to
+                            your
+                            logo design for easy tracking and management. This title is only visible to you and can be
+                            changed at any time.</p>
 
+                        <p class="paragraph" style="font-size: 20px;">By uploading a logo design, you guarantee that:
+                        </p>
+                        <p class="paragraph ins"><i class="fas fa-check"></i> Your logo design is unique.</p>
+                        <p class="paragraph ins"><i class="fas fa-check"></i> The logo design is your original creation.</p>
+                        <p class="paragraph ins"><i class="fas fa-check"></i> You have full ownership rights to the design.</p>
+                        <p class="paragraph ins"><i class="fas fa-check"></i> This logo design has never sold before.
+                        </p>
+                        <p class="paragraph ins"><i class="fas fa-check"></i> You will not sell this logo design to
+                            anyone,
+                            anywhere in the future.</p>
+                        <p class="paragraph" style="font-size: 14px; letter-spacing: 0;">Please note that any violation
+                            of
+                            these terms may lead to limitations on your MyBrandeE account.</p>
+
+                        <input id="logo_name_input-userId" class="form-control" type="hidden" value="2"
+                            placeholder="User Id">
+                        <input id="logo_name_input-userName" class="form-control" type="hidden" value="seller"
+                            placeholder="User Name">
+                    </div>
+
+                    <div id="darg-drop-parent" style="display: grid; justify-items: flex-start; justify-content: center;">
+                        <div id="drag-drop" class="drag_drop" style="display: grid; justify-content: center; align-items: center;">
+                            <div id="drag-drop-child" style="display: grid; align-items: center;  justify-content: center; gap: 10px;">
+                                <div class="icon-container">
+                                    <i class="fa-solid fa-images" style="font-size: 80px; color: #4d4e4e;"></i>
+                                </div>
+                                <h2 style="color: #4d4e4e; text-align: center;">Drag & Drop</h2>
+                                <div style="display: flex; flex-direction: column; align-items: flex-start; margin-left: 50px;">
+                                    <li style="color: #4d4e4e; font-size: 20px;">Logo Symbol</li>
+                                    <li style="color: #4d4e4e; font-size: 20px;">SVG format Only</li>
+                                    <li style="color: #4d4e4e; font-size: 20px;">No text layers</li>
+                                    <li style="color: #4d4e4e; font-size: 20px;">Less than 100 layers</li>
+                                    <li style="color: #4d4e4e; font-size: 20px;">100% vector elements</li>
+                                </div>
+                            </div>
+                            <div id="img-view-container"
+                                style="display: flex; justify-content: center; align-items: center;">
+                                <img id="img-view" style="width: 500px; height: 500px; object-fit: contain;"></img>
+                            </div>
+                        </div>
+                        <input type="file" id="upload_file_btn" name="upload_file_btn" style="display: none;">
+                        <!-- <button id="crop">Crop</button>
+                    <img id="imger" alt=""> -->
+                    </div>
+                </div>
+                <div style="display: flex; margin-inline: 95px;">
+                    <button class="btn-main btn-bordered" id="terms-accept">I Accept the Terms</button>
+
+                    <div style="display: flex; justify-content: space-between; width: 600px; margin-left: 640px;">
+                        <button class="btn-main btn-bordered" style="margin-left: 50px;">
+                            <label for="upload_file_btn">Upload file</label>
+                        </button>
+                        <button id="next_btn" class="btn-main btn-bordered" style="margin-left: 50px;">
+                            <label>Next ></label>
+                        </button>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -92,10 +125,15 @@
                     <img id="header-logo" src="./assets/Logo Gold.svg"
                         style="width: 170px; margin-left: 20px; object-fit: cover;" alt="">
                 </div>
-                <button id="save-btn" class="btn-main"><i class="fas fa-download" style="margin: 5px;"></i>
-                    <span>Save and
-                        Next</span>
-                </button>
+                <div style="display: flex; justify-content: space-evenly; gap: 10px;">
+                    <button id="save-btn" class="btn-main"><i class="fas fa-download" style="margin: 5px;"></i>
+                        <span>Save</span>
+                    </button>
+                    <button id="third_page_btn" style="display: none;" class="btn-main">
+                        <i class="fas fa-angles-right" style="margin: 5px;"></i>
+                        <span>Next</span>
+                    </button>
+                </div>
             </div>
         </header>
 
@@ -446,7 +484,7 @@
                     <div id="logo_colors_pallete"
                         style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
                     </div>
-                        <pallete-component id="logo-pallete" data-list="['Linear']"></pallete-component>
+                    <pallete-component id="logo-pallete" data-list="['Linear']"></pallete-component>
                 </div>
 
 
@@ -504,7 +542,8 @@
                             max="100">
                     </div>
                 </div>
-                <div id="logo-shadow-border" style="border-bottom: 1px solid rgb(226, 226, 226); padding-bottom: 14px;"></div>
+                <div id="logo-shadow-border" style="border-bottom: 1px solid rgb(226, 226, 226); padding-bottom: 14px;">
+                </div>
 
                 <div class="setting-item" style=" width: 230px;">
                     <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -710,19 +749,11 @@
                             </label>
                         </div>
 
-                        
+
                         <div style="margin-top: 20px;">
                             <pallete-component id="bg-pallete"
-                            data-list="['Linear', 'Solid', 'Web 2.0', 'None']"></pallete-component>
+                                data-list="['Linear', 'Solid', 'Web 2.0', 'None']"></pallete-component>
                         </div>
-                        <!-- 
-                        <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Layer</h4>
-                        <div id="logo_colors_pallete"
-                            style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-                        </div>
-                        <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Text</h4>
-                        <div id="logo_text_colors_pallete"
-                            style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div> -->
                     </div>
 
 
@@ -1425,25 +1456,15 @@
     <div id="details_view">
         <header class="header">
             <div style="display: flex; justify-content: space-between; margin-inline: 10px; align-items: center;">
-                <div id="back-main_3" style="margin-left: 120px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="1em" viewBox="0 0 448 512">
-                        <path
-                            d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-                    </svg>
-                </div>
                 <div>
                     <img src="./assets/Logo Gold.svg" alt="" loading="eager"
                         style="width: 170px; object-fit: contain; margin-top: 10px;">
                 </div>
-                <div class="links">
-                    <a class="link" href="#">Learn</a>
-                    <a class="link" href="#">About</a>
-                </div>
             </div>
         </header>
         <div>
-            <div style="display: flex; justify-content: space-between;">
-                <div style="margin-top: 40px;">
+            <div style="display: flex; justify-content: space-around;">
+                <div style="margin: 70px 0; display: flex; flex-direction: column; align-items: flex-end;">
                     <div style="position: fixed; z-index: -1; opacity: 0.1;">
                         <img src="./assets/abs.png" alt="" width="1200px" height="1200px"
                             style="object-fit: contain; filter: invert(); margin-left: 100px;">
@@ -1474,7 +1495,8 @@
                                         buyers brief, which means
                                         higher chances for exposure and conversion</p>
                                     <div id="modal_business_tags">
-                                        <div class="container" style="width: 95%; margin-bottom: 20px;">
+                                        <div class="container"
+                                            style="width: 95%; overflow-x: scroll; overflow-y: hidden; margin-bottom: 20px;">
                                             <ul id="business_type_list"></ul>
                                             <input type="text" id="business_type" placeholder="Industry Type...">
                                         </div>
@@ -1488,23 +1510,28 @@
 
                         </div>
                     </div>
-                    <div class="elements__card">
+                    <!-- <div class="elements__card">
                         <h4>Logo Type</h4>
                         <p>What type of logo best represents logo symbol</p>
                         <div id="logo-type" style="display: flex; justify-content: flex-start; gap: 20px">
                         </div>
-                    </div>
+                    </div> -->
                     <div class="elements__card">
                         <h4>Logo Style</h4>
                         <p>What logo style best represents logo symbol</p>
-                        <div id="logo-style" style="display: flex; justify-content: flex-start; gap: 20px;">
+                        <div id="logo-style" style="display: grid; grid-template-columns: repeat(4, 1fr); justify-content: flex-start; gap: 20px;">
+                        </div>
+                        <div id="monogram">
+                            <div class="monogram_list" id="monogram_list"></div>
                         </div>
                     </div>
-                </div>
 
-                <div style="margin-top: 80px; margin-right: 400px;">
-                    <h3 style="position: absolute; margin-left: 20px;">Logo Symbol</h3>
-                    <img id="logo-file" class="logo-file" alt="" style="object-fit: cover;">
+                    <button id="upload_logo" class="btn-main" style="margin-right: 20px;">
+                        <i class="fa-solid fa-upload"></i>
+                        Publish</button>
+                </div>
+                <div>
+                    <img id="prev_img" alt="" style="width: 800px; height: 800px; object-fit: contain;">
                 </div>
             </div>
 

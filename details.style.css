@@ -55,7 +55,7 @@
   padding: 7px 26px 4px 39px;
   border-width: 0 0 2px;
   width: 100%;
-  font-size: 16px;
+  font-size: 32px;
   font-weight: 500;
   color: var(--gray-dark);
   transition: 0.1s ease-out all;
@@ -63,12 +63,12 @@
 
 .input-box-primary::before {
   content: '\f044';
-  font-family: 'Font Awesome 5 Free';
+  font-family: 'Font Awesome 6 Free';
   position: absolute;
   top: 50%;
   left: 10px;
   transform: translateY(-50%);
-  font-size: 14px;
+  font-size: 24px;
   font-weight: 500;
   color: var(--gray);
 }
@@ -100,6 +100,17 @@ input:focus {
   background-color: var(--gold-darker);
 }
 
+.btn-bordered {
+  outline: 1.5px solid var(--gold);
+  background: none;
+  color: var(--gray-dark);
+}
+
+.btn-bordered:hover {
+  background-color: var(--gold);
+  color: var(--white);
+}
+
 .icon-container {
   display: flex;
   flex-direction: column;
@@ -111,14 +122,15 @@ input:focus {
   height: 500px;
   width: 550px;
   border-radius: 15px;
-  display: grid;
+  /* display: grid; */
   margin: 50px;
+  padding: 10px;
   justify-content: center;
   align-items: center;
   text-align: center;
   border-width: 3px;
   border-style: dotted;
-  border-color: #4d4e4e55;
+  border-color: var(--gold);
   background-color: #fff;
   transition: ease-out 0.2s all;
 }
@@ -128,13 +140,22 @@ input:focus {
 }
 
 .paragraph {
-  color: #333333;
+  color: var(--gray);
+  font-size: 16px;
+  letter-spacing: 0.5px;
+}
+
+.ins {
+  font-size: 16px;
+  color: var(--gray-dark);
+  padding: 0;
+  margin: 4px;
 }
 
 .elements__card {
   background-color: #eeeeee6b;
   padding: 25px;
-  margin: 40px;
+  margin: 16px;
   border: 1px solid #ddd;
   border-radius: 5px;
   width: 800px;
@@ -207,6 +228,8 @@ input:focus {
 
 .tag_name_text {
   font-size: 14px;
+  width: 160px;
+  height: 20px;
 }
 
 .industry-modal {
@@ -292,4 +315,28 @@ input:focus {
   display: block;
 
   max-width: 100%;
+}
+
+.monogram_list {
+  display: none;
+  margin: 30px 0;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 30px;
+}
+
+.mlist {
+  border-radius: 10px;
+  width: 60px;
+  height: 24px;
+  background-color: var(--gray);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.mlist:hover {
+  background-color: var(--gold);
 }

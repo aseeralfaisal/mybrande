@@ -5,6 +5,28 @@ import { DeleteLayer } from './handleDeleteLayer';
 import 'alwan/dist/css/alwan.min.css';
 import iro from '@jaames/iro';
 import WebFont from 'webfontloader';
+import axios from 'axios';
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
+
+const toastNotification = (text) => {
+  return Toastify({
+    text,
+    duration: 3000,
+    newWindow: true,
+    close: false,
+    gravity: 'top',
+    position: 'center',
+    stopOnFocus: true,
+    style: {
+      background: 'var(--gold)',
+      color: '#ffffff',
+      borderRadius: '8px',
+      cursor: 'context-menu',
+    },
+    onClick: null,
+  }).showToast();
+};
 
 const querySelect = (element) => document.querySelector(element);
 const querySelectAll = (element) => document.querySelectorAll(element);
@@ -13,7 +35,7 @@ WebFont.load({
   google: {
     families: ['Poppins:300,400,500,600,700', 'Inter:300,400,500,600,700', 'Roboto:400,500,700'],
   },
-  fontloading: () => querySelect('#loader').style.display = 'flex',
+  fontloading: () => (querySelect('#loader').style.display = 'flex'),
   fontactive: (familyName) => {
     if (familyName === 'Poppins' || familyName === 'Inter' || familyName === 'Roboto') {
       querySelect('#loader').style.display = 'none';
@@ -140,7 +162,7 @@ class EditorScreen {
     this.logoName = 'My Brand Name';
     this.sloganName = 'Slogan goes here';
     this.rotateRange = querySelect('#rotate-bar');
-    this.downloadBtn = querySelect('#save-btn');
+    this.saveBtn = querySelect('#save-btn');
     this.scaleRange = querySelect('#progress-bar');
     this.scaleRangeUploads = querySelect('#progress-bar-uploads');
     this.scaleElement = querySelect('#scale-value');
@@ -200,10 +222,10 @@ class EditorScreen {
     this.activeNavbarSetting = 'logo';
     this.initialRotation = null;
 
-    querySelect('#back-main_3').addEventListener('click', () => {
-      localStorage.setItem('mainEditorCounter', 1);
-      location.reload();
-    });
+    this.transparentLoader = (isOn = true) => {
+      querySelect('#loader').style.display = isOn ? 'flex' : 'none';
+      querySelect('#loader').style.background = '#ffffffbb';
+    };
 
     this.rotateObject = () => {
       const active = this.canvas.getActiveObject();
@@ -455,7 +477,44 @@ class EditorScreen {
       this.rotateObject();
     });
 
-    this.downloadBtn.addEventListener('click', () => {
+    this.saveBtn.addEventListener('click', async () => {
+      this.transparentLoader(true);
+
+      this.canvas.setBackgroundImage(null);
+      this.canvas.setBackgroundColor(null, this.canvas.renderAll.bind(this.canvas));
+
+      const currentCanvasSVG = this.canvas.toSVG();
+
+      const currentCanvasData = JSON.stringify(this.canvas);
+      const sellerLogoInfoId = localStorage.getItem('sellerLogoInfoId');
+
+      if (currentCanvasData && sellerLogoInfoId) {
+        const response = await axios.post(`https://www.mybrande.com/api/seller/logo/store`, {
+          seller_logoinfo_id: sellerLogoInfoId,
+          json_data: currentCanvasData,
+          svg_data: currentCanvasSVG,
+        });
+
+        this.canvas.setBackgroundColor(this.canvasBG, this.canvas.renderAll.bind(this.canvas));
+        setCanvasBackground();
+
+        const { logoSavedCount } = response.data;
+
+        if (response.status === 200) {
+          toastNotification(`You have saved ${logoSavedCount} ${logoSavedCount === 1 ? 'time' : 'times'}. Save at least three variants to move on to the next page`);
+          this.transparentLoader(false);
+          if (logoSavedCount >= 3) {
+            querySelect('#third_page_btn').style.display = 'flex';
+          }
+          if (logoSavedCount >= 8) {
+            querySelect('#save-btn').style.display = 'none';
+          }
+        }
+      }
+
+    });
+
+    querySelect('#third_page_btn').addEventListener('click', () => {
       const savedLogo = this.canvas.toDataURL({
         format: 'png',
         multiplier: 10,
@@ -463,10 +522,11 @@ class EditorScreen {
       localStorage.setItem('saved_logo', savedLogo);
       localStorage.setItem('mainEditorCounter', 3);
       location.reload();
+
       setTimeout(() => {
-        document.getElementById('drag_drop_view').style.display = 'none';
-        document.getElementById('main_editor_view').style.display = 'none';
-        document.getElementById('details_view').style.display = 'block';
+        querySelect('#drag_drop_view').style.display = 'none';
+        querySelect('#main_editor_view').style.display = 'none';
+        querySelect('#details_view').style.display = 'block';
       }, 50);
     });
 
@@ -793,7 +853,7 @@ class EditorScreen {
       } else {
         return 'Title Case';
       }
-    }
+    };
 
     const putAngleDownIcon = (className, additionalFunction) => {
       const icon = document.createElement('i');
@@ -869,8 +929,7 @@ class EditorScreen {
     });
 
     this.previewMode.addEventListener('click', () => {
-      querySelect('#loader').style.display = 'flex';
-      querySelect('#loader').style.background = '#ffffffbb';
+      this.transparentLoader();
       const bgColor = this.canvas.get('backgroundColor');
 
       const timeout = 1000;
@@ -1323,7 +1382,7 @@ class EditorScreen {
         }, 100);
       } else if (undoHistory.length === undoMax) {
         currIndex = undoMax - 1;
-        undoHistory.shift(); // Remove the existingest entry when reaching undoMax
+        undoHistory.shift();
         undoHistory.push(JSON.stringify(this.canvas));
       }
     };
@@ -1566,7 +1625,7 @@ class EditorScreen {
         });
       }
     };
-    
+
     const redo = () => {
       if (currIndex < undoHistory.length - 1) {
         setCanvasBackground();
@@ -2550,7 +2609,7 @@ class EditorScreen {
 
       querySelect(activeElement + '_view_BG').classList.add('color_mode_title-active');
       querySelect(activeElement + '_view_BG').style.display = 'flex';
-    }
+    };
 
     querySelect('#HSL_mode_BG').addEventListener('click', () => {
       handleColorModeClickBG('#HSL', '#RGB', '#HEX');
