@@ -362,7 +362,6 @@ const getIndustrylist = () => {
 document.getElementById('upload_logo').addEventListener('click', async () => {
   const fieldsAreEmpty =
     newLogoStyle.length === 0 ||
-    newLogoType.length === 0 ||
     getTaglist().length === 0 ||
     getIndustrylist().length === 0;
 

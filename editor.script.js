@@ -489,16 +489,25 @@ class EditorScreen {
       const currentCanvasData = JSON.stringify(this.canvas);
       const sellerLogoInfoId = localStorage.getItem('sellerLogoInfoId');
 
+      const getFormattedBgColor = (bgColor) => {
+        if (typeof bgColor === 'object') {
+          const color = bgColor.colorStops.map((i) => i.color);
+          return color.join(',');
+        }
+        return bgColor;
+      };
+
       if (currentCanvasData && sellerLogoInfoId) {
-        const response = await axios.post(`https://www.mybrande.com/api/seller/logo/store`, {
+        const postData = {
           seller_logoinfo_id: sellerLogoInfoId,
           json_data: currentCanvasData,
           svg_data: currentCanvasSVG,
           orientation: this.logoOrientation,
           logo_spacing: +logoNameElement.get('charSpacing') / 10,
           slogan_spacing: +sloganNameElement.get('charSpacing') / 10,
-          backcolor: bgColor === this.canvasBG ? 'transparent' : bgColor
-        });
+          backcolor: bgColor === this.canvasBG ? 'transparent' : getFormattedBgColor(bgColor),
+        };
+        const response = await axios.post(`https://www.mybrande.com/api/seller/logo/store`, postData);
 
         this.canvas.setBackgroundColor(bgColor, this.canvas.renderAll.bind(this.canvas));
         setCanvasBackground();
