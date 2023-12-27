@@ -1,4 +1,24 @@
 import axios from 'axios';
+import Toastify from 'toastify-js';
+
+const toastNotification = (text) => {
+  return Toastify({
+    text,
+    duration: 3000,
+    newWindow: true,
+    close: false,
+    gravity: 'top',
+    position: 'center',
+    stopOnFocus: true,
+    style: {
+      background: 'var(--gold)',
+      color: '#ffffff',
+      borderRadius: '8px',
+      cursor: 'context-menu',
+    },
+    onClick: null,
+  }).showToast();
+};
 
 const tagName = document.getElementById('tag_name');
 const tagList = document.getElementById('tag_list');
@@ -6,10 +26,11 @@ let tagItems = [];
 
 tagName.addEventListener('keypress', (event) => {
   if (event.key === 'Enter') {
+    document.querySelector('#tag_list_wrapper').style.display = 'block';
     let val = tagName.value;
     if (val !== '') {
       if (tagItems.indexOf(val) >= 0) {
-        alert('Tag name is a duplicate');
+        toastNotification('Tag name is a duplicate');
       } else {
         tagItems.push(val);
         tagNamesRender();
@@ -17,15 +38,17 @@ tagName.addEventListener('keypress', (event) => {
         tagName.focus();
       }
     } else {
-      alert('No tag Name!!!');
+      toastNotification('No tag Name!!!');
     }
   }
 });
 
 const tagNamesRender = () => {
+  if (tagItems.length === 0) document.querySelector('#tag_list_wrapper').style.display = 'none';
   tagList.innerHTML = '';
   tagItems.forEach((item, index) => {
     const listItem = document.createElement('li');
+    listItem.style.width = 'max-content';
     listItem.innerHTML = `<span id="gfx_elem_text" class="tag_name_text">${item}</span><a id="item_${index}">X</a>`;
 
     const anchor = listItem.querySelector(`#item_${index}`);
@@ -212,7 +235,8 @@ getIndustryData().then((newCategoryData) => {
     const category = e.target.innerText;
 
     if (newTypes.includes(category)) {
-      businessTypeDelete(category);
+      // businessTypeDelete(category);
+      return;
     } else {
       newTypes.push(category);
       businessTypeRender();

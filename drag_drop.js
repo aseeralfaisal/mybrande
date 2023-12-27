@@ -2,10 +2,31 @@ import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
 import './style.css';
 import axios from 'axios';
+import Toastify from 'toastify-js';
 
 const querySelect = (id) => document.querySelector(id);
 const fileReader = new FileReader();
 
+const toastNotification = (text) => {
+  return Toastify({
+    text,
+    duration: 3000,
+    newWindow: true,
+    close: false,
+    gravity: 'top',
+    position: 'center',
+    stopOnFocus: true,
+    style: {
+      background: 'var(--gold)',
+      color: '#ffffff',
+      borderRadius: '8px',
+      cursor: 'context-menu',
+    },
+    onClick: null,
+  }).showToast();
+};
+
+var logoMainFile;
 const elements = {
   detailsView: querySelect('#details_view'),
   mainEditorView: querySelect('#main_editor_view'),
@@ -28,7 +49,7 @@ const preventEvents = (event) => {
 };
 
 let mainEditorCounter = localStorage.getItem('mainEditorCounter');
-localStorage.setItem('mainEditorCounter', '2');
+localStorage.setItem('mainEditorCounter', '3');
 if (mainEditorCounter === '1') {
   elements.detailsView.style.display = 'none';
   elements.mainEditorView.style.display = 'block';
@@ -70,7 +91,7 @@ const uploadLocalFile = (file) => {
 
   if (file.type !== 'image/svg+xml') {
     file = null;
-    alert('Please use an SVG file instead');
+    toastNotification('Please use an SVG file instead');
     elements.imgViewContainer.style.display = 'none';
     return;
   }
@@ -79,6 +100,7 @@ const uploadLocalFile = (file) => {
   fileReader.onloadend = () => {
     const svgContent = fileReader.result;
     const resizedSVGContent = resizeSVG(svgContent, 1000, 1000);
+    logoMainFile = resizedSVGContent;
     localStorage.setItem('logo-file', resizedSVGContent);
     localStorage.setItem('mainEditorCounter', 0);
   };
@@ -133,27 +155,32 @@ elements.inputPrimary.addEventListener('input', (event) => {
 
 let termsAccept = false;
 elements.nextBtn.addEventListener('click', async () => {
-  if (!termsAccept) return alert('Please Accept the terms to continue');
+  if (!termsAccept) return toastNotification('Please Accept the terms to continue');
   if (!uploaded) {
-    alert('Please upload an SVG file');
+    toastNotification('Please upload an SVG file');
     localStorage.removeItem('mainEditorCounter');
     return location.reload();
   } else if (!logoNameExists) {
-    return alert('Please include a logo name');
+    return toastNotification('Please include a logo name');
   }
   const userId = querySelect('#logo_name_input-userId').value;
-  if (!userId) return alert('Invalid User');
+  if (!userId) return toastNotification('Invalid User');
   const apiUrl = `https://www.mybrande.com/api/logoname/store`;
 
   const response = await axios.post(apiUrl, {
     user_id: userId,
     logo_name: elements.inputPrimary.value,
+    main_file: logoMainFile,
   });
-
+  
+  if (response.data.status === 500) {
+    return toastNotification(response.data.message);
+  } 
+  
   if (response.status === 200) {
     const sellerLogoInfoId = response?.data?.seller_logoinfo_id;
     if (sellerLogoInfoId) {
-      console.log(sellerLogoInfoId)
+      console.log(sellerLogoInfoId);
       localStorage.setItem('sellerLogoInfoId', sellerLogoInfoId);
     }
     localStorage.setItem('mainEditorCounter', '1');

@@ -172,7 +172,9 @@ input:focus {
 }
 
 .container {
-  width: 500px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 780px;
   background: #f0f0f0;
   padding: 12px;
   border-radius: 15px;
@@ -185,8 +187,9 @@ input:focus {
   list-style: none;
   margin: 0px;
   padding: 0px;
-  display: flex;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
 }
 
 .container ul li {
@@ -228,7 +231,7 @@ input:focus {
 
 .tag_name_text {
   font-size: 14px;
-  width: 160px;
+  /* width: 130px; */
   height: 20px;
 }
 

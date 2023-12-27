@@ -221,6 +221,7 @@ class EditorScreen {
     this.colorMode = 'Solid';
     this.activeNavbarSetting = 'logo';
     this.initialRotation = null;
+    this.logoOrientation = null;
 
     this.transparentLoader = (isOn = true) => {
       querySelect('#loader').style.display = isOn ? 'flex' : 'none';
@@ -480,9 +481,9 @@ class EditorScreen {
     this.saveBtn.addEventListener('click', async () => {
       this.transparentLoader(true);
 
+      const bgColor = this.canvas.get('backgroundColor');
       this.canvas.setBackgroundImage(null);
       this.canvas.setBackgroundColor(null, this.canvas.renderAll.bind(this.canvas));
-
       const currentCanvasSVG = this.canvas.toSVG();
 
       const currentCanvasData = JSON.stringify(this.canvas);
@@ -493,15 +494,23 @@ class EditorScreen {
           seller_logoinfo_id: sellerLogoInfoId,
           json_data: currentCanvasData,
           svg_data: currentCanvasSVG,
+          orientation: this.logoOrientation,
+          logo_spacing: +logoNameElement.get('charSpacing') / 10,
+          slogan_spacing: +sloganNameElement.get('charSpacing') / 10,
+          backcolor: bgColor === this.canvasBG ? 'transparent' : bgColor
         });
 
-        this.canvas.setBackgroundColor(this.canvasBG, this.canvas.renderAll.bind(this.canvas));
+        this.canvas.setBackgroundColor(bgColor, this.canvas.renderAll.bind(this.canvas));
         setCanvasBackground();
 
         const { logoSavedCount } = response.data;
 
         if (response.status === 200) {
-          toastNotification(`You have saved ${logoSavedCount} ${logoSavedCount === 1 ? 'time' : 'times'}. Save at least three variants to move on to the next page`);
+          toastNotification(
+            `You have saved ${logoSavedCount} ${
+              logoSavedCount === 1 ? 'time' : 'times'
+            }. Save at least three variants to move on to the next page`
+          );
           this.transparentLoader(false);
           if (logoSavedCount >= 3) {
             querySelect('#third_page_btn').style.display = 'flex';
@@ -511,7 +520,6 @@ class EditorScreen {
           }
         }
       }
-
     });
 
     querySelect('#third_page_btn').addEventListener('click', () => {
@@ -3029,6 +3037,7 @@ class EditorScreen {
             newGrp.ungroupOnCanvas();
             updatePreview();
             this.canvas.requestRenderAll();
+            this.logoOrientation = 'vertical';
           }, timeout);
           break;
         case 'bottomTop':
@@ -3055,6 +3064,7 @@ class EditorScreen {
             newGrp.ungroupOnCanvas();
             updatePreview();
             this.canvas.requestRenderAll();
+            this.logoOrientation = 'vertical';
           }, timeout);
           break;
         case 'leftRight':
@@ -3120,6 +3130,7 @@ class EditorScreen {
             newGrp.ungroupOnCanvas();
             updatePreview();
             this.canvas.requestRenderAll();
+            this.logoOrientation = 'horizontal';
           }, timeout);
           break;
         case 'rightLeft':
@@ -3188,6 +3199,7 @@ class EditorScreen {
             newGrp.ungroupOnCanvas();
             updatePreview();
             this.canvas.requestRenderAll();
+            this.logoOrientation = 'horizontal';
           }, timeout);
           break;
       }
