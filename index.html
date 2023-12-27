@@ -1481,7 +1481,8 @@
                         <div id="tag_list_wrapper" class="container" style="display: none;">
                             <ul id="tag_list" style="display: flex; flex-wrap: wrap; gap: 10px;"></ul>
                         </div>
-                        <input type="text" id="tag_name" placeholder="Type a Tag Name..." style="width: 100%; border: none; border-radius: 10px; background: none; padding-inline: 10px;">
+                        <input type="text" id="tag_name" placeholder="Type a Tag Name..."
+                            style="width: 100%; border: none; border-radius: 10px; background: none; padding-inline: 10px;">
                     </div>
                     <div class="elements__card">
                         <h4>Industry</h4>
@@ -1496,15 +1497,18 @@
 
                             <div id="industry-modal" class="industry-modal">
                                 <div class="industry-modal-content">
-                                    <h4>Select Relavent industries</h4>
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <h4>Select Relavent industries</h4>
+                                        <i id="industry_close_icon" class="fas fa-close"></i>
+                                    </div>
                                     <p>Highly relavent and specific industries can lead to higher relevancy to the
                                         buyers brief, which means
                                         higher chances for exposure and conversion</p>
                                     <div id="modal_business_tags">
-                                        <div class="container"
-                                            style="width: 95%; margin-bottom: 20px;">
+                                        <div class="container" style="width: 95%; margin-bottom: 20px;">
                                             <ul id="business_type_list"></ul>
-                                            <input type="text" id="business_type" placeholder="Industry Type...">
+                                            <p id="business_text_color" style="color: #555555; font-size: 14px;">Select
+                                                Tags from list to add...</p>
                                         </div>
                                     </div>
                                     <div class="tag_categories">

@@ -205,6 +205,7 @@ getIndustryData().then((newCategoryData) => {
   const modal_business_tags = document.querySelector('#modal_business_tags');
 
   const businessTypeRender = () => {
+    document.querySelector('#business_text_color').style.display = 'none';
     businessTypeList.innerHTML = '';
     newTypes.forEach((item, index) => {
       const listItem = document.createElement('li');
@@ -245,15 +246,15 @@ getIndustryData().then((newCategoryData) => {
 });
 
 document.addEventListener('click', (event) => {
-  if (event.target.classList.contains('industry-modal')) {
+  if (event.target.classList.contains('industry-modal') || event.target.classList.contains('fa-close')) {
     document.querySelector('#industry-modal').style.display = 'none';
   }
 });
 
-const toggleIndustryModal = () => (document.querySelector('#industry-modal').style.display = 'block');
+const visibleIndustryModal = () => (document.querySelector('#industry-modal').style.display = 'block');
 
-document.getElementById('modal_business_tags_parent').addEventListener('click', toggleIndustryModal);
-document.getElementById('industry-type').addEventListener('click', toggleIndustryModal);
+document.getElementById('modal_business_tags_parent').addEventListener('click', visibleIndustryModal);
+document.getElementById('industry-type').addEventListener('click', visibleIndustryModal);
 
 const newLogoType = [];
 const newLogoStyle = [];
@@ -345,8 +346,8 @@ document.querySelectorAll('#mlist_item').forEach((item) => {
 });
 
 const getTaglist = () => {
-  const tags = document.querySelectorAll('#gfx_elem_text');
   const taglist = [];
+  const tags = document.querySelectorAll('#gfx_elem_text');
   tags.forEach((tag) => taglist.push(tag.innerHTML));
   return taglist;
 };
@@ -359,6 +360,16 @@ const getIndustrylist = () => {
 };
 
 document.getElementById('upload_logo').addEventListener('click', async () => {
+  const fieldsAreEmpty =
+    newLogoStyle.length === 0 ||
+    newLogoType.length === 0 ||
+    getTaglist().length === 0 ||
+    getIndustrylist().length === 0;
+
+  if (fieldsAreEmpty) {
+    return toastNotification('All the fields are required');
+  }
+
   const graphical_element = getTaglist().join(',');
   const industry = getIndustrylist().join(',');
   const monogram_type = newLogoType.join(',');
