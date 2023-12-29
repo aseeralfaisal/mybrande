@@ -28,6 +28,12 @@ tagName.addEventListener('keypress', (event) => {
   if (event.key === 'Enter') {
     document.querySelector('#tag_list_wrapper').style.display = 'block';
     let val = tagName.value;
+
+    const graphicTagLen = getGraphicTaglist().length;
+    if (graphicTagLen >= 20) {
+      return toastNotification('20 graphic elements are allowed at max');
+    }
+
     if (val !== '') {
       if (tagItems.indexOf(val) >= 0) {
         toastNotification('Tag name is a duplicate');
@@ -234,10 +240,14 @@ getIndustryData().then((newCategoryData) => {
 
   categoryTypes.addEventListener('click', (e) => {
     const category = e.target.innerText;
+    const industryTagLen = getIndustrylist().length;
+
+    if (industryTagLen >= 30) {
+      return toastNotification('30 industry tags are allowed at max');
+    }
 
     if (newTypes.includes(category)) {
-      // businessTypeDelete(category);
-      return;
+      return toastNotification('The item already exist in the list');
     } else {
       newTypes.push(category);
       businessTypeRender();
@@ -345,7 +355,7 @@ document.querySelectorAll('#mlist_item').forEach((item) => {
   });
 });
 
-const getTaglist = () => {
+const getGraphicTaglist = () => {
   const taglist = [];
   const tags = document.querySelectorAll('#gfx_elem_text');
   tags.forEach((tag) => taglist.push(tag.innerHTML));
@@ -359,32 +369,43 @@ const getIndustrylist = () => {
   return industrylist;
 };
 
-document.getElementById('upload_logo').addEventListener('click', async () => {
-  const fieldsAreEmpty =
-    newLogoStyle.length === 0 ||
-    getTaglist().length === 0 ||
-    getIndustrylist().length === 0;
+const publishLogoBtn = document.getElementById('upload_logo');
+
+const logoPublisher = async () => {
+  const graphicTagLen = getGraphicTaglist().length;
+  const industryTagLen = getIndustrylist().length;
+  const logoStyleTagLen = newLogoStyle.length;
+
+  const fieldsAreEmpty = logoStyleTagLen === 0 || graphicTagLen === 0 || industryTagLen === 0;
 
   if (fieldsAreEmpty) {
     return toastNotification('All the fields are required');
+  } else if (graphicTagLen >= 20) {
+    return toastNotification('20 graphic elements are allowed at max');
+  } else if (industryTagLen >= 30) {
+    return toastNotification('30 industry tags are allowed at max');
   }
 
-  const graphical_element = getTaglist().join(',');
+  const graphical_element = getGraphicTaglist().join(',');
   const industry = getIndustrylist().join(',');
   const monogram_type = newLogoType.join(',');
   const logo_style = newLogoStyle.join(',');
   const seller_logoinfo_id = localStorage.getItem('sellerLogoInfoId');
 
-  const response = await axios.post('https://www.mybrande.com/api/logoothersinfo/store', {
+  const postData = {
     seller_logoinfo_id,
     graphical_element,
     industry,
     monogram_type,
     logo_style,
-  });
+  };
+
+  const response = await axios.post('https://www.mybrande.com/api/logoothersinfo/store', postData);
 
   if (response.status === 200) {
     const userName = document.getElementById('logo_name_input-userName').value;
     location.href = `https://www.mybrande.com/${userName}`;
   }
-});
+};
+
+publishLogoBtn.addEventListener('click', logoPublisher);

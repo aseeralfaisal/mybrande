@@ -532,10 +532,12 @@ class EditorScreen {
     });
 
     querySelect('#third_page_btn').addEventListener('click', () => {
-      const savedLogo = this.canvas.toDataURL({
-        format: 'png',
-        multiplier: 10,
-      });
+      const saveSettings = {
+        format: 'jpg',
+        multiplier: 1,
+      };
+      const savedLogo = this.canvas.toDataURL(saveSettings);
+      localStorage.clear(); 
       localStorage.setItem('saved_logo', savedLogo);
       localStorage.setItem('mainEditorCounter', 3);
       location.reload();
