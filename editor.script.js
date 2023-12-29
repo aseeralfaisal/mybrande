@@ -30,6 +30,7 @@ const toastNotification = (text) => {
 
 const querySelect = (element) => document.querySelector(element);
 const querySelectAll = (element) => document.querySelectorAll(element);
+const getAttr = (element, attr) => querySelect(element).getAttribute(attr)
 
 WebFont.load({
   google: {
@@ -222,6 +223,7 @@ class EditorScreen {
     this.activeNavbarSetting = 'logo';
     this.initialRotation = null;
     this.logoOrientation = null;
+    this.alignId = null;
 
     this.transparentLoader = (isOn = true) => {
       querySelect('#loader').style.display = isOn ? 'flex' : 'none';
@@ -502,10 +504,22 @@ class EditorScreen {
           seller_logoinfo_id: sellerLogoInfoId,
           json_data: currentCanvasData,
           svg_data: currentCanvasSVG,
-          orientation: this.logoOrientation,
-          logo_spacing: +logoNameElement.get('charSpacing') / 10,
-          slogan_spacing: +sloganNameElement.get('charSpacing') / 10,
-          backcolor: bgColor === this.canvasBG ? 'transparent' : getFormattedBgColor(bgColor),
+          logo_position: this.alignId,
+          logo_backgroundcolor: bgColor === this.canvasBG ? 'transparent' : getFormattedBgColor(bgColor),
+          brandName_color: logoNameElement.get('fill'),
+          brandName_fontFamely:logoNameElement.get('fontFamily'),
+          brandName_fontSize: logoNameElement.get('fontSize'),
+          brandName_letterCase: getTextCase(logoNameElement),
+          brandName_fontStyle: logoNameElement.get('fontStyle'),
+          brandName_letterSpace: +logoNameElement.get('charSpacing') / 10,
+          brandName_droupShadow: logoNameElement.get('shadow'),
+          slogan_color: sloganNameElement.get('fill'),
+          slogan_fontFamely:sloganNameElement.get('fontFamily'),
+          slogan_fontSize: sloganNameElement.get('fontSize'),
+          slogan_letterCase: getTextCase(sloganNameElement),
+          slogan_fontStyle: sloganNameElement.get('fontStyle'),
+          slogan_letterSpace: +sloganNameElement.get('charSpacing') / 10,
+          slogan_droupShadow: sloganNameElement.get('shadow'),
         };
         const response = await axios.post(`https://www.mybrande.com/api/seller/logo/store`, postData);
 
@@ -3254,90 +3268,105 @@ class EditorScreen {
 
     querySelect('#top_bottom_1').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#top_bottom_1', 'data-align-id');
       scaleLogo(200);
       centerAndResizeElements('topBottom', 46, 22, 'center', 1.32, 1.5);
     });
 
     querySelect('#top_bottom_2').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#top_bottom_2', 'data-align-id');
       scaleLogo(200);
       centerAndResizeElements('topBottom', 40, 20, 'center', 1.35, 1.52);
     });
 
     querySelect('#top_bottom_3').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#top_bottom_3', 'data-align-id');
       scaleLogo(160);
       centerAndResizeElements('topBottom', 46, 22, 'center', 1.42, 1.6);
     });
 
     querySelect('#bottom_top_1').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#bottom_top_1', 'data-align-id');
       scaleLogo(200);
       centerAndResizeElements('bottomTop', 46, 22, 'center', 3.8, 5.5);
     });
 
     querySelect('#bottom_top_2').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#bottom_top_2', 'data-align-id');
       scaleLogo(200);
       centerAndResizeElements('bottomTop', 40, 18, 'center', 3.5, 5);
     });
 
     querySelect('#bottom_top_3').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#bottom_top_3', 'data-align-id');
       scaleLogo(160);
       centerAndResizeElements('bottomTop', 46, 22, 'center', 3.3, 4.5);
     });
 
     querySelect('#left_right_1').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#left_right_1', 'data-align-id');
       scaleLogo(200);
       centerAndResizeElements('leftRight', 32, 25, 'center', 1.32, 1.5);
     });
 
     querySelect('#left_right_2').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#left_right_2', 'data-align-id');
       scaleLogo(200);
       centerAndResizeElements('leftRight', 32, 25, 'left', 1.32, 1.5);
     });
 
     querySelect('#left_right_3').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#left_right_3', 'data-align-id');
       scaleLogo(160);
       centerAndResizeElements('leftRight', 32, 25, 'left', 1.32, 1.5);
     });
 
     querySelect('#right_left_1').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#right_left_1', 'data-align-id');
       scaleLogo(200);
       centerAndResizeElements('rightLeft', 32, 25, 'center', 1.32, 1.5);
     });
 
     querySelect('#right_left_2').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#right_left_2', 'data-align-id');
       scaleLogo(160);
       centerAndResizeElements('rightLeft', 32, 25, 'left', 1.32, 1.5);
     });
 
     querySelect('#right_left_3').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#right_left_3', 'data-align-id');
       scaleLogo(200);
       centerAndResizeElements('rightLeft', 32, 25, 'left', 1.32, 1.5);
     });
 
     querySelect('#top_bottom_4').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#top_bottom_4', 'data-align-id');
       scaleLogo(200);
       centerAndResizeElements('topBottom', 46, 22, 'center', 1.32, 1.5, true);
     });
 
     querySelect('#left_right_4').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#left_right_4', 'data-align-id');
       scaleLogo(200);
       centerAndResizeElements('leftRight', 32, 25, 'center', 1.32, 1.5, true);
     });
 
     querySelect('#right_left_4').addEventListener('click', () => {
       discardSelectionForAlignments();
+      this.alignId = getAttr('#right_left_4', 'data-align-id');
       scaleLogo(200);
       centerAndResizeElements('rightLeft', 32, 25, 'left', 1.32, 1.5, true);
     });

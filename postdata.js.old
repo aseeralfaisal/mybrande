@@ -1,0 +1,10 @@
+const postData = {
+    seller_logoinfo_id: sellerLogoInfoId,
+    json_data: currentCanvasData,
+    svg_data: currentCanvasSVG,
+    logo_position: this.alignId,
+    orientation: this.logoOrientation,
+    logo_spacing: +logoNameElement.get('charSpacing') / 10,
+    slogan_spacing: +sloganNameElement.get('charSpacing') / 10,
+    backcolor: bgColor === this.canvasBG ? 'transparent' : getFormattedBgColor(bgColor),
+  };

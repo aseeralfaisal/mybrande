@@ -49,7 +49,7 @@ const preventEvents = (event) => {
 };
 
 let mainEditorCounter = localStorage.getItem('mainEditorCounter');
-localStorage.setItem('mainEditorCounter', '2');
+localStorage.setItem('mainEditorCounter', '1');
 if (mainEditorCounter === '1') {
   elements.detailsView.style.display = 'none';
   elements.mainEditorView.style.display = 'block';
