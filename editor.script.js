@@ -223,7 +223,7 @@ class EditorScreen {
     this.activeNavbarSetting = 'logo';
     this.initialRotation = null;
     this.logoOrientation = null;
-    this.alignId = null;
+    this.alignId = 1;
 
     this.transparentLoader = (isOn = true) => {
       querySelect('#loader').style.display = isOn ? 'flex' : 'none';

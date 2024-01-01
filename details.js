@@ -339,15 +339,17 @@ document.getElementById('logo-style').addEventListener('click', (e) => {
 
 document.querySelectorAll('#mlist_item').forEach((item) => {
   item.addEventListener('click', (e) => {
-    const clickedItem = e.target.innerText;
+    const item = e.target.innerText;
 
-    if (!newLogoStyle.includes(clickedItem)) {
-      newLogoStyle.push(clickedItem);
+    if (item.length === 1 && item >= 'a' && item <= 'z') {
+      newLogoType.push(item);
+    } else if (!newLogoStyle.includes(item)) {
+      newLogoStyle.push(item);
     } else {
-      newLogoStyle.splice(newLogoStyle.indexOf(clickedItem), 1);
+      newLogoStyle.splice(newLogoStyle.indexOf(item), 1);
     }
 
-    if (newLogoStyle.includes(clickedItem)) {
+    if (newLogoStyle.includes(item)) {
       item.style.background = 'var(--gold)';
     } else {
       item.style.background = '';
