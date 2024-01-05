@@ -12,7 +12,6 @@
 </head>
 
 <body>
-
     <div id="loader"
         style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; z-index: 10000; display: flex; justify-content: center; align-items: center;">
         <img src="/assets/loader.gif" alt="" style="max-width: 100%; max-height: 100%;">
@@ -26,8 +25,6 @@
                         style="width: 170px; object-fit: contain; margin-top: 10px;">
                 </div>
                 <div class="links">
-                    <!-- <a class="link" href="#">Learn</a>
-                    <a class="link" href="#">About</a> -->
                     <i class="fa-solid fa-circle-user" style="font-size: 32px; color: var(--gray);"></i>
                 </div>
             </div>
@@ -45,7 +42,6 @@
                                 placeholder="Title your logo" style="font-size: 28px; font-weight: 400;">
                         </div>
                         <p class="paragraph" style="width: 700px; font-size: 16px; padding-block: 10px;">Add a title to
-                            your
                             logo design for easy tracking and management. This title is only visible to you and can be
                             changed at any time.</p>
 
@@ -1191,236 +1187,9 @@
                 <span id="redo-btn" class="canvas-action">
                     <i class="fa fa-redo" style="color: var(--gray);"></i>
                     Redo
-                </span>
-                <!-- <span id="align-btn" class="canvas-action">
-                    <i class="fa fa-align-center" style="color: var(--gray);"></i>
-                    Align
-                </span> -->
             </div>
             <div id="canvas-container" tabindex="0">
                 <canvas id="c" height="600vh" width="980vw"></canvas>
-                <!-- <canvas id="c" height="1000vh" width="1580vw"></canvas> -->
-            </div>
-
-        </div>
-
-        <div class="right-bar">
-            <div style="margin-top: 100px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                <div id="top_bottom_1" data-align-id="1" class="svg__icon">
-                    <svg fill="currentColor" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'
-                        role='graphics-symbol' aria-labelledby='title' aria-describedby='desc'
-                        class='tw-fill-current tw-w-14 tw-h-14'>
-                        <title id='layout-itn-tcn-773-title' lang='en'>
-                            Icon with text below
-                        </title>
-                        <desc id='layout-itn-tcn-773-desc' lang='en'>
-                            Icon with text below Icon
-                        </desc>
-                        <svg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'>
-                            <circle cx='8' cy='5' r='3'></circle>
-                            <rect x='4' y='13' width='8' height='1.5' rx='0.75'></rect>
-                            <rect x='2' y='9.5' width='12' height='2' rx='1'></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="top_bottom_2" data-align-id="2" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-itn-tcs-775-title" lang="en">Icon with smaller text below</title>
-                        <desc id="layout-itn-tcs-775-desc" lang="en">Icon with smaller text below Icon</desc> <svg
-                            width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="8" cy="5" r="3"></circle>
-                            <rect x="6" y="13" width="4" height="1.5" rx="0.75"></rect>
-                            <rect x="4" y="9.5" width="8" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="top_bottom_3" data-align-id="3" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-its-tcn-777-title" lang="en">Smaller icon with larger text below</title>
-                        <desc id="layout-its-tcn-777-desc" lang="en">Smaller icon with larger text below Icon</desc>
-                        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="8" cy="4.5" r="2"></circle>
-                            <rect x="4" y="11.5" width="8" height="1.5" rx="0.75"></rect>
-                            <rect x="2" y="8" width="12" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-
-                <div id="bottom_top_1" data-align-id="4" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-ibn-tcn-525-title" lang="en">Icon with text above</title>
-                        <desc id="layout-ibn-tcn-525-desc" lang="en">Icon with text above Icon</desc> <svg width="16"
-                            height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="8" cy="11" r="3"></circle>
-                            <rect x="4" y="5" width="8" height="1.5" rx="0.75"></rect>
-                            <rect x="2" y="1.5" width="12" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="bottom_top_2" data-align-id="5" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-ibn-tcs-1491-title" lang="en">Icon with smaller text above</title>
-                        <desc id="layout-ibn-tcs-1491-desc" lang="en">Icon with smaller text above Icon</desc> <svg
-                            width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="8" cy="11" r="3"></circle>
-                            <rect x="6" y="5" width="4" height="1.5" rx="0.75"></rect>
-                            <rect x="4" y="1.5" width="8" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="bottom_top_3" data-align-id="6" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-ibs-tcn-783-title" lang="en">Smaller icon with larger text above</title>
-                        <desc id="layout-ibs-tcn-783-desc" lang="en">Smaller icon with larger text above Icon</desc>
-                        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="8" cy="11.5" r="2"></circle>
-                            <rect x="4" y="6.5" width="8" height="1.5" rx="0.75"></rect>
-                            <rect x="2" y="3" width="12" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="left_right_1" data-align-id="7" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-iln-tcn-819-title" lang="en">Icon with text on the right</title>
-                        <desc id="layout-iln-tcn-819-desc" lang="en">Icon with text on the right Icon</desc> <svg
-                            width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="4" cy="8" r="3"></circle>
-                            <rect x="9.5" y="9" width="4" height="1.5" rx="0.75"></rect>
-                            <rect x="8" y="6" width="7" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="left_right_2" data-align-id="8" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-iln-tln-821-title" lang="en">Icon with smaller text on the right</title>
-                        <desc id="layout-iln-tln-821-desc" lang="en">Icon with smaller text on the right Icon</desc>
-                        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="4" cy="8" r="3"></circle>
-                            <rect x="8" y="9" width="4" height="1.5" rx="0.75"></rect>
-                            <rect x="8" y="6" width="7" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="left_right_3" data-align-id="9" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-ils-tln-823-title" lang="en">Smaller icon with larger text on the right
-                        </title>
-                        <desc id="layout-ils-tln-823-desc" lang="en">Smaller icon with larger text on the right Icon
-                        </desc>
-                        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="3.25" cy="8.05" r="2.25"></circle>
-                            <rect x="7" y="6" width="8" height="2" rx="1"></rect>
-                            <rect x="7" y="9" width="5" height="1.5" rx="0.75"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="right_left_1" data-align-id="10" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-irn-tcn-825-title" lang="en">Icon with text on the left</title>
-                        <desc id="layout-irn-tcn-825-desc" lang="en">Icon with text on the left Icon</desc> <svg
-                            width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="8" r="3"></circle>
-                            <rect x="2.5" y="9" width="4" height="1.5" rx="0.75"></rect>
-                            <rect x="1" y="6" width="7" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="right_left_2" data-align-id="11" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-irs-trn-829-title" lang="en">Smaller icon with larger text on the left</title>
-                        <desc id="layout-irs-trn-829-desc" lang="en">Smaller icon with larger text on the left Icon
-                        </desc>
-                        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12.75" cy="8.05" r="2.25"></circle>
-                            <rect x="1" y="6" width="8" height="2" rx="1"></rect>
-                            <rect x="4" y="9" width="5" height="1.5" rx="0.75"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="right_left_3" data-align-id="12" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-irn-trn-827-title" lang="en">Icon with smaller text on the left</title>
-                        <desc id="layout-irn-trn-827-desc" lang="en">Icon with smaller text on the left Icon</desc> <svg
-                            width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="8" r="3"></circle>
-                            <rect x="4" y="9" width="4" height="1.5" rx="0.75"></rect>
-                            <rect x="1" y="6" width="7" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="top_bottom_4" data-align-id="13" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-itn-tjn-281-title" lang="en">Icon with justified text below</title>
-                        <desc id="layout-itn-tjn-281-desc" lang="en">Icon with justified text below Icon</desc> <svg
-                            width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="8" cy="5" r="3"></circle>
-                            <rect x="2" y="13" width="12" height="1.5" rx="0.75"></rect>
-                            <rect x="2" y="9.5" width="12" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-                <div id="left_right_4" data-align-id="14" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-iln-tjn-283-title" lang="en">Icon with justified text on the right</title>
-                        <desc id="layout-iln-tjn-283-desc" lang="en">Icon with justified text on the right Icon</desc>
-                        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="4" cy="8" r="3"></circle>
-                            <rect x="8" y="9" width="7" height="1.5" rx="0.75"></rect>
-                            <rect x="8" y="6" width="7" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-                <div id="right_left_4" data-align-id="15" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-irn-tjn-285-title" lang="en">Icon with justified text on the left</title>
-                        <desc id="layout-irn-tjn-285-desc" lang="en">Icon with justified text on the left Icon</desc>
-                        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="8" r="3"></circle>
-                            <rect x="1" y="9" width="7" height="1.5" rx="0.75"></rect>
-                            <rect x="1" y="6" width="7" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
             </div>
 
         </div>
@@ -1450,7 +1219,6 @@
                 </div>
             </div>
             <div class="preview-img-container">
-                <!-- <canvas id="preview-canvas" height="520vh" width="900vw"></canvas> -->
                 <div class="preview_image_wrapper" id="preview_image_wrapper">
                     <img id="fixed_preview" alt="fixed_preview" class="preview_image">
                 </div>
@@ -1520,12 +1288,6 @@
 
                         </div>
                     </div>
-                    <!-- <div class="elements__card">
-                        <h4>Logo Type</h4>
-                        <p>What type of logo best represents logo symbol</p>
-                        <div id="logo-type" style="display: flex; justify-content: flex-start; gap: 20px">
-                        </div>
-                    </div> -->
                     <div class="elements__card">
                         <h4>Logo Style</h4>
                         <p>What logo style best represents logo symbol</p>

@@ -283,22 +283,13 @@ const logostyle = [
   'Pictorial',
   'Monogram',
 ];
-// const logotype = ['Monogram', 'Mascot', 'Emblem', 'Abstract', 'Pictorial'];
-
-// logotype.forEach((logo) => {
-//   const div = document.createElement('div');
-//   div.innerText = logo;
-//   div.className = 'round__chip';
-//   div.setAttribute('id', 'logotype');
-//   document.getElementById('logo-type').append(div);
-// });
 
 logostyle.forEach((logo) => {
   const div = document.createElement('div');
   div.innerText = logo;
   div.className = 'round__chip';
   div.setAttribute('id', 'logostyle');
-  document.getElementById('logo-style').append(div);
+  document.setElementById('logo-style').append(div);
 });
 
 document.querySelectorAll('#logostyle').forEach((item) => {
@@ -341,9 +332,9 @@ document.querySelectorAll('#mlist_item').forEach((item) => {
   item.addEventListener('click', (e) => {
     const item = e.target.innerText;
 
-  if (!newLogoType.includes(item)) {
+    if (!newLogoType.includes(item)) {
       newLogoType.push(item);
-    } 
+    }
 
     document.querySelectorAll('#mlist_item').forEach((item) => {
       if (newLogoType.includes(item.innerText)) {
