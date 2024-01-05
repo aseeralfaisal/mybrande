@@ -3016,11 +3016,374 @@ class EditorScreen {
     handleColorModeClick('#HEX', '#RGB', '#HSL');
     handleColorModeClick('#HEX2', '#RGB2', '#HSL2');
 
+    const centerAndResizeElements = (
+      type,
+      logoSize,
+      sloganSize,
+      textPosition,
+      sloganTop,
+      logoNameTop,
+      letterSpaced = false
+    ) => {
+      const objects = this.canvas.getObjects();
+      logoNameElement.charSpacing = 0;
+      sloganNameElement.charSpacing = 0;
+      const logoMain = objects.filter((i) => !i.text);
+
+      const timeout = 5;
+
+      switch (type) {
+        case 'topBottom':
+          setTimeout(() => {
+            const logoNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
+            );
+
+            const sloganNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here'
+            );
+
+            logoNameElement?.set('fontSize', logoSize);
+            sloganNameElement?.set('fontSize', sloganSize);
+
+            logoNameElement.set('charSpacing', 0);
+            sloganNameElement.set('charSpacing', 0);
+
+            logoNameElement.centerH();
+            sloganNameElement.centerH();
+
+            logoNameElement.set('top', this.canvas.height / logoNameTop);
+            sloganNameElement.set('top', this.canvas.height / sloganTop);
+
+            if (letterSpaced) {
+              logoNameElement.text = toTitleCase(logoNameElement.text);
+              sloganNameElement.text = toSentenceCase(sloganNameElement.text);
+
+              logoNameElement.set('fontFamily', 'Poppins');
+              sloganNameElement.set('fontFamily', 'Poppins');
+
+              const logoNameWidth = logoNameElement.width;
+              sloganNameElement.set('width', logoNameWidth);
+
+              sloganNameElement.set('charSpacing', 322);
+              sloganNameElement.set('fontSize', 27);
+            }
+
+            logoNameElement.centerH();
+            sloganNameElement.centerH();
+
+            const newGrp = new fabric.Group(objects);
+            this.canvas.viewportCenterObject(newGrp);
+            newGrp.ungroupOnCanvas();
+            updatePreview();
+            this.canvas.requestRenderAll();
+            this.logoOrientation = 'vertical';
+          }, timeout);
+          break;
+        case 'bottomTop':
+          setTimeout(() => {
+            const logoNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
+            );
+
+            const sloganNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text === 'Slogan goes here'
+            );
+
+            logoNameElement.set('fontSize', logoSize);
+            sloganNameElement.set('fontSize', sloganSize);
+
+            logoNameElement.centerH();
+            sloganNameElement.centerH();
+
+            logoNameElement.set('top', this.canvas.height / logoNameTop);
+            sloganNameElement.set('top', this.canvas.height / sloganTop);
+
+            const newGrp = new fabric.Group(objects);
+            this.canvas.viewportCenterObject(newGrp);
+            newGrp.ungroupOnCanvas();
+            updatePreview();
+            this.canvas.requestRenderAll();
+            this.logoOrientation = 'vertical';
+          }, timeout);
+          break;
+        case 'leftRight':
+          setTimeout(() => {
+            const logoNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
+            );
+
+            const sloganNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here'
+            );
+            logoNameElement.center();
+            sloganNameElement.center();
+
+            logoNameElement.set('top', this.canvas.height / 2.3);
+            sloganNameElement.set('top', this.canvas.height / 1.9);
+
+            logoNameElement.set('fontSize', 46);
+            sloganNameElement.set('fontSize', 22);
+
+            logoNameElement.set('charSpacing', 0);
+            sloganNameElement.set('charSpacing', 0);
+
+            if (textPosition === 'left') {
+              logoNameElement.viewportCenter();
+              sloganNameElement.viewportCenter();
+
+              logoNameElement.set('top', this.canvas.height / 2.3);
+              sloganNameElement.set('top', this.canvas.height / 1.9);
+
+              logoNameElement.set('left', this.canvas.width / 2.4);
+              sloganNameElement.set('left', logoNameElement.left);
+            } else {
+              logoNameElement.viewportCenterH();
+              sloganNameElement.viewportCenterH();
+
+              logoNameElement.set('left', this.canvas.width / 2.5);
+              sloganNameElement.set(
+                'left',
+                logoNameElement.left + logoNameElement.width / 2 - sloganNameElement.width / 2
+              );
+            }
+
+            if (letterSpaced) {
+              logoNameElement.text = toTitleCase(logoNameElement.text);
+              sloganNameElement.text = toSentenceCase(sloganNameElement.text);
+
+              logoNameElement.set('fontFamily', 'Poppins');
+              sloganNameElement.set('fontFamily', 'Poppins');
+
+              sloganNameElement.set('charSpacing', 322);
+              sloganNameElement.set('fontSize', 27);
+              sloganNameElement.set(
+                'left',
+                logoNameElement.left + logoNameElement.width / 2 - sloganNameElement.width / 2
+              );
+            }
+
+            logoMain.forEach((i) => (i.left -= 200));
+            const newGrp = new fabric.Group(objects);
+            this.canvas.viewportCenterObjectH(newGrp);
+            this.canvas.viewportCenterObjectV(newGrp);
+            newGrp.ungroupOnCanvas();
+            updatePreview();
+            this.canvas.requestRenderAll();
+            this.logoOrientation = 'horizontal';
+          }, timeout);
+          break;
+        case 'rightLeft':
+          setTimeout(() => {
+            const logoNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
+            );
+
+            const sloganNameElement = objects.find(
+              (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here'
+            );
+            logoNameElement.center();
+            sloganNameElement.center();
+
+            logoNameElement.set('top', this.canvas.height / 2.3);
+            sloganNameElement.set('top', this.canvas.height / 1.9);
+
+            logoNameElement.set('fontSize', 46);
+            sloganNameElement.set('fontSize', 22);
+
+            logoNameElement.set('charSpacing', 0);
+            sloganNameElement.set('charSpacing', 0);
+
+            if (textPosition === 'left') {
+              logoNameElement.viewportCenter();
+              sloganNameElement.viewportCenter();
+
+              logoNameElement.set('top', this.canvas.height / 2.3);
+              sloganNameElement.set('top', this.canvas.height / 1.9);
+
+              logoNameElement.set('left', this.canvas.width / 6);
+              sloganNameElement.set(
+                'left',
+                logoNameElement.left + logoNameElement.width - sloganNameElement.width
+              );
+
+              if (letterSpaced) {
+                logoNameElement.text = toTitleCase(logoNameElement.text);
+                sloganNameElement.text = toSentenceCase(sloganNameElement.text);
+
+                logoNameElement.set('fontFamily', 'Poppins');
+                sloganNameElement.set('fontFamily', 'Poppins');
+
+                sloganNameElement.set('charSpacing', 322);
+                sloganNameElement.set('fontSize', 27);
+                sloganNameElement.set(
+                  'left',
+                  logoNameElement.left + logoNameElement.width - sloganNameElement.width
+                );
+              }
+            } else {
+              logoNameElement.viewportCenterH();
+              sloganNameElement.viewportCenterH();
+
+              logoNameElement.set('left', this.canvas.width / 6);
+              sloganNameElement.set(
+                'left',
+                logoNameElement.left + logoNameElement.width / 2 - sloganNameElement.width / 2
+              );
+            }
+
+            logoMain.forEach((i) => (i.left += 150));
+            const newGrp = new fabric.Group(objects);
+            this.canvas.viewportCenterObjectH(newGrp);
+            this.canvas.viewportCenterObjectV(newGrp);
+            newGrp.ungroupOnCanvas();
+            updatePreview();
+            this.canvas.requestRenderAll();
+            this.logoOrientation = 'horizontal';
+          }, timeout);
+          break;
+      }
+      this.canvas.requestRenderAll();
+      captureCanvasState();
+      this.canvas.requestRenderAll();
+    };
+
+    const scaleLogo = (scaleSize) => {
+      const selection = new fabric.ActiveSelection(
+        this.canvas.getObjects().filter((i) => !i.text),
+        {
+          canvas: this.canvas,
+        }
+      );
+
+      const { width, height } = selection;
+      const scaleFactor = Math.min(scaleSize / width, scaleSize / height);
+      selection.scale(scaleFactor);
+
+      selection.center();
+      this.canvas.setActiveObject(selection);
+      this.canvas.discardActiveObject(selection);
+      this.canvas.requestRenderAll();
+    };
+
     querySelect('#canvas-bg-none').addEventListener('click', () => {
       this.canvas.setBackgroundColor(this.canvasBG);
       updatePreview();
       this.canvas.requestRenderAll();
       captureCanvasState();
+    });
+
+    const discardSelectionForAlignments = () => {
+      this.canvas.discardActiveObject();
+      this.canvas.requestRenderAll();
+    };
+
+    scaleLogo(200);
+    centerAndResizeElements('topBottom', 46, 22, 'center', 1.32, 1.5);
+
+    querySelect('#top_bottom_1').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#top_bottom_1', 'data-align-id');
+      scaleLogo(200);
+      centerAndResizeElements('topBottom', 46, 22, 'center', 1.32, 1.5);
+    });
+
+    querySelect('#top_bottom_2').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#top_bottom_2', 'data-align-id');
+      scaleLogo(200);
+      centerAndResizeElements('topBottom', 40, 20, 'center', 1.35, 1.52);
+    });
+
+    querySelect('#top_bottom_3').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#top_bottom_3', 'data-align-id');
+      scaleLogo(160);
+      centerAndResizeElements('topBottom', 46, 22, 'center', 1.42, 1.6);
+    });
+
+    querySelect('#bottom_top_1').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#bottom_top_1', 'data-align-id');
+      scaleLogo(200);
+      centerAndResizeElements('bottomTop', 46, 22, 'center', 3.8, 5.5);
+    });
+
+    querySelect('#bottom_top_2').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#bottom_top_2', 'data-align-id');
+      scaleLogo(200);
+      centerAndResizeElements('bottomTop', 40, 18, 'center', 3.5, 5);
+    });
+
+    querySelect('#bottom_top_3').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#bottom_top_3', 'data-align-id');
+      scaleLogo(160);
+      centerAndResizeElements('bottomTop', 46, 22, 'center', 3.3, 4.5);
+    });
+
+    querySelect('#left_right_1').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#left_right_1', 'data-align-id');
+      scaleLogo(200);
+      centerAndResizeElements('leftRight', 32, 25, 'center', 1.32, 1.5);
+    });
+
+    querySelect('#left_right_2').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#left_right_2', 'data-align-id');
+      scaleLogo(200);
+      centerAndResizeElements('leftRight', 32, 25, 'left', 1.32, 1.5);
+    });
+
+    querySelect('#left_right_3').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#left_right_3', 'data-align-id');
+      scaleLogo(160);
+      centerAndResizeElements('leftRight', 32, 25, 'left', 1.32, 1.5);
+    });
+
+    querySelect('#right_left_1').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#right_left_1', 'data-align-id');
+      scaleLogo(200);
+      centerAndResizeElements('rightLeft', 32, 25, 'center', 1.32, 1.5);
+    });
+
+    querySelect('#right_left_2').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#right_left_2', 'data-align-id');
+      scaleLogo(160);
+      centerAndResizeElements('rightLeft', 32, 25, 'left', 1.32, 1.5);
+    });
+
+    querySelect('#right_left_3').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#right_left_3', 'data-align-id');
+      scaleLogo(200);
+      centerAndResizeElements('rightLeft', 32, 25, 'left', 1.32, 1.5);
+    });
+
+    querySelect('#top_bottom_4').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#top_bottom_4', 'data-align-id');
+      scaleLogo(200);
+      centerAndResizeElements('topBottom', 46, 22, 'center', 1.32, 1.5, true);
+    });
+
+    querySelect('#left_right_4').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#left_right_4', 'data-align-id');
+      scaleLogo(200);
+      centerAndResizeElements('leftRight', 32, 25, 'center', 1.32, 1.5, true);
+    });
+
+    querySelect('#right_left_4').addEventListener('click', () => {
+      discardSelectionForAlignments();
+      this.alignId = getAttr('#right_left_4', 'data-align-id');
+      scaleLogo(200);
+      centerAndResizeElements('rightLeft', 32, 25, 'left', 1.32, 1.5, true);
     });
   }
 }
