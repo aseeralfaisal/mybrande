@@ -172,19 +172,18 @@ elements.nextBtn.addEventListener('click', async () => {
     logo_name: elements.inputPrimary.value,
     main_file: logoMainFile,
   });
-  
+
   if (response.data.status === 500) {
     return toastNotification(response.data.message);
-  } 
-  
-  if (response.status === 200) {
-    const sellerLogoInfoId = response?.data?.seller_logoinfo_id;
-    if (sellerLogoInfoId) {
-      console.log(sellerLogoInfoId);
-      localStorage.setItem('sellerLogoInfoId', sellerLogoInfoId);
-    }
+  }
+
+  const sellerLogoInfoId = response.data.seller_logoinfo_id;
+  if (sellerLogoInfoId) {
+    localStorage.setItem('seller_logoinfo_id', sellerLogoInfoId);
     localStorage.setItem('mainEditorCounter', '1');
     location.reload();
+  } else {
+    return toastNotification('Sever Error');
   }
 });
 

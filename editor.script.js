@@ -489,7 +489,7 @@ class EditorScreen {
       const currentCanvasSVG = this.canvas.toSVG();
 
       const currentCanvasData = JSON.stringify(this.canvas);
-      const sellerLogoInfoId = localStorage.getItem('sellerLogoInfoId');
+      const sellerLogoInfoId = localStorage.getItem('seller_logoinfo_id');
 
       const getFormattedBgColor = (bgColor) => {
         if (typeof bgColor === 'object') {
@@ -556,6 +556,8 @@ class EditorScreen {
           if (logoSavedCount >= 8) {
             querySelect('#save-btn').style.display = 'none';
           }
+        } else {
+          return toastNotification("Server Error")
         }
       }
     });
@@ -566,7 +568,6 @@ class EditorScreen {
         multiplier: 1,
       };
       const savedLogo = this.canvas.toDataURL(saveSettings);
-      localStorage.clear();
       localStorage.setItem('saved_logo', savedLogo);
       localStorage.setItem('mainEditorCounter', 3);
       location.reload();
@@ -3043,8 +3044,8 @@ class EditorScreen {
               (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here'
             );
 
-            logoNameElement.set('fontSize', logoSize);
-            sloganNameElement.set('fontSize', sloganSize);
+            logoNameElement?.set('fontSize', logoSize);
+            sloganNameElement?.set('fontSize', sloganSize);
 
             logoNameElement.set('charSpacing', 0);
             sloganNameElement.set('charSpacing', 0);

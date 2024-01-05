@@ -341,19 +341,17 @@ document.querySelectorAll('#mlist_item').forEach((item) => {
   item.addEventListener('click', (e) => {
     const item = e.target.innerText;
 
-    if (item.length === 1 && item >= 'a' && item <= 'z') {
+  if (!newLogoType.includes(item)) {
       newLogoType.push(item);
-    } else if (!newLogoStyle.includes(item)) {
-      newLogoStyle.push(item);
-    } else {
-      newLogoStyle.splice(newLogoStyle.indexOf(item), 1);
-    }
+    } 
 
-    if (newLogoStyle.includes(item)) {
-      item.style.background = 'var(--gold)';
-    } else {
-      item.style.background = '';
-    }
+    document.querySelectorAll('#mlist_item').forEach((item) => {
+      if (newLogoType.includes(item.innerText)) {
+        item.style.background = 'var(--gold)';
+      } else {
+        item.style.background = '';
+      }
+    });
   });
 });
 
