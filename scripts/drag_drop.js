@@ -1,6 +1,6 @@
 import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
-import '../css/style.css';
+import '../styles/style.css';
 import axios from 'axios';
 import Toastify from 'toastify-js';
 
