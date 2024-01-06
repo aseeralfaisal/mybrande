@@ -2,798 +2,725 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mybrande</title>
-    <script src="https://kit.fontawesome.com/c64b631310.js" crossorigin="anonymous"></script>
-    <link rel="icon" type="image/x-icon" href="./assets/Favicon Transparent.ico">
-    <link rel="stylesheet" href="editor.style.css">
-    <link rel="stylesheet" href="details.style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mybrande</title>
+  <script src="https://kit.fontawesome.com/c64b631310.js" crossorigin="anonymous"></script>
+  <link rel="icon" type="image/x-icon" href="./assets/Favicon Transparent.ico">
+  <link rel="stylesheet" href="css/editor.style.css">
+  <link rel="stylesheet" href="css/details.style.css">
 </head>
 
 <body>
-    <div id="loader"
-        style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; z-index: 10000; display: flex; justify-content: center; align-items: center;">
-        <img src="/assets/loader.gif" alt="" style="max-width: 100%; max-height: 100%;">
-    </div>
+  <div id="loader"
+    style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; z-index: 10000; display: flex; justify-content: center; align-items: center;">
+    <img src="/assets/loader.gif" alt="" style="max-width: 100%; max-height: 100%;">
+  </div>
 
-    <div id="drag_drop_view">
-        <header class="header">
-            <div style="display: flex; justify-content: space-between; margin-inline: 100px; align-items: center;">
-                <div>
-                    <img src="./assets/Logo Gold.svg" alt="" loading="eager"
-                        style="width: 170px; object-fit: contain; margin-top: 10px;">
-                </div>
-                <div class="links">
-                    <i class="fa-solid fa-circle-user" style="font-size: 32px; color: var(--gray);"></i>
-                </div>
-            </div>
-        </header>
-        <div id="app" class="start-template-body">
-            <div style="position: fixed; z-index: -1; opacity: 0.1;">
-                <img src="./assets/abs.png" alt="" width="600px" height="600px"
-                    style="object-fit: cover; filter: invert();">
-            </div>
-            <div>
-                <div style="display: flex;">
-                    <div id="input_phase" style="margin: 100px;">
-                        <div class="input-box-primary" style="padding: 10px;">
-                            <input id="logo_name_input-primary" class="form-control" type="text" value=""
-                                placeholder="Title your logo" style="font-size: 28px; font-weight: 400;">
-                        </div>
-                        <p class="paragraph" style="width: 700px; font-size: 16px; padding-block: 10px;">Add a title to
-                            your
-                            logo design for easy tracking and management. This title is only visible to you and can be
-                            changed at any time.</p>
-
-                        <p class="paragraph" style="font-size: 20px;">By uploading a logo design, you guarantee that:
-                        </p>
-                        <p class="paragraph ins"><i class="fas fa-check"></i> Your logo design is unique.</p>
-                        <p class="paragraph ins"><i class="fas fa-check"></i> The logo design is your original creation.
-                        </p>
-                        <p class="paragraph ins"><i class="fas fa-check"></i> You have full ownership rights to the
-                            design.</p>
-                        <p class="paragraph ins"><i class="fas fa-check"></i> This logo design has never sold before.
-                        </p>
-                        <p class="paragraph ins"><i class="fas fa-check"></i> You will not sell this logo design to
-                            anyone,
-                            anywhere in the future.</p>
-                        <p class="paragraph" style="font-size: 14px; letter-spacing: 0;">Please note that any violation
-                            of
-                            these terms may lead to limitations on your MyBrandeE account.</p>
-
-                        <input id="logo_name_input-userId" class="form-control" type="hidden" value="2"
-                            placeholder="User Id">
-                        <input id="logo_name_input-userName" class="form-control" type="hidden" value="seller"
-                            placeholder="User Name">
-                    </div>
-
-                    <div id="darg-drop-parent"
-                        style="display: grid; justify-items: flex-start; justify-content: center;">
-                        <div id="drag-drop" class="drag_drop"
-                            style="display: grid; justify-content: center; align-items: center;">
-                            <div id="drag-drop-child"
-                                style="display: grid; align-items: center;  justify-content: center; gap: 10px;">
-                                <div class="icon-container">
-                                    <i class="fa-solid fa-images" style="font-size: 80px; color: #4d4e4e;"></i>
-                                </div>
-                                <h2 style="color: #4d4e4e; text-align: center;">Drag & Drop</h2>
-                                <div
-                                    style="display: flex; flex-direction: column; align-items: flex-start; margin-left: 50px;">
-                                    <li style="color: #4d4e4e; font-size: 20px;">Logo Symbol</li>
-                                    <li style="color: #4d4e4e; font-size: 20px;">SVG format Only</li>
-                                    <li style="color: #4d4e4e; font-size: 20px;">No text layers</li>
-                                    <li style="color: #4d4e4e; font-size: 20px;">Less than 100 layers</li>
-                                    <li style="color: #4d4e4e; font-size: 20px;">100% vector elements</li>
-                                </div>
-                            </div>
-                            <div id="img-view-container"
-                                style="display: flex; justify-content: center; align-items: center;">
-                                <img id="img-view" style="width: 500px; height: 500px; object-fit: contain;"></img>
-                            </div>
-                        </div>
-                        <input type="file" id="upload_file_btn" name="upload_file_btn" style="display: none;">
-                        <!-- <button id="crop">Crop</button>
-                    <img id="imger" alt=""> -->
-                    </div>
-                </div>
-                <div style="display: flex; margin-inline: 95px;">
-                    <button class="btn-main btn-bordered" id="terms-accept">I Accept the Terms</button>
-
-                    <div style="display: flex; justify-content: space-between; width: 600px; margin-left: 640px;">
-                        <label class="btn-main btn-bordered"
-                            style="margin-left: 50px; height: 25px; padding-inline: 5px !important; width: 20px !important; display: flex; justify-content: center; align-items: center;"
-                            for="upload_file_btn">Upload file</label>
-                        <button id="next_btn" class="btn-main btn-bordered" style="margin-left: 50px;">
-                            <label>Next ></label>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
+  <div id="drag_drop_view">
+    <header class="header">
+      <div style="display: flex; justify-content: space-between; margin-inline: 100px; align-items: center;">
+        <div>
+          <img src="./assets/Logo Gold.svg" alt="" loading="eager"
+            style="width: 170px; object-fit: contain; margin-top: 10px;">
         </div>
-    </div>
-
-
-    <div id="main_editor_view">
-        <header class="header">
-            <div class="header-elements">
-                <div style="display: flex; align-items: flex-end; gap: 10px;">
-                    <div id="back-main" style="margin-left: 120px;">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="1em" viewBox="0 0 448 512">
-                            <path
-                                d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-                        </svg>
-                    </div>
-                    <img id="header-logo" src="./assets/Logo Gold.svg"
-                        style="width: 170px; margin-left: 20px; object-fit: cover;" alt="">
-                </div>
-                <div style="display: flex; justify-content: space-evenly; gap: 10px;">
-                    <button id="save-btn" class="btn-main"><i class="fas fa-download" style="margin: 5px;"></i>
-                        <span>Save</span>
-                    </button>
-                    <button id="third_page_btn" style="display: none;" class="btn-main">
-                        <i class="fas fa-angles-right" style="margin: 5px;"></i>
-                        <span>Next</span>
-                    </button>
-                </div>
+        <div class="links">
+          <i class="fa-solid fa-circle-user" style="font-size: 32px; color: var(--gray);"></i>
+        </div>
+      </div>
+    </header>
+    <div id="app" class="start-template-body">
+      <div style="position: fixed; z-index: -1; opacity: 0.1;">
+        <img src="./assets/abs.png" alt="" width="600px" height="600px" style="object-fit: cover; filter: invert();">
+      </div>
+      <div>
+        <div style="display: flex;">
+          <div id="input_phase" style="margin: 100px;">
+            <div class="input-box-primary" style="padding: 10px;">
+              <input id="logo_name_input-primary" class="form-control" type="text" value=""
+                placeholder="Title your logo" style="font-size: 28px; font-weight: 400;">
             </div>
-        </header>
+            <p class="paragraph" style="width: 700px; font-size: 16px; padding-block: 10px;">Add a title to
+              your
+              logo design for easy tracking and management. This title is only visible to you and can be
+              changed at any time.</p>
 
-        <div id="popup-parent"
-            style="width: 100vw; height: 100vh; background-color: #00000071; z-index: 50; position: absolute; top: 0; left: 0;">
-            <div class="popup" style="display: flex; justify-content: center;">
-                <div class="popup-box" id="add-popup">
-                    <h3>What do you want to add?</h3>
+            <p class="paragraph" style="font-size: 20px;">By uploading a logo design, you guarantee that:
+            </p>
+            <p class="paragraph ins"><i class="fas fa-check"></i> Your logo design is unique.</p>
+            <p class="paragraph ins"><i class="fas fa-check"></i> The logo design is your original creation.
+            </p>
+            <p class="paragraph ins"><i class="fas fa-check"></i> You have full ownership rights to the
+              design.</p>
+            <p class="paragraph ins"><i class="fas fa-check"></i> This logo design has never sold before.
+            </p>
+            <p class="paragraph ins"><i class="fas fa-check"></i> You will not sell this logo design to
+              anyone,
+              anywhere in the future.</p>
+            <p class="paragraph" style="font-size: 14px; letter-spacing: 0;">Please note that any violation
+              of
+              these terms may lead to limitations on your MyBrandeE account.</p>
 
-                    <div style="display: flex; justify-content: space-evenly;">
-                        <div class="popup-item" id="popup-item">
-                            <div class="item-title">
-                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="145px"
-                                    height="145px" viewBox="0 0 145 145" enable-background="new 0 0 145 145"
-                                    xml:space="preserve">
-                                    <g>
-                                        <g>
-                                            <defs>
-                                                <rect id="SVGID_1_" width="171.2" height="156.7"></rect>
-                                            </defs>
-                                            <clipPath id="SVGID_2_">
-                                                <use xlink:href="#SVGID_1_" overflow="visible"></use>
-                                            </clipPath>
-                                            <path clip-path="url(#SVGID_2_)" fill="var(--gold)" d="M140.5,145H4.5C2,145,0,143,0,140.5V4.5C0,2,2,0,4.5,0h136
+            <input id="logo_name_input-userId" class="form-control" type="hidden" value="2" placeholder="User Id">
+            <input id="logo_name_input-userName" class="form-control" type="hidden" value="seller"
+              placeholder="User Name">
+          </div>
+
+          <div id="darg-drop-parent" style="display: grid; justify-items: flex-start; justify-content: center;">
+            <div id="drag-drop" class="drag_drop" style="display: grid; justify-content: center; align-items: center;">
+              <div id="drag-drop-child"
+                style="display: grid; align-items: center;  justify-content: center; gap: 10px;">
+                <div class="icon-container">
+                  <i class="fa-solid fa-images" style="font-size: 80px; color: #4d4e4e;"></i>
+                </div>
+                <h2 style="color: #4d4e4e; text-align: center;">Drag & Drop</h2>
+                <div style="display: flex; flex-direction: column; align-items: flex-start; margin-left: 50px;">
+                  <li style="color: #4d4e4e; font-size: 20px;">Logo Symbol</li>
+                  <li style="color: #4d4e4e; font-size: 20px;">SVG format Only</li>
+                  <li style="color: #4d4e4e; font-size: 20px;">No text layers</li>
+                  <li style="color: #4d4e4e; font-size: 20px;">Less than 100 layers</li>
+                  <li style="color: #4d4e4e; font-size: 20px;">100% vector elements</li>
+                </div>
+              </div>
+              <div id="img-view-container" style="display: flex; justify-content: center; align-items: center;">
+                <img id="img-view" style="width: 500px; height: 500px; object-fit: contain;"></img>
+              </div>
+            </div>
+            <input type="file" id="upload_file_btn" name="upload_file_btn" style="display: none;">
+            <!-- <button id="crop">Crop</button>
+                    <img id="imger" alt=""> -->
+          </div>
+        </div>
+        <div style="display: flex; margin-inline: 95px;">
+          <button class="btn-main btn-bordered" id="terms-accept">I Accept the Terms</button>
+
+          <div style="display: flex; justify-content: space-between; width: 600px; margin-left: 640px;">
+            <label class="btn-main btn-bordered"
+              style="margin-left: 50px; height: 25px; padding-inline: 5px !important; width: 20px !important; display: flex; justify-content: center; align-items: center;"
+              for="upload_file_btn">Upload file</label>
+            <button id="next_btn" class="btn-main btn-bordered" style="margin-left: 50px;">
+              <label>Next ></label>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div id="main_editor_view">
+    <header class="header">
+      <div class="header-elements">
+        <div style="display: flex; align-items: flex-end; gap: 10px;">
+          <div id="back-main" style="margin-left: 120px;">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="1em" viewBox="0 0 448 512">
+              <path
+                d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+            </svg>
+          </div>
+          <img id="header-logo" src="./assets/Logo Gold.svg" style="width: 170px; margin-left: 20px; object-fit: cover;"
+            alt="">
+        </div>
+        <div style="display: flex; justify-content: space-evenly; gap: 10px;">
+          <button id="save-btn" class="btn-main"><i class="fas fa-download" style="margin: 5px;"></i>
+            <span>Save</span>
+          </button>
+          <button id="third_page_btn" style="display: none;" class="btn-main">
+            <i class="fas fa-angles-right" style="margin: 5px;"></i>
+            <span>Next</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div id="popup-parent"
+      style="width: 100vw; height: 100vh; background-color: #00000071; z-index: 50; position: absolute; top: 0; left: 0;">
+      <div class="popup" style="display: flex; justify-content: center;">
+        <div class="popup-box" id="add-popup">
+          <h3>What do you want to add?</h3>
+
+          <div style="display: flex; justify-content: space-evenly;">
+            <div class="popup-item" id="popup-item">
+              <div class="item-title">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+                  y="0px" width="145px" height="145px" viewBox="0 0 145 145" enable-background="new 0 0 145 145"
+                  xml:space="preserve">
+                  <g>
+                    <g>
+                      <defs>
+                        <rect id="SVGID_1_" width="171.2" height="156.7"></rect>
+                      </defs>
+                      <clipPath id="SVGID_2_">
+                        <use xlink:href="#SVGID_1_" overflow="visible"></use>
+                      </clipPath>
+                      <path clip-path="url(#SVGID_2_)" fill="var(--gold)" d="M140.5,145H4.5C2,145,0,143,0,140.5V4.5C0,2,2,0,4.5,0h136
                             c2.5,0,4.5,2,4.5,4.5v136C145,143,143,145,140.5,145"></path>
-                                        </g>
-                                    </g>
-                                    <polygon fill="#FFFFFF" points="67.1,60.7 67.1,62.4 67.1,64.1 67.1,67.6 70.5,67.6 70.5,64.1 74.9,64.1 74.9,83.2 70.9,83.2
+                    </g>
+                  </g>
+                  <polygon fill="#FFFFFF" points="67.1,60.7 67.1,62.4 67.1,64.1 67.1,67.6 70.5,67.6 70.5,64.1 74.9,64.1 74.9,83.2 70.9,83.2
 70.9,86.7 82.3,86.7 82.3,83.2 78.3,83.2 78.3,64.1 82.7,64.1 82.7,67.6 86.1,67.6 86.1,64.1 86.1,62.4 86.1,60.7 ">
-                                    </polygon>
-                                    <polygon fill="#FFFFFF" points="56.7,71.9 56.7,73.7 56.7,75.4 60.1,75.4 60.1,73.7 61.9,73.7 61.9,83.2 59.6,83.2 59.6,86.7
+                  </polygon>
+                  <polygon fill="#FFFFFF" points="56.7,71.9 56.7,73.7 56.7,75.4 60.1,75.4 60.1,73.7 61.9,73.7 61.9,83.2 59.6,83.2 59.6,86.7
 67.6,86.7 67.6,83.2 65.3,83.2 65.3,73.7 67.1,73.7 67.1,75.4 70.5,75.4 70.5,73.7 70.5,71.9 70.5,70.2 56.7,70.2 ">
-                                    </polygon>
-                                    <rect x="36.5" y="36.5" fill="none" stroke="#FFFFFF" stroke-miterlimit="10"
-                                        width="72" height="72"></rect>
-                                    <rect x="31.3" y="31.3" fill="#fff" width="10.5" height="10.5"></rect>
-                                    <rect x="31.3" y="31.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10"
-                                        width="10.5" height="10.5"></rect>
-                                    <rect x="31.3" y="102.3" fill="#fff" width="10.5" height="10.5"></rect>
-                                    <rect x="31.3" y="102.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10"
-                                        width="10.5" height="10.5"></rect>
-                                    <rect x="103.3" y="31.3" fill="#fff" width="10.5" height="10.5"></rect>
-                                    <rect x="103.3" y="31.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10"
-                                        width="10.5" height="10.5"></rect>
-                                    <rect x="103.3" y="102.3" fill="#fff" width="10.5" height="10.5"></rect>
-                                    <rect x="103.3" y="102.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10"
-                                        width="10.5" height="10.5"></rect>
-                                </svg>
-                            </div>
-                            <p>Add Text</p>
-                        </div>
+                  </polygon>
+                  <rect x="36.5" y="36.5" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" width="72" height="72">
+                  </rect>
+                  <rect x="31.3" y="31.3" fill="#fff" width="10.5" height="10.5"></rect>
+                  <rect x="31.3" y="31.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" width="10.5"
+                    height="10.5"></rect>
+                  <rect x="31.3" y="102.3" fill="#fff" width="10.5" height="10.5"></rect>
+                  <rect x="31.3" y="102.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" width="10.5"
+                    height="10.5"></rect>
+                  <rect x="103.3" y="31.3" fill="#fff" width="10.5" height="10.5"></rect>
+                  <rect x="103.3" y="31.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" width="10.5"
+                    height="10.5"></rect>
+                  <rect x="103.3" y="102.3" fill="#fff" width="10.5" height="10.5"></rect>
+                  <rect x="103.3" y="102.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" width="10.5"
+                    height="10.5"></rect>
+                </svg>
+              </div>
+              <p>Add Text</p>
+            </div>
 
-                        <div class="popup-item" id="clipart">
-                            <div class="item-title">
-                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="145px"
-                                    height="145px" viewBox="0 0 145 145" enable-background="new 0 0 145 145"
-                                    xml:space="preserve">
-                                    <g>
-                                        <g>
-                                            <defs>
-                                                <rect id="SVGID_1_clipart" width="171.2" height="156.7"></rect>
-                                            </defs>
-                                            <clipPath id="SVGID_2_clipart">
-                                                <use xlink:href="#SVGID_1_clipart" overflow="visible"></use>
-                                            </clipPath>
-                                            <path clip-path="url(#SVGID_2_clipart)" fill="#8F86EF" d="M140.5,145H4.5C2,145,0,143,0,140.5V4.5C0,2,2,0,4.5,0h136
+            <div class="popup-item" id="clipart">
+              <div class="item-title">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+                  y="0px" width="145px" height="145px" viewBox="0 0 145 145" enable-background="new 0 0 145 145"
+                  xml:space="preserve">
+                  <g>
+                    <g>
+                      <defs>
+                        <rect id="SVGID_1_clipart" width="171.2" height="156.7"></rect>
+                      </defs>
+                      <clipPath id="SVGID_2_clipart">
+                        <use xlink:href="#SVGID_1_clipart" overflow="visible"></use>
+                      </clipPath>
+                      <path clip-path="url(#SVGID_2_clipart)" fill="#8F86EF" d="M140.5,145H4.5C2,145,0,143,0,140.5V4.5C0,2,2,0,4.5,0h136
                             c2.5,0,4.5,2,4.5,4.5v136C145,143,143,145,140.5,145"></path>
-                                        </g>
-                                    </g>
-                                    <rect x="36.5" y="36.5" fill="none" stroke="#FFFFFF" stroke-miterlimit="10"
-                                        width="72" height="72"></rect>
-                                    <g>
-                                        <g>
-                                            <defs>
-                                                <rect id="SVGID_3_clipart" width="171.2" height="156.7"></rect>
-                                            </defs>
-                                            <clipPath id="SVGID_4_clipart">
-                                                <use xlink:href="#SVGID_3_clipart" overflow="visible"></use>
-                                            </clipPath>
-                                            <path clip-path="url(#SVGID_4_clipart)" fill="#FFFFFF"
-                                                d="M57.3,88h30V58h-30C57.3,58,57.3,88,57.3,88z M66.1,61.6
+                    </g>
+                  </g>
+                  <rect x="36.5" y="36.5" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" width="72" height="72">
+                  </rect>
+                  <g>
+                    <g>
+                      <defs>
+                        <rect id="SVGID_3_clipart" width="171.2" height="156.7"></rect>
+                      </defs>
+                      <clipPath id="SVGID_4_clipart">
+                        <use xlink:href="#SVGID_3_clipart" overflow="visible"></use>
+                      </clipPath>
+                      <path clip-path="url(#SVGID_4_clipart)" fill="#FFFFFF"
+                        d="M57.3,88h30V58h-30C57.3,58,57.3,88,57.3,88z M66.1,61.6
                         c-0.3,2.6-2.5,4.7-5.2,4.8v-4.8C60.9,61.6,66.1,61.6,66.1,61.6z M63.8,84.4l5.3-4.9l5,4.9H63.8z M83.8,84.4h-4.5l-5-4.8l4.3-3.7
                         l5.2,4.5V84.4z M83.8,75.6l-5.2-4.5L71.8,77l-2.5-2.5l-8.2,7.6V69.9c4.6-0.1,8.4-3.8,8.8-8.3H84v14H83.8z"></path>
-                                        </g>
-                                    </g>
-                                </svg>
-                            </div>
-                            <p>Add Clipart</p>
-                        </div>
-                    </div>
-
-                </div>
+                    </g>
+                  </g>
+                </svg>
+              </div>
+              <p>Add Clipart</p>
             </div>
-        </div>
+          </div>
 
-        <div id="popup-parent-icons" class="popup-parent-icons"
-            style="width: 100vw; height: 100vh; background-color: #00000071; z-index: 50; position: absolute; top: 0; left: 0;">
-            <div class="popup" style="display: flex; justify-content: center;">
-                <div class="popup-box" style="height: 450px; width: 600px;" id="add-popup">
-                    <div style="display: flex; justify-content: space-between;">
-                        <div style="display: grid; border-right: 1px solid var(--gray-lighter); padding-right: 20px;">
-                            <span class="search-icon-category-text">Travel</span>
-                            <span class="search-icon-category-text">Fashion</span>
-                            <span class="search-icon-category-text">Food</span>
-                            <span class="search-icon-category-text">Books</span>
-                            <span class="search-icon-category-text">Health</span>
-                            <span class="search-icon-category-text">Sports</span>
-                            <span class="search-icon-category-text">Art</span>
-                            <span class="search-icon-category-text">Music</span>
-                            <span class="search-icon-category-text">Technology</span>
-                            <span class="search-icon-category-text">Science</span>
-                            <span class="search-icon-category-text">Gaming</span>
-                            <span class="search-icon-category-text">Nature</span>
-                            <span class="search-icon-category-text">History</span>
-                            <span class="search-icon-category-text">Movies</span>
-                            <span class="search-icon-category-text">Cooking</span>
-                            <span class="search-icon-category-text">Photography</span>
-                            <span class="search-icon-category-text">DIY</span>
-                            <span class="search-icon-category-text">Pets</span>
-                            <span class="search-icon-category-text">Fitness</span>
-                        </div>
-                        <div>
-                            <div id="close-btn" style="position: absolute; right: 14px; top: 10px;"><i
-                                    class="fa-solid fa-close" style=" font-size: 20px;"></i></div>
-                            <input placeholder="Search Icons" type="text" id="icon-search-input" class="input-main">
-                            <i class="fa-solid fa-magnifying-glass"
-                                style="color: var(--gray-light); font-size: 16px; position: absolute; margin-left: -30px; margin-top: 7px;"></i>
-                            <div id="clip-icons">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="popup-parent-icons" class="popup-parent-icons"
+      style="width: 100vw; height: 100vh; background-color: #00000071; z-index: 50; position: absolute; top: 0; left: 0;">
+      <div class="popup" style="display: flex; justify-content: center;">
+        <div class="popup-box" style="height: 450px; width: 600px;" id="add-popup">
+          <div style="display: flex; justify-content: space-between;">
+            <div style="display: grid; border-right: 1px solid var(--gray-lighter); padding-right: 20px;">
+              <span class="search-icon-category-text">Travel</span>
+              <span class="search-icon-category-text">Fashion</span>
+              <span class="search-icon-category-text">Food</span>
+              <span class="search-icon-category-text">Books</span>
+              <span class="search-icon-category-text">Health</span>
+              <span class="search-icon-category-text">Sports</span>
+              <span class="search-icon-category-text">Art</span>
+              <span class="search-icon-category-text">Music</span>
+              <span class="search-icon-category-text">Technology</span>
+              <span class="search-icon-category-text">Science</span>
+              <span class="search-icon-category-text">Gaming</span>
+              <span class="search-icon-category-text">Nature</span>
+              <span class="search-icon-category-text">History</span>
+              <span class="search-icon-category-text">Movies</span>
+              <span class="search-icon-category-text">Cooking</span>
+              <span class="search-icon-category-text">Photography</span>
+              <span class="search-icon-category-text">DIY</span>
+              <span class="search-icon-category-text">Pets</span>
+              <span class="search-icon-category-text">Fitness</span>
             </div>
-        </div>
-
-        <div class="nav">
-            <div class="nav-elements">
-                <div id="nav-items" class="nav-items">
-                    <div class="nav-item" tabindex="0" data-name="logo">
-                        <div class="icon-container">
-                            <i class="fa-solid fa-shapes"></i>
-                        </div>
-                        <span class="nav-title">Logo</span>
-                    </div>
-
-                    <div class="nav-item" tabindex="0" data-name="text">
-                        <div class="icon-container">
-                            <i class="fa-solid fa-text-height"></i>
-                        </div>
-                        <span class="nav-title">Text</span>
-                    </div>
-
-                    <div class="nav-item" tabindex="0" data-name="background">
-                        <div class="icon-container">
-                            <i class="fa-solid fa-clone"></i>
-                        </div>
-                        <span class="nav-title">Background</span>
-                    </div>
-
-                    <div class="nav-item" tabindex="0" data-name="preview">
-                        <div class="icon-container">
-                            <i class="fa-solid fa-eye"></i>
-                        </div>
-                        <span class="nav-title">Preview</span>
-                    </div>
-                </div>
+            <div>
+              <div id="close-btn" style="position: absolute; right: 14px; top: 10px;"><i class="fa-solid fa-close"
+                  style=" font-size: 20px;"></i></div>
+              <input placeholder="Search Icons" type="text" id="icon-search-input" class="input-main">
+              <i class="fa-solid fa-magnifying-glass"
+                style="color: var(--gray-light); font-size: 16px; position: absolute; margin-left: -30px; margin-top: 7px;"></i>
+              <div id="clip-icons">
+              </div>
             </div>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <div class="settings-view">
+    <div class="nav">
+      <div class="nav-elements">
+        <div id="nav-items" class="nav-items">
+          <div class="nav-item" tabindex="0" data-name="logo">
+            <div class="icon-container">
+              <i class="fa-solid fa-shapes"></i>
+            </div>
+            <span class="nav-title">Logo</span>
+          </div>
 
-            <div class="setting-container">
-                <div>
-                    <span style="color: #62646a;
+          <div class="nav-item" tabindex="0" data-name="text">
+            <div class="icon-container">
+              <i class="fa-solid fa-text-height"></i>
+            </div>
+            <span class="nav-title">Text</span>
+          </div>
+
+          <div class="nav-item" tabindex="0" data-name="background">
+            <div class="icon-container">
+              <i class="fa-solid fa-clone"></i>
+            </div>
+            <span class="nav-title">Background</span>
+          </div>
+
+          <div class="nav-item" tabindex="0" data-name="preview">
+            <div class="icon-container">
+              <i class="fa-solid fa-eye"></i>
+            </div>
+            <span class="nav-title">Preview</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-view">
+
+      <div class="setting-container">
+        <div>
+          <span style="color: #62646a;
                 font-size: 14px; font-weight: 500;">Layers</span>
-                    <div id="layers" class="layers"></div>
-                </div>
+          <div id="layers" class="layers"></div>
+        </div>
 
-                <div class="layer-specific-settings">
-                    <span class="specific-setting" id="copyElement">
-                        <i class="fa-solid fa-copy"></i>
-                        <span class="specific-setting-label">Duplicate</span>
-                    </span>
-                    <span class="specific-setting" id="eyeElement">
-                        <i class="fa-solid fa-eye"></i>
-                        <span class="specific-setting-label">Visible</span>
-                    </span>
-                    <span class="specific-setting" id="bringUpElement">
-                        <i class="fa-solid fa-arrow-up"></i>
-                        <span class="specific-setting-label">Forward</span>
-                    </span>
-                    <span class="specific-setting" id="bringDownElement">
-                        <i class="fa-solid fa-arrow-down"></i>
-                        <span class="specific-setting-label">Backward</span>
-                    </span>
-                    <span class="specific-setting" id="removeElement">
-                        <i class="fa-solid fa-trash"></i>
-                        <span class="specific-setting-label">Remove</span>
-                    </span>
-                </div>
+        <div class="layer-specific-settings">
+          <span class="specific-setting" id="copyElement">
+            <i class="fa-solid fa-copy"></i>
+            <span class="specific-setting-label">Duplicate</span>
+          </span>
+          <span class="specific-setting" id="eyeElement">
+            <i class="fa-solid fa-eye"></i>
+            <span class="specific-setting-label">Visible</span>
+          </span>
+          <span class="specific-setting" id="bringUpElement">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span class="specific-setting-label">Forward</span>
+          </span>
+          <span class="specific-setting" id="bringDownElement">
+            <i class="fa-solid fa-arrow-down"></i>
+            <span class="specific-setting-label">Backward</span>
+          </span>
+          <span class="specific-setting" id="removeElement">
+            <i class="fa-solid fa-trash"></i>
+            <span class="specific-setting-label">Remove</span>
+          </span>
+        </div>
 
-                <div style="display: flex; justify-content: space-around;">
-                    <span id="solid_color_mode" class="category">Solid Colors</span>
-                    <span id="picker_color_mode" class="category">Color Picker</span>
-                </div>
+        <div style="display: flex; justify-content: space-around;">
+          <span id="solid_color_mode" class="category">Solid Colors</span>
+          <span id="picker_color_mode" class="category">Color Picker</span>
+        </div>
 
-                <div id="solid_color_items" style="display: flex; flex-direction: column; gap: 5px;">
-                    <div style="display: flex;">
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #000000;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #545454;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #737373;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #a6a6a6;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #d9d9d9;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #f5f5f5;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #ffffff;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #ab2d2d;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #de3a3a;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #f74040;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #f85d5d;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #fcb3b3;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #fed0d0;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #ffeded;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #b25d1f;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #e37627;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #fc832b;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #fd964b;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #febb8a;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #fedfc9;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #fff2e9;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #8a6e10;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #b89e1e;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #e5c100;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #ffdd00;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #ffea66;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #fff59d;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #ffffe0;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #126f43;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #168a53;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #1dbf73;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #62d49f;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #a6eaca;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #c9f4e0;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #e8faf4;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #1b8996;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #25a1b0;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #3ad0e6;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #75dfee;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #afedf7;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #cdf5fb;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #ecfcff;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #284389;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #3f63c8;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #4a73e8;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #819ef0;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #9db4f3;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #d4defb;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #f0f4ff;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #6731a1;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #984ae8;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #a866ec;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #b881f0;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #d8b9f7;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #ecddfb;"></span>
-                        <span id="solid_color" class="color-picker solid_color_section"
-                            style="background-color: #f8f0ff;"></span>
-                    </div>
+        <div id="solid_color_items" style="display: flex; flex-direction: column; gap: 5px;">
+          <div style="display: flex;">
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #000000;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #545454;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #737373;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #a6a6a6;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #d9d9d9;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #f5f5f5;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #ffffff;"></span>
+          </div>
+          <div style="display: flex;">
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #ab2d2d;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #de3a3a;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #f74040;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #f85d5d;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #fcb3b3;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #fed0d0;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #ffeded;"></span>
+          </div>
+          <div style="display: flex;">
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #b25d1f;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #e37627;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #fc832b;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #fd964b;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #febb8a;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #fedfc9;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #fff2e9;"></span>
+          </div>
+          <div style="display: flex;">
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #8a6e10;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #b89e1e;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #e5c100;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #ffdd00;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #ffea66;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #fff59d;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #ffffe0;"></span>
+          </div>
+          <div style="display: flex;">
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #126f43;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #168a53;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #1dbf73;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #62d49f;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #a6eaca;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #c9f4e0;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #e8faf4;"></span>
+          </div>
+          <div style="display: flex;">
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #1b8996;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #25a1b0;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #3ad0e6;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #75dfee;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #afedf7;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #cdf5fb;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #ecfcff;"></span>
+          </div>
+          <div style="display: flex;">
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #284389;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #3f63c8;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #4a73e8;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #819ef0;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #9db4f3;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #d4defb;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #f0f4ff;"></span>
+          </div>
+          <div style="display: flex;">
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #6731a1;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #984ae8;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #a866ec;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #b881f0;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #d8b9f7;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #ecddfb;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #f8f0ff;"></span>
+          </div>
 
-                    <div id="custom_colors_wrapper"
-                        style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-block: 15px;">
-                        <label
-                            style="width: 33px; height: 33px; background-color: #eee; border-radius: 5px; justify-content: center; display: flex; align-items: center;">
-                            <span style="position: absolute;">+</span>
-                            <input id="custom_color_generator" type="color" style="visibility: hidden;">
-                        </label>
-                    </div>
-                    <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Layer Colors</h4>
-                    <div id="logo_colors_pallete"
-                        style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-                    </div>
-                    <pallete-component id="logo-pallete" data-list="['Linear']"></pallete-component>
-                </div>
+          <div id="custom_colors_wrapper"
+            style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-block: 15px;">
+            <label
+              style="width: 33px; height: 33px; background-color: #eee; border-radius: 5px; justify-content: center; display: flex; align-items: center;">
+              <span style="position: absolute;">+</span>
+              <input id="custom_color_generator" type="color" style="visibility: hidden;">
+            </label>
+          </div>
+          <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Layer Colors</h4>
+          <div id="logo_colors_pallete" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+          </div>
+          <pallete-component id="logo-pallete" data-list="['Linear']"></pallete-component>
+        </div>
 
 
-                <div id="picker_color_items" style="display: flex; flex-direction: column; margin-top: -40px;">
+        <div id="picker_color_items" style="display: flex; flex-direction: column; margin-top: -40px;">
 
-                    <div id="open_picker"></div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-                        <span id="HSL_mode" class="color_mode_title">HSL</span>
-                        <span id="RGB_mode" class="color_mode_title">RGB</span>
-                        <span id="HEX_mode" class="color_mode_title">HEX</span>
-                    </div>
-                    <div style="display: grid; gap: 10px; margin: 20px 18px;">
-                        <div id="HSL_view" style="display: flex;">
-                            <input id="H" class="hslPalette" type="text" placeholder="H">
-                            <input id="S" class="hslPalette" type="text" placeholder="S">
-                            <input id="L" class="hslPalette" type="text" placeholder="L">
-                        </div>
-                        <div id="RGB_view" style="display: flex;">
-                            <input id="R" class="hslPalette" type="text" placeholder="R">
-                            <input id="G" class="hslPalette" type="text" placeholder="G">
-                            <input id="B" class="hslPalette" type="text" placeholder="B">
-                        </div>
-                        <div id="HEX_view" style="display: flex;">
-                            <input id="HEX" class="hslPalette" type="text" placeholder="HEX">
-                        </div>
-                    </div>
-                </div>
+          <div id="open_picker"></div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+            <span id="HSL_mode" class="color_mode_title">HSL</span>
+            <span id="RGB_mode" class="color_mode_title">RGB</span>
+            <span id="HEX_mode" class="color_mode_title">HEX</span>
+          </div>
+          <div style="display: grid; gap: 10px; margin: 20px 18px;">
+            <div id="HSL_view" style="display: flex;">
+              <input id="H" class="hslPalette" type="text" placeholder="H">
+              <input id="S" class="hslPalette" type="text" placeholder="S">
+              <input id="L" class="hslPalette" type="text" placeholder="L">
+            </div>
+            <div id="RGB_view" style="display: flex;">
+              <input id="R" class="hslPalette" type="text" placeholder="R">
+              <input id="G" class="hslPalette" type="text" placeholder="G">
+              <input id="B" class="hslPalette" type="text" placeholder="B">
+            </div>
+            <div id="HEX_view" style="display: flex;">
+              <input id="HEX" class="hslPalette" type="text" placeholder="HEX">
+            </div>
+          </div>
+        </div>
 
-                <div class="setting-switch">
-                    <span>Drop Shadow</span>
-                    <label class="switch">
-                        <input type="checkbox" id="logo-drop-shadow">
-                        <span class="switch-slider round"></span>
-                    </label>
-                </div>
-                <button id="logo-shadow-adjust" class="btn-main" style="width: 200px; display: none;"><i
-                        class="fa-solid fa-sun"></i> Adjust</button>
-                <div id="logo-shadow-blur" class="setting-item" style="display: none;">
-                    <span>Shadow Blur</span><span id="logo-shadow_blur_title"> :1px</span>
-                    <div class="slider-container">
-                        <input class="slider" id="logo-shadow-blur-slider" type="range" value="0" min="0" max="100">
-                    </div>
-                </div>
-                <div id="logo-shadow-offsetX" class="setting-item" style="display: none;">
-                    <span>Shadow OffsetX</span><span id="logo-shadow_offsetX"> :0px</span>
-                    <div class="slider-container">
-                        <input class="slider" id="logo-shadow-offsetX-slider" type="range" value="0" min="-100"
-                            max="100">
-                    </div>
-                </div>
-                <div id="logo-shadow-offsetY" class="setting-item" style="display: none;">
-                    <span>Shadow OffsetY</span><span id="logo-shadow_offsetY"> :0px</span>
-                    <div class="slider-container">
-                        <input class="slider" id="logo-shadow-offsetY-slider" type="range" value="0" min="-100"
-                            max="100">
-                    </div>
-                </div>
-                <div id="logo-shadow-border" style="border-bottom: 1px solid rgb(226, 226, 226); padding-bottom: 14px;">
-                </div>
+        <div class="setting-switch">
+          <span>Drop Shadow</span>
+          <label class="switch">
+            <input type="checkbox" id="logo-drop-shadow">
+            <span class="switch-slider round"></span>
+          </label>
+        </div>
+        <button id="logo-shadow-adjust" class="btn-main" style="width: 200px; display: none;"><i
+            class="fa-solid fa-sun"></i> Adjust</button>
+        <div id="logo-shadow-blur" class="setting-item" style="display: none;">
+          <span>Shadow Blur</span><span id="logo-shadow_blur_title"> :1px</span>
+          <div class="slider-container">
+            <input class="slider" id="logo-shadow-blur-slider" type="range" value="0" min="0" max="100">
+          </div>
+        </div>
+        <div id="logo-shadow-offsetX" class="setting-item" style="display: none;">
+          <span>Shadow OffsetX</span><span id="logo-shadow_offsetX"> :0px</span>
+          <div class="slider-container">
+            <input class="slider" id="logo-shadow-offsetX-slider" type="range" value="0" min="-100" max="100">
+          </div>
+        </div>
+        <div id="logo-shadow-offsetY" class="setting-item" style="display: none;">
+          <span>Shadow OffsetY</span><span id="logo-shadow_offsetY"> :0px</span>
+          <div class="slider-container">
+            <input class="slider" id="logo-shadow-offsetY-slider" type="range" value="0" min="-100" max="100">
+          </div>
+        </div>
+        <div id="logo-shadow-border" style="border-bottom: 1px solid rgb(226, 226, 226); padding-bottom: 14px;">
+        </div>
 
-                <div class="setting-item" style=" width: 230px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                        <div><span style="font-size: 14px;">Scale: </span> <span style="font-size: 14px;"
-                                id="scale-value"></span></div>
-                    </div>
-                    <div class="slider-container">
-                        <input class="slider" id="progress-bar" type="range" value="10" min="0" max="20">
-                    </div>
-                </div>
+        <div class="setting-item" style=" width: 230px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div><span style="font-size: 14px;">Scale: </span> <span style="font-size: 14px;" id="scale-value"></span>
+            </div>
+          </div>
+          <div class="slider-container">
+            <input class="slider" id="progress-bar" type="range" value="10" min="0" max="20">
+          </div>
+        </div>
 
-                <div class="setting-item" style=" width: 230px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                        <span style="font-size: 14px;" id="rotate_info">Rotate: 0deg</span>
-                        <button id="rotate_reset" style="font-size: 14px; padding: 5px 20px; background-color: transparent; color: #999999; border: var(--gold) 1px solid; 
+        <div class="setting-item" style=" width: 230px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 14px;" id="rotate_info">Rotate: 0deg</span>
+            <button id="rotate_reset" style="font-size: 14px; padding: 5px 20px; background-color: transparent; color: #999999; border: var(--gold) 1px solid; 
                             display: flex; justify-content: center; align-items: center;">Reset</button>
-                    </div>
+          </div>
 
-                    <div class="slider-container">
-                        <input style="width: 230px;" class="slider" id="rotate-bar" type="range" value="0" min="-180"
-                            max="180">
-                    </div>
+          <div class="slider-container">
+            <input style="width: 230px;" class="slider" id="rotate-bar" type="range" value="0" min="-180" max="180">
+          </div>
 
-                </div>
+        </div>
 
-                <div class="setting-switch">
-                    <span>Flip Horizontal</span>
-                    <label class="switch">
-                        <input type="checkbox" id="flip-x">
-                        <span class="switch-slider round"></span>
-                    </label>
-                </div>
-                <div class="setting-switch">
-                    <span>Flip Vertical</span>
-                    <label class="switch">
-                        <input type="checkbox" id="flip-y">
-                        <span class="switch-slider round"></span>
-                    </label>
-                </div>
+        <div class="setting-switch">
+          <span>Flip Horizontal</span>
+          <label class="switch">
+            <input type="checkbox" id="flip-x">
+            <span class="switch-slider round"></span>
+          </label>
+        </div>
+        <div class="setting-switch">
+          <span>Flip Vertical</span>
+          <label class="switch">
+            <input type="checkbox" id="flip-y">
+            <span class="switch-slider round"></span>
+          </label>
+        </div>
 
+      </div>
+
+
+      <div class="bg-settings-container">
+
+        <div id="solid_color_items-bg" style="display: flex; flex-direction: column; gap: 5px; margin-left: 26px;">
+          <h4 style="color: #777;">Solid Colors</h4>
+
+          <div style="display: flex; justify-content: space-around;">
+            <span id="solid_color_text_modeBG" class="category">Solid Colors</span>
+            <span id="picker_color_text_modeBG" class="category">Color Picker</span>
+          </div>
+          <span id="canvas-bg-none" class="none-icon">
+            <svg width="30" height="30" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.7785 2.22168L2.22217 17.778" stroke="#DE3A3A" stroke-width="2" stroke-linecap="round"></path>
+              <path
+                d="M4 0.5H16C17.933 0.5 19.5 2.067 19.5 4V16C19.5 17.933 17.933 19.5 16 19.5H4C2.067 19.5 0.5 17.933 0.5 16V4C0.5 2.067 2.067 0.5 4 0.5Z"
+                stroke="#E4E5E7"></path>
+            </svg>
+          </span>
+
+
+          <div id="bg_solid_color_items_text" style="display: flex; flex-direction: column; gap: 5px;">
+            <div style="display: flex;">
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #000000;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #545454;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #737373;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #a6a6a6;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #d9d9d9;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #f5f5f5;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #ffffff;"></span>
+            </div>
+            <div style="display: flex;">
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #b25d1f;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #e37627;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #fc832b;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #fd964b;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #febb8a;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #fedfc9;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #fff2e9;"></span>
+            </div>
+            <div style="display: flex;">
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #ab2d2d;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #de3a3a;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #f74040;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #f85d5d;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #fcb3b3;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #fed0d0;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #ffeded;"></span>
+            </div>
+
+            <div style="display: flex;">
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #8a6e10;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #b89e1e;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #e5c100;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #ffdd00;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #ffea66;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #fff59d;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #ffffe0;"></span>
+            </div>
+            <div style="display: flex;">
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #126f43;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #168a53;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #1dbf73;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #62d49f;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #a6eaca;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #c9f4e0;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #e8faf4;"></span>
+            </div>
+            <div style="display: flex;">
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #1b8996;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #25a1b0;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #3ad0e6;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #75dfee;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #afedf7;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #cdf5fb;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #ecfcff;"></span>
+            </div>
+            <div style="display: flex;">
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #284389;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #3f63c8;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #4a73e8;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #819ef0;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #9db4f3;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #d4defb;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #f0f4ff;"></span>
+            </div>
+            <div style="display: flex;">
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #6731a1;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #984ae8;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #a866ec;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #b881f0;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #d8b9f7;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #ecddfb;"></span>
+              <span id="solid_color-bg" class="color-picker solid_color_section"
+                style="background-color: #f8f0ff;"></span>
             </div>
 
 
-            <div class="bg-settings-container">
-
-                <div id="solid_color_items-bg"
-                    style="display: flex; flex-direction: column; gap: 5px; margin-left: 26px;">
-                    <h4 style="color: #777;">Solid Colors</h4>
-
-                    <div style="display: flex; justify-content: space-around;">
-                        <span id="solid_color_text_modeBG" class="category">Solid Colors</span>
-                        <span id="picker_color_text_modeBG" class="category">Color Picker</span>
-                    </div>
-                    <span id="canvas-bg-none" class="none-icon">
-                        <svg width="30" height="30" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M17.7785 2.22168L2.22217 17.778" stroke="#DE3A3A" stroke-width="2"
-                                stroke-linecap="round"></path>
-                            <path
-                                d="M4 0.5H16C17.933 0.5 19.5 2.067 19.5 4V16C19.5 17.933 17.933 19.5 16 19.5H4C2.067 19.5 0.5 17.933 0.5 16V4C0.5 2.067 2.067 0.5 4 0.5Z"
-                                stroke="#E4E5E7"></path>
-                        </svg>
-                    </span>
-
-
-                    <div id="bg_solid_color_items_text" style="display: flex; flex-direction: column; gap: 5px;">
-                        <div style="display: flex;">
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #000000;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #545454;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #737373;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #a6a6a6;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #d9d9d9;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #f5f5f5;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #ffffff;"></span>
-                        </div>
-                        <div style="display: flex;">
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #b25d1f;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #e37627;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #fc832b;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #fd964b;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #febb8a;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #fedfc9;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #fff2e9;"></span>
-                        </div>
-                        <div style="display: flex;">
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #ab2d2d;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #de3a3a;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #f74040;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #f85d5d;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #fcb3b3;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #fed0d0;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #ffeded;"></span>
-                        </div>
-
-                        <div style="display: flex;">
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #8a6e10;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #b89e1e;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #e5c100;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #ffdd00;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #ffea66;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #fff59d;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #ffffe0;"></span>
-                        </div>
-                        <div style="display: flex;">
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #126f43;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #168a53;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #1dbf73;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #62d49f;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #a6eaca;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #c9f4e0;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #e8faf4;"></span>
-                        </div>
-                        <div style="display: flex;">
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #1b8996;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #25a1b0;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #3ad0e6;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #75dfee;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #afedf7;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #cdf5fb;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #ecfcff;"></span>
-                        </div>
-                        <div style="display: flex;">
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #284389;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #3f63c8;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #4a73e8;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #819ef0;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #9db4f3;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #d4defb;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #f0f4ff;"></span>
-                        </div>
-                        <div style="display: flex;">
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #6731a1;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #984ae8;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #a866ec;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #b881f0;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #d8b9f7;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #ecddfb;"></span>
-                            <span id="solid_color-bg" class="color-picker solid_color_section"
-                                style="background-color: #f8f0ff;"></span>
-                        </div>
-
-
-                        <div id="custom_bg_colors_wrapper"
-                            style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-block: 15px;">
-                            <label
-                                style="width: 33px; height: 33px; background-color: #eee; border-radius: 5px; justify-content: center; display: flex; align-items: center;">
-                                <span style="position: absolute;">+</span>
-                                <input id="custom_bg_color_generator" type="color" style="visibility: hidden;">
-                            </label>
-                        </div>
-
-
-                        <div style="margin-top: 20px;">
-                            <pallete-component id="bg-pallete"
-                                data-list="['Linear', 'Solid', 'Web 2.0', 'None']"></pallete-component>
-                        </div>
-                    </div>
-
-
-                    <div id="bg_picker_color_items_text"
-                        style="display: flex; flex-direction: column; margin-top: 20px;">
-
-                        <div id="openTextPickerViewBG"></div>
-
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-                            <span id="HSL_mode_BG" class="color_mode_title">HSL</span>
-                            <span id="RGB_mode_BG" class="color_mode_title">RGB</span>
-                            <span id="HEX_mode_BG" class="color_mode_title">HEX</span>
-                        </div>
-                        <div style="display: grid; gap: 10px; margin: 20px 0;">
-                            <div id="HSL_view_BG" style="display: flex; width: 200px;">
-                                <input id="H_BG" class="hslPalette" type="text" placeholder="H">
-                                <input id="S_BG" class="hslPalette" type="text" placeholder="S">
-                                <input id="L_BG" class="hslPalette" type="text" placeholder="L">
-                            </div>
-                            <div id="RGB_view_BG" style="display: flex; width: 200px;">
-                                <input id="R_BG" class="hslPalette" type="text" placeholder="R">
-                                <input id="G_BG" class="hslPalette" type="text" placeholder="G">
-                                <input id="B_BG" class="hslPalette" type="text" placeholder="B">
-                            </div>
-                            <div id="HEX_view_BG" style="display: flex; width: 200px;">
-                                <input id="HEX_BG" class="hslPalette" type="text" placeholder="HEX">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+            <div id="custom_bg_colors_wrapper"
+              style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-block: 15px;">
+              <label
+                style="width: 33px; height: 33px; background-color: #eee; border-radius: 5px; justify-content: center; display: flex; align-items: center;">
+                <span style="position: absolute;">+</span>
+                <input id="custom_bg_color_generator" type="color" style="visibility: hidden;">
+              </label>
             </div>
 
-            <div class="text-settings-container">
 
-                <!-- <div class='setting-list-item'>
+            <div style="margin-top: 20px;">
+              <pallete-component id="bg-pallete" data-list="['Linear', 'Solid', 'Web 2.0', 'None']"></pallete-component>
+            </div>
+          </div>
+
+
+          <div id="bg_picker_color_items_text" style="display: flex; flex-direction: column; margin-top: 20px;">
+
+            <div id="openTextPickerViewBG"></div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+              <span id="HSL_mode_BG" class="color_mode_title">HSL</span>
+              <span id="RGB_mode_BG" class="color_mode_title">RGB</span>
+              <span id="HEX_mode_BG" class="color_mode_title">HEX</span>
+            </div>
+            <div style="display: grid; gap: 10px; margin: 20px 0;">
+              <div id="HSL_view_BG" style="display: flex; width: 200px;">
+                <input id="H_BG" class="hslPalette" type="text" placeholder="H">
+                <input id="S_BG" class="hslPalette" type="text" placeholder="S">
+                <input id="L_BG" class="hslPalette" type="text" placeholder="L">
+              </div>
+              <div id="RGB_view_BG" style="display: flex; width: 200px;">
+                <input id="R_BG" class="hslPalette" type="text" placeholder="R">
+                <input id="G_BG" class="hslPalette" type="text" placeholder="G">
+                <input id="B_BG" class="hslPalette" type="text" placeholder="B">
+              </div>
+              <div id="HEX_view_BG" style="display: flex; width: 200px;">
+                <input id="HEX_BG" class="hslPalette" type="text" placeholder="HEX">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="text-settings-container">
+
+        <!-- <div class='setting-list-item'>
                     <span class="setting-list-item__title">Logo Name
                         <i class="fa-solid fa-angle-down"></i>
                     </span>
@@ -802,177 +729,177 @@
                         <li>Slogan Name</li>
                     </div>
                 </div> -->
-                <!-- <input id="logoNameInput" class="input-main" type="text" placeholder="Logo Name">
+        <!-- <input id="logoNameInput" class="input-main" type="text" placeholder="Logo Name">
                 <input id="sloganNameInput" class="input-main" type="text" placeholder="Slogan Name"> -->
-                <div class="layer-specific-settings">
-                    <span class="specific-setting" id="copyElement2">
-                        <i class="fa-solid fa-copy"></i>
-                        <span class="specific-setting-label">Duplicate</span>
-                    </span>
-                    <span class="specific-setting" id="eyeElement2">
-                        <i class="fa-solid fa-eye"></i>
-                        <span class="specific-setting-label">Visible</span>
-                    </span>
-                    <span class="specific-setting" id="bringUpElement2">
-                        <i class="fa-solid fa-arrow-up"></i>
-                        <span class="specific-setting-label">Forward</span>
-                    </span>
-                    <span class="specific-setting" id="bringDownElement2">
-                        <i class="fa-solid fa-arrow-down"></i>
-                        <span class="specific-setting-label">Backward</span>
-                    </span>
-                    <span class="specific-setting" id="removeElement2">
-                        <i class="fa-solid fa-trash"></i>
-                        <span class="specific-setting-label">Remove</span>
-                    </span>
-                </div>
-                <span id="text-layer-section" style="display: flex; margin-left: -15px;"></span>
-                <div style="display: flex; justify-content: space-around;">
-                    <span id="solid_color_text_mode" class="category">Solid Colors</span>
-                    <span id="picker_color_text_mode" class="category">Color Picker</span>
-                </div>
+        <div class="layer-specific-settings">
+          <span class="specific-setting" id="copyElement2">
+            <i class="fa-solid fa-copy"></i>
+            <span class="specific-setting-label">Duplicate</span>
+          </span>
+          <span class="specific-setting" id="eyeElement2">
+            <i class="fa-solid fa-eye"></i>
+            <span class="specific-setting-label">Visible</span>
+          </span>
+          <span class="specific-setting" id="bringUpElement2">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span class="specific-setting-label">Forward</span>
+          </span>
+          <span class="specific-setting" id="bringDownElement2">
+            <i class="fa-solid fa-arrow-down"></i>
+            <span class="specific-setting-label">Backward</span>
+          </span>
+          <span class="specific-setting" id="removeElement2">
+            <i class="fa-solid fa-trash"></i>
+            <span class="specific-setting-label">Remove</span>
+          </span>
+        </div>
+        <span id="text-layer-section" style="display: flex; margin-left: -15px;"></span>
+        <div style="display: flex; justify-content: space-around;">
+          <span id="solid_color_text_mode" class="category">Solid Colors</span>
+          <span id="picker_color_text_mode" class="category">Color Picker</span>
+        </div>
 
 
-                <div id="solid_color_items_text" style="display: flex; flex-direction: column; gap: 5px;">
-                    <div style="display: flex;">
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #000000;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #545454;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #737373;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #a6a6a6;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #d9d9d9;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #f5f5f5;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #ffffff;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #b25d1f;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #e37627;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #fc832b;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #fd964b;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #febb8a;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #fedfc9;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #fff2e9;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #ab2d2d;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #de3a3a;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #f74040;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #f85d5d;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #fcb3b3;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #fed0d0;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #ffeded;"></span>
-                    </div>
+        <div id="solid_color_items_text" style="display: flex; flex-direction: column; gap: 5px;">
+          <div style="display: flex;">
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #000000;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #545454;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #737373;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #a6a6a6;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #d9d9d9;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #f5f5f5;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #ffffff;"></span>
+          </div>
+          <div style="display: flex;">
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #b25d1f;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #e37627;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #fc832b;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #fd964b;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #febb8a;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #fedfc9;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #fff2e9;"></span>
+          </div>
+          <div style="display: flex;">
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #ab2d2d;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #de3a3a;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #f74040;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #f85d5d;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #fcb3b3;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #fed0d0;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #ffeded;"></span>
+          </div>
 
-                    <div style="display: flex;">
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #8a6e10;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #b89e1e;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #e5c100;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #ffdd00;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #ffea66;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #fff59d;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #ffffe0;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #126f43;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #168a53;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #1dbf73;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #62d49f;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #a6eaca;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #c9f4e0;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #e8faf4;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #1b8996;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #25a1b0;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #3ad0e6;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #75dfee;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #afedf7;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #cdf5fb;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #ecfcff;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #284389;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #3f63c8;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #4a73e8;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #819ef0;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #9db4f3;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #d4defb;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #f0f4ff;"></span>
-                    </div>
-                    <div style="display: flex;">
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #6731a1;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #984ae8;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #a866ec;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #b881f0;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #d8b9f7;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #ecddfb;"></span>
-                        <span id="solid_color_text" class="color-picker solid_color_section"
-                            style="background-color: #f8f0ff;"></span>
-                    </div>
+          <div style="display: flex;">
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #8a6e10;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #b89e1e;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #e5c100;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #ffdd00;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #ffea66;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #fff59d;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #ffffe0;"></span>
+          </div>
+          <div style="display: flex;">
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #126f43;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #168a53;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #1dbf73;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #62d49f;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #a6eaca;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #c9f4e0;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #e8faf4;"></span>
+          </div>
+          <div style="display: flex;">
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #1b8996;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #25a1b0;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #3ad0e6;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #75dfee;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #afedf7;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #cdf5fb;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #ecfcff;"></span>
+          </div>
+          <div style="display: flex;">
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #284389;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #3f63c8;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #4a73e8;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #819ef0;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #9db4f3;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #d4defb;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #f0f4ff;"></span>
+          </div>
+          <div style="display: flex;">
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #6731a1;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #984ae8;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #a866ec;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #b881f0;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #d8b9f7;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #ecddfb;"></span>
+            <span id="solid_color_text" class="color-picker solid_color_section"
+              style="background-color: #f8f0ff;"></span>
+          </div>
 
-                    <div id="custom_text_colors_wrapper"
-                        style="display: grid; grid-template-columns: repeat(5, auto); gap: 5px; margin-block: 15px;">
-                        <label
-                            style="width: 33px; height: 33px; background-color: #eee; border-radius: 5px; justify-content: center; display: flex; align-items: center;">
-                            <span style="position: absolute;">+</span>
-                            <input id="custom_text_color_generator" type="color" style="visibility: hidden;">
-                        </label>
-                    </div>
-                    <!-- 
+          <div id="custom_text_colors_wrapper"
+            style="display: grid; grid-template-columns: repeat(5, auto); gap: 5px; margin-block: 15px;">
+            <label
+              style="width: 33px; height: 33px; background-color: #eee; border-radius: 5px; justify-content: center; display: flex; align-items: center;">
+              <span style="position: absolute;">+</span>
+              <input id="custom_text_color_generator" type="color" style="visibility: hidden;">
+            </label>
+          </div>
+          <!-- 
                     <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Layer</h4>
                     <div id="logo_colors_pallete"
                         style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
@@ -981,67 +908,65 @@
                     <div id="logo_text_colors_pallete"
                         style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div> -->
 
-                    <pallete-component id="text-pallete"
-                        data-list="['Linear', 'Solid', 'Web 2.0', 'None']"></pallete-component>
-                </div>
+          <pallete-component id="text-pallete" data-list="['Linear', 'Solid', 'Web 2.0', 'None']"></pallete-component>
+        </div>
 
-                <div id="picker_color_items_text" style="display: flex; flex-direction: column; margin-top: 20px;">
+        <div id="picker_color_items_text" style="display: flex; flex-direction: column; margin-top: 20px;">
 
-                    <div id="open_picker_text"></div>
+          <div id="open_picker_text"></div>
 
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-                        <span id="HSL2_mode" class="color_mode_title">HSL</span>
-                        <span id="RGB2_mode" class="color_mode_title">RGB</span>
-                        <span id="HEX2_mode" class="color_mode_title">HEX</span>
-                    </div>
-                    <div style="display: grid; gap: 10px; margin: 20px 0;">
-                        <div id="HSL2_view" style="display: flex; width: 200px;">
-                            <input id="H2" class="hslPalette" type="text" placeholder="H">
-                            <input id="S2" class="hslPalette" type="text" placeholder="S">
-                            <input id="L2" class="hslPalette" type="text" placeholder="L">
-                        </div>
-                        <div id="RGB2_view" style="display: flex; width: 200px;">
-                            <input id="R2" class="hslPalette" type="text" placeholder="R">
-                            <input id="G2" class="hslPalette" type="text" placeholder="G">
-                            <input id="B2" class="hslPalette" type="text" placeholder="B">
-                        </div>
-                        <div id="HEX2_view" style="display: flex; width: 200px;">
-                            <input id="HEX2" class="hslPalette" type="text" placeholder="HEX">
-                        </div>
-                    </div>
-                </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+            <span id="HSL2_mode" class="color_mode_title">HSL</span>
+            <span id="RGB2_mode" class="color_mode_title">RGB</span>
+            <span id="HEX2_mode" class="color_mode_title">HEX</span>
+          </div>
+          <div style="display: grid; gap: 10px; margin: 20px 0;">
+            <div id="HSL2_view" style="display: flex; width: 200px;">
+              <input id="H2" class="hslPalette" type="text" placeholder="H">
+              <input id="S2" class="hslPalette" type="text" placeholder="S">
+              <input id="L2" class="hslPalette" type="text" placeholder="L">
+            </div>
+            <div id="RGB2_view" style="display: flex; width: 200px;">
+              <input id="R2" class="hslPalette" type="text" placeholder="R">
+              <input id="G2" class="hslPalette" type="text" placeholder="G">
+              <input id="B2" class="hslPalette" type="text" placeholder="B">
+            </div>
+            <div id="HEX2_view" style="display: flex; width: 200px;">
+              <input id="HEX2" class="hslPalette" type="text" placeholder="HEX">
+            </div>
+          </div>
+        </div>
 
-                <span
-                    style="font-weight: 600; color: var(--gray); margin-left: 5px; margin-bottom: -10px; font-size: 14px">
-                    Font Family
-                </span>
-                <div id="font-selector" class="font-selector">
-                    <span id="font-selector-title" class="font-selector-title">Poppins
-                        <i class="fa-solid fa-angle-down"></i>
-                    </span>
-                    <div class="font-selector-list">
-                        <li>Poppins</li>
-                        <li>Inter</li>
-                        <li>Roboto</li>
-                    </div>
-                </div>
+        <span style="font-weight: 600; color: var(--gray); margin-left: 5px; margin-bottom: -10px; font-size: 14px">
+          Font Family
+        </span>
+        <div id="font-selector" class="font-selector">
+          <span id="font-selector-title" class="font-selector-title">Poppins
+            <i class="fa-solid fa-angle-down"></i>
+          </span>
+          <div class="font-selector-list">
+            <li>Poppins</li>
+            <li>Inter</li>
+            <li>Roboto</li>
+          </div>
+        </div>
 
-                <span
-                    style="font-weight: 600; color: var(--gray); margin-left: 5px; margin-bottom: -10px; font-size: 14px">Letter
-                    Case</span>
-                <div id="case_arrow" class='case-list-item'>
-                    <span id="case-list-item__title" class="case-list-item__title">Uppercase
-                        <i class="fa-solid fa-angle-down"></i>
-                    </span>
-                    <div id="case-list-items-li" class="case-list-items-li">
-                        <li>Uppercase</li>
-                        <li>Lowercase</li>
-                        <li>Title Case</li>
-                        <li>Sentence Case</li>
-                    </div>
-                </div>
+        <span
+          style="font-weight: 600; color: var(--gray); margin-left: 5px; margin-bottom: -10px; font-size: 14px">Letter
+          Case</span>
+        <div id="case_arrow" class='case-list-item'>
+          <span id="case-list-item__title" class="case-list-item__title">Uppercase
+            <i class="fa-solid fa-angle-down"></i>
+          </span>
+          <div id="case-list-items-li" class="case-list-items-li">
+            <li>Uppercase</li>
+            <li>Lowercase</li>
+            <li>Title Case</li>
+            <li>Sentence Case</li>
+          </div>
+        </div>
 
-                <!-- <span
+        <!-- <span
                     style="font-weight: 600; color: #555; margin-left: 5px; margin-bottom: -10px; font-size: 14px">Font
                     Size</span>
                 <div class='font_size-list-item'>
@@ -1051,500 +976,483 @@
                     <div class="font_size-list-items-li">
                     </div>
                 </div> -->
-                <div class="setting-item">
-                    <div style="display: flex; align-items: center;">
-                        <span
-                            style="font-weight: 600; color: #555; margin-left: 5px; margin-bottom: -10px; font-size: 14px">Font
-                            Size</span>
-                        <div
-                            style="display: flex; align-items: center; justify-content: space-between; background-color: #eeeeee; margin-left: 43px; border-radius: 5px; height: 36px;">
-                            <input class="font_size" id="font_size_title"></input>
-                            <div style="display: grid; gap: 2px; padding-right: 10px;">
-                                <span id="font_size_up" class="fa-solid fa-chevron-up arrow_icons"></span>
-                                <span id="font_size_down" class="fa-solid fa-chevron-down arrow_icons"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="slider-container">
-                        <input class="slider" id="font_size_range" type="range" value="10" min="1" max="130">
-                    </div>
-                </div>
-
-                <span
-                    style="font-weight: 600; color: #555; margin-left: 5px; margin-bottom: -10px; font-size: 14px">Font
-                    Style</span>
-                <div class='font_style-list-item'>
-                    <span class="font_style-list-item__title">Normal
-                        <i class="fa-solid fa-angle-down"></i>
-                    </span>
-                    <div class="font_style-list-items-li">
-                        <li>Normal</li>
-                        <li>Italic</li>
-                        <li>Underline</li>
-                    </div>
-                </div>
-                <div class="setting-item">
-                    <span>Letter Spacing</span><span id="l_spacing_value">: 1.0</span>
-                    <div class="slider-container">
-                        <input class="slider" id="letter-spacing-slider" type="range" value="10" min="-200" max="600">
-                    </div>
-                </div>
-                <div class="setting-switch">
-                    <span>Drop Shadow</span>
-                    <label class="switch">
-                        <input type="checkbox" id="drop-shadow">
-                        <span class="switch-slider round"></span>
-                    </label>
-                </div>
-                <button id="shadow-adjust" class="btn-main" style="width: 200px; display: none;"><i
-                        class="fa-solid fa-sun"></i> Adjust</button>
-                <div id="shadow-blur" class="setting-item" style="display: none;">
-                    <span>Shadow Blur</span><span id="shadow_blur_title"> :1px</span>
-                    <div class="slider-container">
-                        <input class="slider" id="shadow-blur-slider" type="range" value="0" min="0" max="100">
-                    </div>
-                </div>
-                <div id="shadow-offsetX" class="setting-item" style="display: none;">
-                    <span>Shadow OffsetX</span><span id="offset_x_title"> :0px</span>
-                    <div class="slider-container">
-                        <input class="slider" id="shadow-offsetX-slider" type="range" value="0" min="-100" max="100">
-                    </div>
-                </div>
-                <div id="shadow-offsetY" class="setting-item" style="display: none;">
-                    <span>Shadow OffsetY</span><span id="offset_y_title"> :0px</span>
-                    <div class="slider-container">
-                        <input class="slider" id="shadow-offsetY-slider" type="range" value="0" min="-100" max="100">
-                    </div>
-                </div>
+        <div class="setting-item">
+          <div style="display: flex; align-items: center;">
+            <span style="font-weight: 600; color: #555; margin-left: 5px; margin-bottom: -10px; font-size: 14px">Font
+              Size</span>
+            <div
+              style="display: flex; align-items: center; justify-content: space-between; background-color: #eeeeee; margin-left: 43px; border-radius: 5px; height: 36px;">
+              <input class="font_size" id="font_size_title"></input>
+              <div style="display: grid; gap: 2px; padding-right: 10px;">
+                <span id="font_size_up" class="fa-solid fa-chevron-up arrow_icons"></span>
+                <span id="font_size_down" class="fa-solid fa-chevron-down arrow_icons"></span>
+              </div>
             </div>
-
-            <div class="uploads-settings-container">
-                <div style="margin-top: 100px; display: grid; justify-content: center;">
-                    <label for="upload-file" class="btn-main"
-                        style="display: flex; align-items: center; justify-content: center; height: 25px; width: 160px;">
-                        <span>
-                            <i class="fa-solid fa-upload" style="margin-inline: 10px;"></i>
-                        </span>Upload a file
-                    </label>
-                </div>
-                <input type="file" name="file-uploads" id="upload-file" style="display: none;">
-
-                <div class="layer-specific-settings">
-                    <span class="specific-setting" id="copyElement-uploads">
-                        <i class="fa-solid fa-copy"></i>
-                        <span class="specific-setting-label">Duplicate</span>
-                    </span>
-                    <span class="specific-setting" id="eyeElement-uploads">
-                        <i class="fa-solid fa-eye"></i>
-                        <span class="specific-setting-label">Visible</span>
-                    </span>
-                    <span class="specific-setting" id="bringUpElement-uploads">
-                        <i class="fa-solid fa-arrow-up"></i>
-                        <span class="specific-setting-label">Forward</span>
-                    </span>
-                    <span class="specific-setting" id="bringDownElement-uploads">
-                        <i class="fa-solid fa-arrow-down"></i>
-                        <span class="specific-setting-label">Backward</span>
-                    </span>
-                </div>
-
-                <div class="setting-item">
-                    <span>Scale: </span> <span id="scale-value"></span>
-                    <div class="slider-container">
-                        <input class="slider" id="progress-bar" type="range" value="5" min="1" max="100">
-                    </div>
-                </div>
-                <div class="setting-item">
-                    <span>Rotate</span>
-                    <div class="slider-container">
-                        <input class="slider" id="rotate-bar-uploads" type="range" value="0" min="-180" max="180">
-                    </div>
-                </div>
-                <div class="setting-switch">
-                    <span>Flip Horizontal</span>
-                    <label class="switch">
-                        <input type="checkbox" id="flip-x-uploads">
-                        <span class="switch-slider round"></span>
-                    </label>
-                </div>
-                <div class="setting-switch">
-                    <span>Flip Vertical</span>
-                    <label class="switch">
-                        <input type="checkbox" id="flip-y-uploads">
-                        <span class="switch-slider round"></span>
-                    </label>
-                </div>
-
-            </div>
-
+          </div>
+          <div class="slider-container">
+            <input class="slider" id="font_size_range" type="range" value="10" min="1" max="130">
+          </div>
         </div>
 
-        <div class="editor-container">
-            <div class="canvas-actions">
-                <span id="undo-btn" class="canvas-action">
-                    <i class="fa fa-undo" style="color: var(--gray);"></i>
-                    Undo
-                </span>
-                <span id="redo-btn" class="canvas-action">
-                    <i class="fa fa-redo" style="color: var(--gray);"></i>
-                    Redo
-                </span>
-                <!-- <span id="align-btn" class="canvas-action">
+        <span style="font-weight: 600; color: #555; margin-left: 5px; margin-bottom: -10px; font-size: 14px">Font
+          Style</span>
+        <div class='font_style-list-item'>
+          <span class="font_style-list-item__title">Normal
+            <i class="fa-solid fa-angle-down"></i>
+          </span>
+          <div class="font_style-list-items-li">
+            <li>Normal</li>
+            <li>Italic</li>
+            <li>Underline</li>
+          </div>
+        </div>
+        <div class="setting-item">
+          <span>Letter Spacing</span><span id="l_spacing_value">: 1.0</span>
+          <div class="slider-container">
+            <input class="slider" id="letter-spacing-slider" type="range" value="10" min="-200" max="600">
+          </div>
+        </div>
+        <div class="setting-switch">
+          <span>Drop Shadow</span>
+          <label class="switch">
+            <input type="checkbox" id="drop-shadow">
+            <span class="switch-slider round"></span>
+          </label>
+        </div>
+        <button id="shadow-adjust" class="btn-main" style="width: 200px; display: none;"><i class="fa-solid fa-sun"></i>
+          Adjust</button>
+        <div id="shadow-blur" class="setting-item" style="display: none;">
+          <span>Shadow Blur</span><span id="shadow_blur_title"> :1px</span>
+          <div class="slider-container">
+            <input class="slider" id="shadow-blur-slider" type="range" value="0" min="0" max="100">
+          </div>
+        </div>
+        <div id="shadow-offsetX" class="setting-item" style="display: none;">
+          <span>Shadow OffsetX</span><span id="offset_x_title"> :0px</span>
+          <div class="slider-container">
+            <input class="slider" id="shadow-offsetX-slider" type="range" value="0" min="-100" max="100">
+          </div>
+        </div>
+        <div id="shadow-offsetY" class="setting-item" style="display: none;">
+          <span>Shadow OffsetY</span><span id="offset_y_title"> :0px</span>
+          <div class="slider-container">
+            <input class="slider" id="shadow-offsetY-slider" type="range" value="0" min="-100" max="100">
+          </div>
+        </div>
+      </div>
+
+      <div class="uploads-settings-container">
+        <div style="margin-top: 100px; display: grid; justify-content: center;">
+          <label for="upload-file" class="btn-main"
+            style="display: flex; align-items: center; justify-content: center; height: 25px; width: 160px;">
+            <span>
+              <i class="fa-solid fa-upload" style="margin-inline: 10px;"></i>
+            </span>Upload a file
+          </label>
+        </div>
+        <input type="file" name="file-uploads" id="upload-file" style="display: none;">
+
+        <div class="layer-specific-settings">
+          <span class="specific-setting" id="copyElement-uploads">
+            <i class="fa-solid fa-copy"></i>
+            <span class="specific-setting-label">Duplicate</span>
+          </span>
+          <span class="specific-setting" id="eyeElement-uploads">
+            <i class="fa-solid fa-eye"></i>
+            <span class="specific-setting-label">Visible</span>
+          </span>
+          <span class="specific-setting" id="bringUpElement-uploads">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span class="specific-setting-label">Forward</span>
+          </span>
+          <span class="specific-setting" id="bringDownElement-uploads">
+            <i class="fa-solid fa-arrow-down"></i>
+            <span class="specific-setting-label">Backward</span>
+          </span>
+        </div>
+
+        <div class="setting-item">
+          <span>Scale: </span> <span id="scale-value"></span>
+          <div class="slider-container">
+            <input class="slider" id="progress-bar" type="range" value="5" min="1" max="100">
+          </div>
+        </div>
+        <div class="setting-item">
+          <span>Rotate</span>
+          <div class="slider-container">
+            <input class="slider" id="rotate-bar-uploads" type="range" value="0" min="-180" max="180">
+          </div>
+        </div>
+        <div class="setting-switch">
+          <span>Flip Horizontal</span>
+          <label class="switch">
+            <input type="checkbox" id="flip-x-uploads">
+            <span class="switch-slider round"></span>
+          </label>
+        </div>
+        <div class="setting-switch">
+          <span>Flip Vertical</span>
+          <label class="switch">
+            <input type="checkbox" id="flip-y-uploads">
+            <span class="switch-slider round"></span>
+          </label>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="editor-container">
+      <div class="canvas-actions">
+        <span id="undo-btn" class="canvas-action">
+          <i class="fa fa-undo" style="color: var(--gray);"></i>
+          Undo
+        </span>
+        <span id="redo-btn" class="canvas-action">
+          <i class="fa fa-redo" style="color: var(--gray);"></i>
+          Redo
+        </span>
+        <!-- <span id="align-btn" class="canvas-action">
                     <i class="fa fa-align-center" style="color: var(--gray);"></i>
                     Align
                 </span> -->
-            </div>
-            <div id="canvas-container" tabindex="0">
-                <canvas id="c" height="600vh" width="980vw"></canvas>
-                <!-- <canvas id="c" height="1000vh" width="1580vw"></canvas> -->
-            </div>
+      </div>
+      <div id="canvas-container" tabindex="0">
+        <canvas id="c" height="600vh" width="980vw"></canvas>
+        <!-- <canvas id="c" height="1000vh" width="1580vw"></canvas> -->
+      </div>
 
+    </div>
+
+    <div class="right-bar" style="display: none;">
+      <div style="margin-top: 100px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+        <div id="top_bottom_1" data-align-id="1" class="svg__icon">
+          <svg fill="currentColor" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' role='graphics-symbol'
+            aria-labelledby='title' aria-describedby='desc' class='tw-fill-current tw-w-14 tw-h-14'>
+            <title id='layout-itn-tcn-773-title' lang='en'>
+              Icon with text below
+            </title>
+            <desc id='layout-itn-tcn-773-desc' lang='en'>
+              Icon with text below Icon
+            </desc>
+            <svg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'>
+              <circle cx='8' cy='5' r='3'></circle>
+              <rect x='4' y='13' width='8' height='1.5' rx='0.75'></rect>
+              <rect x='2' y='9.5' width='12' height='2' rx='1'></rect>
+            </svg>
+          </svg>
         </div>
 
-        <div class="right-bar" style="display: none;">
-            <div style="margin-top: 100px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                <div id="top_bottom_1" data-align-id="1" class="svg__icon">
-                    <svg fill="currentColor" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'
-                        role='graphics-symbol' aria-labelledby='title' aria-describedby='desc'
-                        class='tw-fill-current tw-w-14 tw-h-14'>
-                        <title id='layout-itn-tcn-773-title' lang='en'>
-                            Icon with text below
-                        </title>
-                        <desc id='layout-itn-tcn-773-desc' lang='en'>
-                            Icon with text below Icon
-                        </desc>
-                        <svg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'>
-                            <circle cx='8' cy='5' r='3'></circle>
-                            <rect x='4' y='13' width='8' height='1.5' rx='0.75'></rect>
-                            <rect x='2' y='9.5' width='12' height='2' rx='1'></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="top_bottom_2" data-align-id="2" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-itn-tcs-775-title" lang="en">Icon with smaller text below</title>
-                        <desc id="layout-itn-tcs-775-desc" lang="en">Icon with smaller text below Icon</desc> <svg
-                            width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="8" cy="5" r="3"></circle>
-                            <rect x="6" y="13" width="4" height="1.5" rx="0.75"></rect>
-                            <rect x="4" y="9.5" width="8" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="top_bottom_3" data-align-id="3" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-its-tcn-777-title" lang="en">Smaller icon with larger text below</title>
-                        <desc id="layout-its-tcn-777-desc" lang="en">Smaller icon with larger text below Icon</desc>
-                        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="8" cy="4.5" r="2"></circle>
-                            <rect x="4" y="11.5" width="8" height="1.5" rx="0.75"></rect>
-                            <rect x="2" y="8" width="12" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-
-                <div id="bottom_top_1" data-align-id="4" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-ibn-tcn-525-title" lang="en">Icon with text above</title>
-                        <desc id="layout-ibn-tcn-525-desc" lang="en">Icon with text above Icon</desc> <svg width="16"
-                            height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="8" cy="11" r="3"></circle>
-                            <rect x="4" y="5" width="8" height="1.5" rx="0.75"></rect>
-                            <rect x="2" y="1.5" width="12" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="bottom_top_2" data-align-id="5" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-ibn-tcs-1491-title" lang="en">Icon with smaller text above</title>
-                        <desc id="layout-ibn-tcs-1491-desc" lang="en">Icon with smaller text above Icon</desc> <svg
-                            width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="8" cy="11" r="3"></circle>
-                            <rect x="6" y="5" width="4" height="1.5" rx="0.75"></rect>
-                            <rect x="4" y="1.5" width="8" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="bottom_top_3" data-align-id="6" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-ibs-tcn-783-title" lang="en">Smaller icon with larger text above</title>
-                        <desc id="layout-ibs-tcn-783-desc" lang="en">Smaller icon with larger text above Icon</desc>
-                        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="8" cy="11.5" r="2"></circle>
-                            <rect x="4" y="6.5" width="8" height="1.5" rx="0.75"></rect>
-                            <rect x="2" y="3" width="12" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="left_right_1" data-align-id="7" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-iln-tcn-819-title" lang="en">Icon with text on the right</title>
-                        <desc id="layout-iln-tcn-819-desc" lang="en">Icon with text on the right Icon</desc> <svg
-                            width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="4" cy="8" r="3"></circle>
-                            <rect x="9.5" y="9" width="4" height="1.5" rx="0.75"></rect>
-                            <rect x="8" y="6" width="7" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="left_right_2" data-align-id="8" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-iln-tln-821-title" lang="en">Icon with smaller text on the right</title>
-                        <desc id="layout-iln-tln-821-desc" lang="en">Icon with smaller text on the right Icon</desc>
-                        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="4" cy="8" r="3"></circle>
-                            <rect x="8" y="9" width="4" height="1.5" rx="0.75"></rect>
-                            <rect x="8" y="6" width="7" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="left_right_3" data-align-id="9" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-ils-tln-823-title" lang="en">Smaller icon with larger text on the right
-                        </title>
-                        <desc id="layout-ils-tln-823-desc" lang="en">Smaller icon with larger text on the right Icon
-                        </desc>
-                        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="3.25" cy="8.05" r="2.25"></circle>
-                            <rect x="7" y="6" width="8" height="2" rx="1"></rect>
-                            <rect x="7" y="9" width="5" height="1.5" rx="0.75"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="right_left_1" data-align-id="10" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-irn-tcn-825-title" lang="en">Icon with text on the left</title>
-                        <desc id="layout-irn-tcn-825-desc" lang="en">Icon with text on the left Icon</desc> <svg
-                            width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="8" r="3"></circle>
-                            <rect x="2.5" y="9" width="4" height="1.5" rx="0.75"></rect>
-                            <rect x="1" y="6" width="7" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="right_left_2" data-align-id="11" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-irs-trn-829-title" lang="en">Smaller icon with larger text on the left</title>
-                        <desc id="layout-irs-trn-829-desc" lang="en">Smaller icon with larger text on the left Icon
-                        </desc>
-                        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12.75" cy="8.05" r="2.25"></circle>
-                            <rect x="1" y="6" width="8" height="2" rx="1"></rect>
-                            <rect x="4" y="9" width="5" height="1.5" rx="0.75"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="right_left_3" data-align-id="12" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-irn-trn-827-title" lang="en">Icon with smaller text on the left</title>
-                        <desc id="layout-irn-trn-827-desc" lang="en">Icon with smaller text on the left Icon</desc> <svg
-                            width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="8" r="3"></circle>
-                            <rect x="4" y="9" width="4" height="1.5" rx="0.75"></rect>
-                            <rect x="1" y="6" width="7" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-
-                <div id="top_bottom_4" data-align-id="13" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-itn-tjn-281-title" lang="en">Icon with justified text below</title>
-                        <desc id="layout-itn-tjn-281-desc" lang="en">Icon with justified text below Icon</desc> <svg
-                            width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="8" cy="5" r="3"></circle>
-                            <rect x="2" y="13" width="12" height="1.5" rx="0.75"></rect>
-                            <rect x="2" y="9.5" width="12" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-                <div id="left_right_4" data-align-id="14" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-iln-tjn-283-title" lang="en">Icon with justified text on the right</title>
-                        <desc id="layout-iln-tjn-283-desc" lang="en">Icon with justified text on the right Icon</desc>
-                        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="4" cy="8" r="3"></circle>
-                            <rect x="8" y="9" width="7" height="1.5" rx="0.75"></rect>
-                            <rect x="8" y="6" width="7" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-                <div id="right_left_4" data-align-id="15" class="svg__icon">
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                        role="graphics-symbol" aria-labelledby="title" aria-describedby="desc"
-                        class="tw-fill-current tw-w-14 tw-h-14">
-                        <title id="layout-irn-tjn-285-title" lang="en">Icon with justified text on the left</title>
-                        <desc id="layout-irn-tjn-285-desc" lang="en">Icon with justified text on the left Icon</desc>
-                        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="8" r="3"></circle>
-                            <rect x="1" y="9" width="7" height="1.5" rx="0.75"></rect>
-                            <rect x="1" y="6" width="7" height="2" rx="1"></rect>
-                        </svg>
-                    </svg>
-                </div>
-            </div>
-
+        <div id="top_bottom_2" data-align-id="2" class="svg__icon">
+          <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol"
+            aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14">
+            <title id="layout-itn-tcs-775-title" lang="en">Icon with smaller text below</title>
+            <desc id="layout-itn-tcs-775-desc" lang="en">Icon with smaller text below Icon</desc> <svg width="16"
+              height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="5" r="3"></circle>
+              <rect x="6" y="13" width="4" height="1.5" rx="0.75"></rect>
+              <rect x="4" y="9.5" width="8" height="2" rx="1"></rect>
+            </svg>
+          </svg>
         </div>
 
-        <div class="magnifier-container">
-            <img id="magnifier_img" src="" alt="" style="height: 120px; width: 240px; object-fit: contain; scale: 1;">
-            <div class="slider-container" style="width: 80%; margin-inline: 20px;">
-                <input class="zoom-slider" id="zoom-slider" type="range" min="0.1" max="0.9" step="0.1" value="1">
-            </div>
+        <div id="top_bottom_3" data-align-id="3" class="svg__icon">
+          <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol"
+            aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14">
+            <title id="layout-its-tcn-777-title" lang="en">Smaller icon with larger text below</title>
+            <desc id="layout-its-tcn-777-desc" lang="en">Smaller icon with larger text below Icon</desc>
+            <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="4.5" r="2"></circle>
+              <rect x="4" y="11.5" width="8" height="1.5" rx="0.75"></rect>
+              <rect x="2" y="8" width="12" height="2" rx="1"></rect>
+            </svg>
+          </svg>
         </div>
 
-        <div class="preview-modal-bg" id="preview-modal-bg">
-            <div id="overlay" class="overlay" style="position: absolute; width: 100vw;">
-                <div style="color: #ccc; display: flex; 
+
+        <div id="bottom_top_1" data-align-id="4" class="svg__icon">
+          <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol"
+            aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14">
+            <title id="layout-ibn-tcn-525-title" lang="en">Icon with text above</title>
+            <desc id="layout-ibn-tcn-525-desc" lang="en">Icon with text above Icon</desc> <svg width="16" height="16"
+              viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="11" r="3"></circle>
+              <rect x="4" y="5" width="8" height="1.5" rx="0.75"></rect>
+              <rect x="2" y="1.5" width="12" height="2" rx="1"></rect>
+            </svg>
+          </svg>
+        </div>
+
+        <div id="bottom_top_2" data-align-id="5" class="svg__icon">
+          <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol"
+            aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14">
+            <title id="layout-ibn-tcs-1491-title" lang="en">Icon with smaller text above</title>
+            <desc id="layout-ibn-tcs-1491-desc" lang="en">Icon with smaller text above Icon</desc> <svg width="16"
+              height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="11" r="3"></circle>
+              <rect x="6" y="5" width="4" height="1.5" rx="0.75"></rect>
+              <rect x="4" y="1.5" width="8" height="2" rx="1"></rect>
+            </svg>
+          </svg>
+        </div>
+
+        <div id="bottom_top_3" data-align-id="6" class="svg__icon">
+          <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol"
+            aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14">
+            <title id="layout-ibs-tcn-783-title" lang="en">Smaller icon with larger text above</title>
+            <desc id="layout-ibs-tcn-783-desc" lang="en">Smaller icon with larger text above Icon</desc>
+            <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="11.5" r="2"></circle>
+              <rect x="4" y="6.5" width="8" height="1.5" rx="0.75"></rect>
+              <rect x="2" y="3" width="12" height="2" rx="1"></rect>
+            </svg>
+          </svg>
+        </div>
+
+        <div id="left_right_1" data-align-id="7" class="svg__icon">
+          <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol"
+            aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14">
+            <title id="layout-iln-tcn-819-title" lang="en">Icon with text on the right</title>
+            <desc id="layout-iln-tcn-819-desc" lang="en">Icon with text on the right Icon</desc> <svg width="16"
+              height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="4" cy="8" r="3"></circle>
+              <rect x="9.5" y="9" width="4" height="1.5" rx="0.75"></rect>
+              <rect x="8" y="6" width="7" height="2" rx="1"></rect>
+            </svg>
+          </svg>
+        </div>
+
+        <div id="left_right_2" data-align-id="8" class="svg__icon">
+          <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol"
+            aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14">
+            <title id="layout-iln-tln-821-title" lang="en">Icon with smaller text on the right</title>
+            <desc id="layout-iln-tln-821-desc" lang="en">Icon with smaller text on the right Icon</desc>
+            <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="4" cy="8" r="3"></circle>
+              <rect x="8" y="9" width="4" height="1.5" rx="0.75"></rect>
+              <rect x="8" y="6" width="7" height="2" rx="1"></rect>
+            </svg>
+          </svg>
+        </div>
+
+        <div id="left_right_3" data-align-id="9" class="svg__icon">
+          <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol"
+            aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14">
+            <title id="layout-ils-tln-823-title" lang="en">Smaller icon with larger text on the right
+            </title>
+            <desc id="layout-ils-tln-823-desc" lang="en">Smaller icon with larger text on the right Icon
+            </desc>
+            <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="3.25" cy="8.05" r="2.25"></circle>
+              <rect x="7" y="6" width="8" height="2" rx="1"></rect>
+              <rect x="7" y="9" width="5" height="1.5" rx="0.75"></rect>
+            </svg>
+          </svg>
+        </div>
+
+        <div id="right_left_1" data-align-id="10" class="svg__icon">
+          <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol"
+            aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14">
+            <title id="layout-irn-tcn-825-title" lang="en">Icon with text on the left</title>
+            <desc id="layout-irn-tcn-825-desc" lang="en">Icon with text on the left Icon</desc> <svg width="16"
+              height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="3"></circle>
+              <rect x="2.5" y="9" width="4" height="1.5" rx="0.75"></rect>
+              <rect x="1" y="6" width="7" height="2" rx="1"></rect>
+            </svg>
+          </svg>
+        </div>
+
+        <div id="right_left_2" data-align-id="11" class="svg__icon">
+          <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol"
+            aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14">
+            <title id="layout-irs-trn-829-title" lang="en">Smaller icon with larger text on the left</title>
+            <desc id="layout-irs-trn-829-desc" lang="en">Smaller icon with larger text on the left Icon
+            </desc>
+            <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12.75" cy="8.05" r="2.25"></circle>
+              <rect x="1" y="6" width="8" height="2" rx="1"></rect>
+              <rect x="4" y="9" width="5" height="1.5" rx="0.75"></rect>
+            </svg>
+          </svg>
+        </div>
+
+        <div id="right_left_3" data-align-id="12" class="svg__icon">
+          <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol"
+            aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14">
+            <title id="layout-irn-trn-827-title" lang="en">Icon with smaller text on the left</title>
+            <desc id="layout-irn-trn-827-desc" lang="en">Icon with smaller text on the left Icon</desc> <svg width="16"
+              height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="3"></circle>
+              <rect x="4" y="9" width="4" height="1.5" rx="0.75"></rect>
+              <rect x="1" y="6" width="7" height="2" rx="1"></rect>
+            </svg>
+          </svg>
+        </div>
+
+        <div id="top_bottom_4" data-align-id="13" class="svg__icon">
+          <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol"
+            aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14">
+            <title id="layout-itn-tjn-281-title" lang="en">Icon with justified text below</title>
+            <desc id="layout-itn-tjn-281-desc" lang="en">Icon with justified text below Icon</desc> <svg width="16"
+              height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="5" r="3"></circle>
+              <rect x="2" y="13" width="12" height="1.5" rx="0.75"></rect>
+              <rect x="2" y="9.5" width="12" height="2" rx="1"></rect>
+            </svg>
+          </svg>
+        </div>
+        <div id="left_right_4" data-align-id="14" class="svg__icon">
+          <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol"
+            aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14">
+            <title id="layout-iln-tjn-283-title" lang="en">Icon with justified text on the right</title>
+            <desc id="layout-iln-tjn-283-desc" lang="en">Icon with justified text on the right Icon</desc>
+            <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="4" cy="8" r="3"></circle>
+              <rect x="8" y="9" width="7" height="1.5" rx="0.75"></rect>
+              <rect x="8" y="6" width="7" height="2" rx="1"></rect>
+            </svg>
+          </svg>
+        </div>
+        <div id="right_left_4" data-align-id="15" class="svg__icon">
+          <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="graphics-symbol"
+            aria-labelledby="title" aria-describedby="desc" class="tw-fill-current tw-w-14 tw-h-14">
+            <title id="layout-irn-tjn-285-title" lang="en">Icon with justified text on the left</title>
+            <desc id="layout-irn-tjn-285-desc" lang="en">Icon with justified text on the left Icon</desc>
+            <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="3"></circle>
+              <rect x="1" y="9" width="7" height="1.5" rx="0.75"></rect>
+              <rect x="1" y="6" width="7" height="2" rx="1"></rect>
+            </svg>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="magnifier-container">
+      <img id="magnifier_img" src="" alt="" style="height: 120px; width: 240px; object-fit: contain; scale: 1;">
+      <div class="slider-container" style="width: 80%; margin-inline: 20px;">
+        <input class="zoom-slider" id="zoom-slider" type="range" min="0.1" max="0.9" step="0.1" value="1">
+      </div>
+    </div>
+
+    <div class="preview-modal-bg" id="preview-modal-bg">
+      <div id="overlay" class="overlay" style="position: absolute; width: 100vw;">
+        <div style="color: #ccc; display: flex; 
                 align-items: center; height: 95vh; justify-content: space-between; margin-inline: 150px;">
-                    <span class="icon-container" style="font-size: 50px;">
-                        <i id="left-arrow" class="fa-solid fa-chevron-left"></i>
-                    </span>
-                    <span class="icon-container" style="font-size: 50px;">
-                        <i id="right-arrow" class="fa-solid fa-chevron-right"></i>
-                    </span>
-                    <div id="close_modal" style="position: absolute; top: 40px; right: 150px;">
-                        <span style="font-size: 50px;  display: flex; justify-content: center;">
-                            <i id="right-arrow" class="fa-solid fa-close"></i>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="preview-img-container">
-                <!-- <canvas id="preview-canvas" height="520vh" width="900vw"></canvas> -->
-                <div class="preview_image_wrapper" id="preview_image_wrapper">
-                    <img id="fixed_preview" alt="fixed_preview" class="preview_image">
-                </div>
-            </div>
+          <span class="icon-container" style="font-size: 50px;">
+            <i id="left-arrow" class="fa-solid fa-chevron-left"></i>
+          </span>
+          <span class="icon-container" style="font-size: 50px;">
+            <i id="right-arrow" class="fa-solid fa-chevron-right"></i>
+          </span>
+          <div id="close_modal" style="position: absolute; top: 40px; right: 150px;">
+            <span style="font-size: 50px;  display: flex; justify-content: center;">
+              <i id="right-arrow" class="fa-solid fa-close"></i>
+            </span>
+          </div>
         </div>
+      </div>
+      <div class="preview-img-container">
+        <!-- <canvas id="preview-canvas" height="520vh" width="900vw"></canvas> -->
+        <div class="preview_image_wrapper" id="preview_image_wrapper">
+          <img id="fixed_preview" alt="fixed_preview" class="preview_image">
+        </div>
+      </div>
     </div>
+  </div>
 
 
-    <div id="details_view">
-        <header class="header">
-            <div style="display: flex; justify-content: space-between; margin-inline: 10px; align-items: center;">
-                <div>
-                    <img src="./assets/Logo Gold.svg" alt="" loading="eager"
-                        style="width: 170px; object-fit: contain; margin-top: 10px;">
-                </div>
-            </div>
-        </header>
+  <div id="details_view">
+    <header class="header">
+      <div style="display: flex; justify-content: space-between; margin-inline: 10px; align-items: center;">
         <div>
-            <div style="display: flex; justify-content: space-around;">
-                <div style="margin: 70px 0; display: flex; flex-direction: column; align-items: flex-end;">
-                    <div style="position: fixed; z-index: -1; opacity: 0.1;">
-                        <img src="./assets/abs.png" alt="" width="1200px" height="1200px"
-                            style="object-fit: contain; filter: invert(); margin-left: 100px;">
-                    </div>
-                    <div class="elements__card">
-                        <h4>Graphical Elements</h4>
-                        <p>What graphic elements appear in your logo? Add relevant tags separated with commas</p>
-                        <div id="tag_list_wrapper" class="container" style="display: none;">
-                            <ul id="tag_list" style="display: flex; flex-wrap: wrap; gap: 10px;"></ul>
-                        </div>
-                        <input type="text" id="tag_name" placeholder="Type a Tag Name..."
-                            style="width: 100%; border: none; border-radius: 10px; background: none; padding-inline: 10px;">
-                    </div>
-                    <div class="elements__card">
-                        <h4>Industry</h4>
-                        <p>Select the industries, that best fit this logo symbol, so it gets seen by relavent buyers</p>
-                        <div id="modal_business_tags_parent">
-                        </div>
-
-                        <div class="container" id="industry-type" style="background: none;">
-                            <span
-                                style="text-decoration: underline; font-size: 15px; font-weight: 500; cursor: pointer; margin-left: -12px;">Browse
-                                Industries</span>
-
-                            <div id="industry-modal" class="industry-modal">
-                                <div class="industry-modal-content">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <h4>Select Relavent industries</h4>
-                                        <i id="industry_close_icon" class="fas fa-close"></i>
-                                    </div>
-                                    <p>Highly relavent and specific industries can lead to higher relevancy to the
-                                        buyers brief, which means
-                                        higher chances for exposure and conversion</p>
-                                    <div id="modal_business_tags">
-                                        <div class="container" style="width: 95%; margin-bottom: 20px;">
-                                            <ul id="business_type_list"></ul>
-                                            <p id="business_text_color" style="color: #555555; font-size: 14px;">Select
-                                                Tags from list to add...</p>
-                                        </div>
-                                    </div>
-                                    <div class="tag_categories">
-                                        <div id="category_title" class="category_title"></div>
-                                        <div id="category_types" class="category_types"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="elements__card">
-                        <h4>Logo Style</h4>
-                        <p>What logo style best represents logo symbol</p>
-                        <div id="logo-style"
-                            style="display: grid; grid-template-columns: repeat(4, 1fr); justify-content: flex-start; gap: 20px;">
-                        </div>
-                        <div id="monogram">
-                            <div class="monogram_list" id="monogram_list"></div>
-                        </div>
-                    </div>
-                </div>
-                <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                    <div>
-                        <img id="prev_img" alt="" style="width: 800px; margin-top: 120px; object-fit: contain;">
-                    </div>
-                    <button id="upload_logo" class="btn-main" style="margin-right: 20px; margin-top: 30px;">
-                        <i class="fa-solid fa-upload"></i>
-                        Publish</button>
-                </div>
+          <img src="./assets/Logo Gold.svg" alt="" loading="eager"
+            style="width: 170px; object-fit: contain; margin-top: 10px;">
+        </div>
+      </div>
+    </header>
+    <div>
+      <div style="display: flex; justify-content: space-around;">
+        <div style="margin: 70px 0; display: flex; flex-direction: column; align-items: flex-end;">
+          <div style="position: fixed; z-index: -1; opacity: 0.1;">
+            <img src="./assets/abs.png" alt="" width="1200px" height="1200px"
+              style="object-fit: contain; filter: invert(); margin-left: 100px;">
+          </div>
+          <div class="elements__card">
+            <h4>Graphical Elements</h4>
+            <p>What graphic elements appear in your logo? Add relevant tags separated with commas</p>
+            <div id="tag_list_wrapper" class="container" style="display: none;">
+              <ul id="tag_list" style="display: flex; flex-wrap: wrap; gap: 10px;"></ul>
+            </div>
+            <input type="text" id="tag_name" placeholder="Type a Tag Name..."
+              style="width: 100%; border: none; border-radius: 10px; background: none; padding-inline: 10px;">
+          </div>
+          <div class="elements__card">
+            <h4>Industry</h4>
+            <p>Select the industries, that best fit this logo symbol, so it gets seen by relavent buyers</p>
+            <div id="modal_business_tags_parent">
             </div>
 
-        </div>
-    </div>
+            <div class="container" id="industry-type" style="background: none;">
+              <span
+                style="text-decoration: underline; font-size: 15px; font-weight: 500; cursor: pointer; margin-left: -12px;">Browse
+                Industries</span>
 
-    <script src="drag_drop.js" type="module"></script>
-    <script src="details.js" type="module"></script>
-    <script src="editor.script.js" type="module"></script>
-    <script src="color-container.js" type="module"></script>
+              <div id="industry-modal" class="industry-modal">
+                <div class="industry-modal-content">
+                  <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <h4>Select Relavent industries</h4>
+                    <i id="industry_close_icon" class="fas fa-close"></i>
+                  </div>
+                  <p>Highly relavent and specific industries can lead to higher relevancy to the
+                    buyers brief, which means
+                    higher chances for exposure and conversion</p>
+                  <div id="modal_business_tags">
+                    <div class="container" style="width: 95%; margin-bottom: 20px;">
+                      <ul id="business_type_list"></ul>
+                      <p id="business_text_color" style="color: #555555; font-size: 14px;">Select
+                        Tags from list to add...</p>
+                    </div>
+                  </div>
+                  <div class="tag_categories">
+                    <div id="category_title" class="category_title"></div>
+                    <div id="category_types" class="category_types"></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="elements__card">
+            <h4>Logo Style</h4>
+            <p>What logo style best represents logo symbol</p>
+            <div id="logo-style"
+              style="display: grid; grid-template-columns: repeat(4, 1fr); justify-content: flex-start; gap: 20px;">
+            </div>
+            <div id="monogram">
+              <div class="monogram_list" id="monogram_list"></div>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-start;">
+          <div>
+            <img id="prev_img" alt="" style="width: 800px; margin-top: 120px; object-fit: contain;">
+          </div>
+          <button id="upload_logo" class="btn-main" style="margin-right: 20px; margin-top: 30px;">
+            <i class="fa-solid fa-upload"></i>
+            Publish</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/drag_drop.js" type="module"></script>
+  <script src="js/details.js" type="module"></script>
+  <script src="js/editor.script.js" type="module"></script>
+  <script src="js/color-container.js" type="module"></script>
 </body>
 
 </html>

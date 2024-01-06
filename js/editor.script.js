@@ -225,6 +225,28 @@ class EditorScreen {
     this.logoOrientation = null;
     this.alignId = 1;
 
+    const url = new URL(location);
+    const params = new URLSearchParams(url.search);
+    params.set('logo', 'logo');
+    params.set('slogan', 'slogan');
+    const updatedURL = url.origin + url.pathname + "?" + params.toString();
+    history.pushState({}, '', updatedURL);
+
+    querySelect("#logoMainField").addEventListener('input', (e) => {
+      const val = e.target.value;
+      params.set('logo', val);
+      const updatedURL = url.origin + url.pathname + "?" + params.toString();
+      history.pushState({}, '', updatedURL);
+    })
+
+    querySelect("#sloganNameField").addEventListener('input', (e) => {
+      const val = e.target.value;
+      params.set('slogan', val);
+      const updatedURL = url.origin + url.pathname + "?" + params.toString();
+      history.pushState({}, '', updatedURL);
+    });
+
+
     this.transparentLoader = (isOn = true) => {
       querySelect('#loader').style.display = isOn ? 'flex' : 'none';
       querySelect('#loader').style.background = '#ffffffbb';
@@ -258,7 +280,7 @@ class EditorScreen {
 
       if (active) {
         if (active._objects) {
-          const groupObjects = active.getObjects();
+          const groupObjects = active?.getObjects();
 
           groupObjects.forEach((object) => {
             const currCoordinate = object.getCenterPoint();
