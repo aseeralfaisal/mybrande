@@ -48,7 +48,7 @@
   display: block;
 }
 
-.input-box-primary > input {
+.input-box-primary>input {
   height: 40px;
   outline: none;
   background-color: var(--white);
@@ -122,4 +122,3 @@ input:focus {
   background-color: #fff;
   transition: ease-out 0.2s all;
 }
-

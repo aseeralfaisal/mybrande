@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mybrande</title>
-  <script src="https://kit.fontawesome.com/c64b631310.js" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/c64b6313.js" crossorigin="anonymous"></script>
   <link rel="icon" type="image/x-icon" href="./assets/Favicon Transparent.ico">
   <link rel="stylesheet" href="styles/editor.style.css">
   <link rel="stylesheet" href="styles/details.style.css">
@@ -13,16 +13,21 @@
 
 <body>
   <div id="loader"
-    style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; z-index: 10000; display: flex; justify-content: center; align-items: center;">
-    <img src="/assets/loader.gif" alt="" style="max-width: 100%; max-height: 100%;">
+    style="position: absolute; top: 0; left: 0; width: 0vw; height: 100vh; background-color: #ffffff; z-index: 10000; display: flex; justify-content: center; align-items: center;">
+    <img src="/assets/loader.gif" alt="" style="max-width: 0%; max-height: 100%;">
+  </div>
+
+  <div id="loader2"
+    style="position: absolute; top: 0; left: 0; width: 0vw; height: 100vh; background-color: #ffffff; z-index: 10000; display: flex; justify-content: center; align-items: center;">
+    <img src="/assets/loader.gif" alt="" style="max-width: 0%; max-height: 100%;">
   </div>
 
   <div id="drag_drop_view">
     <header class="header">
-      <div style="display: flex; justify-content: space-between; margin-inline: 100px; align-items: center;">
+      <div style="display: flex; justify-content: space-between; margin-inline: 0px; align-items: center;">
         <div>
           <img src="./assets/Logo Gold.svg" alt="" loading="eager"
-            style="width: 170px; object-fit: contain; margin-top: 10px;">
+            style="width: 170px; object-fit: contain; margin-top: px;">
         </div>
         <div class="links">
           <i class="fa-solid fa-circle-user" style="font-size: 32px; color: var(--gray);"></i>
@@ -35,12 +40,12 @@
       </div>
       <div>
         <div style="display: flex;">
-          <div id="input_phase" style="margin: 100px;">
-            <div class="input-box-primary" style="padding: 10px;">
+          <div id="input_phase" style="margin: 0px;">
+            <div class="input-box-primary" style="padding: px;">
               <input id="logo_name_input-primary" class="form-control" type="text" value=""
                 placeholder="Title your logo" style="font-size: 28px; font-weight: 400;">
             </div>
-            <p class="paragraph" style="width: 700px; font-size: 16px; padding-block: 10px;">Add a title to
+            <p class="paragraph" style="width: 700px; font-size: 16px; padding-block: px;">Add a title to
               your
               logo design for easy tracking and management. This title is only visible to you and can be
               changed at any time.</p>
@@ -68,8 +73,7 @@
 
           <div id="darg-drop-parent" style="display: grid; justify-items: flex-start; justify-content: center;">
             <div id="drag-drop" class="drag_drop" style="display: grid; justify-content: center; align-items: center;">
-              <div id="drag-drop-child"
-                style="display: grid; align-items: center;  justify-content: center; gap: 10px;">
+              <div id="drag-drop-child" style="display: grid; align-items: center;  justify-content: center; gap: px;">
                 <div class="icon-container">
                   <i class="fa-solid fa-images" style="font-size: 80px; color: #4d4e4e;"></i>
                 </div>
@@ -78,8 +82,8 @@
                   <li style="color: #4d4e4e; font-size: 20px;">Logo Symbol</li>
                   <li style="color: #4d4e4e; font-size: 20px;">SVG format Only</li>
                   <li style="color: #4d4e4e; font-size: 20px;">No text layers</li>
-                  <li style="color: #4d4e4e; font-size: 20px;">Less than 100 layers</li>
-                  <li style="color: #4d4e4e; font-size: 20px;">100% vector elements</li>
+                  <li style="color: #4d4e4e; font-size: 20px;">Less than 0 layers</li>
+                  <li style="color: #4d4e4e; font-size: 20px;">0% vector elements</li>
                 </div>
               </div>
               <div id="img-view-container" style="display: flex; justify-content: center; align-items: center;">
@@ -112,17 +116,18 @@
   <div id="main_editor_view">
     <header class="header">
       <div class="header-elements">
-        <div style="display: flex; align-items: flex-end; gap: 10px;">
+        <div style="display: flex; align-items: flex-end; gap: px;">
           <div id="back-main" style="margin-left: 120px;">
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="1em" viewBox="0 0 448 512">
               <path
-                d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+                d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L9.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
             </svg>
           </div>
           <img id="header-logo" src="./assets/Logo Gold.svg" style="width: 170px; margin-left: 20px; object-fit: cover;"
             alt="">
         </div>
-        <div style="display: flex; justify-content: space-evenly; gap: 10px;">
+        <div style="display: flex; justify-content: space-evenly; gap: px;">
+
           <button id="save-btn" class="btn-main"><i class="fas fa-download" style="margin: 5px;"></i>
             <span>Save</span>
           </button>
@@ -133,6 +138,16 @@
         </div>
       </div>
     </header>
+    <button id="add-clip-text" style="display: block; top: 120px; left: 380px; width: 40px;
+    height: 40px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    outline: none;
+    border: none;
+    color: #ffffff;
+    border-radius: 6px;
+    background-color: #8f86ef;">+</button>
 
     <div id="popup-parent"
       style="width: 100vw; height: 100vh; background-color: #00000071; z-index: 50; position: absolute; top: 0; left: 0;">
@@ -164,27 +179,15 @@
                   <polygon fill="#FFFFFF" points="56.7,71.9 56.7,73.7 56.7,75.4 60.1,75.4 60.1,73.7 61.9,73.7 61.9,83.2 59.6,83.2 59.6,86.7
 67.6,86.7 67.6,83.2 65.3,83.2 65.3,73.7 67.1,73.7 67.1,75.4 70.5,75.4 70.5,73.7 70.5,71.9 70.5,70.2 56.7,70.2 ">
                   </polygon>
-                  <rect x="36.5" y="36.5" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" width="72" height="72">
+                  <rect x="36.5" y="36.5" fill="none" stroke="#FFFFFF" stroke-miterlimit="" width="72" height="72">
                   </rect>
-                  <rect x="31.3" y="31.3" fill="#fff" width="10.5" height="10.5"></rect>
-                  <rect x="31.3" y="31.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" width="10.5"
-                    height="10.5"></rect>
-                  <rect x="31.3" y="102.3" fill="#fff" width="10.5" height="10.5"></rect>
-                  <rect x="31.3" y="102.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" width="10.5"
-                    height="10.5"></rect>
-                  <rect x="103.3" y="31.3" fill="#fff" width="10.5" height="10.5"></rect>
-                  <rect x="103.3" y="31.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" width="10.5"
-                    height="10.5"></rect>
-                  <rect x="103.3" y="102.3" fill="#fff" width="10.5" height="10.5"></rect>
-                  <rect x="103.3" y="102.3" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" width="10.5"
-                    height="10.5"></rect>
                 </svg>
               </div>
               <p>Add Text</p>
             </div>
 
             <div class="popup-item" id="clipart">
-              <div class="item-title">
+              <div class="item-title" id="add-icon">
                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
                   y="0px" width="145px" height="145px" viewBox="0 0 145 145" enable-background="new 0 0 145 145"
                   xml:space="preserve">
@@ -200,7 +203,7 @@
                             c2.5,0,4.5,2,4.5,4.5v136C145,143,143,145,140.5,145"></path>
                     </g>
                   </g>
-                  <rect x="36.5" y="36.5" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" width="72" height="72">
+                  <rect x="36.5" y="36.5" fill="none" stroke="#FFFFFF" stroke-miterlimit="" width="72" height="72">
                   </rect>
                   <g>
                     <g>
@@ -221,39 +224,39 @@
               <p>Add Clipart</p>
             </div>
           </div>
-
         </div>
       </div>
     </div>
 
     <div id="popup-parent-icons" class="popup-parent-icons"
-      style="width: 100vw; height: 100vh; background-color: #00000071; z-index: 50; position: absolute; top: 0; left: 0;">
-      <div class="popup" style="display: flex; justify-content: center;">
+      style="width: 0vw; height: 100vh; background-color: #00000071; z-index: 50; position: absolute; top: 0; left: 0;">
+      <div class="popup" style="display: block; position: fixed; top: 30%; left: 50%; transform: translateX(-50%);">
         <div class="popup-box" style="height: 450px; width: 600px;" id="add-popup">
           <div style="display: flex; justify-content: space-between;">
-            <div style="display: grid; border-right: 1px solid var(--gray-lighter); padding-right: 20px;">
-              <span class="search-icon-category-text">Travel</span>
-              <span class="search-icon-category-text">Fashion</span>
-              <span class="search-icon-category-text">Food</span>
-              <span class="search-icon-category-text">Books</span>
-              <span class="search-icon-category-text">Health</span>
-              <span class="search-icon-category-text">Sports</span>
-              <span class="search-icon-category-text">Art</span>
-              <span class="search-icon-category-text">Music</span>
-              <span class="search-icon-category-text">Technology</span>
-              <span class="search-icon-category-text">Science</span>
-              <span class="search-icon-category-text">Gaming</span>
-              <span class="search-icon-category-text">Nature</span>
-              <span class="search-icon-category-text">History</span>
-              <span class="search-icon-category-text">Movies</span>
-              <span class="search-icon-category-text">Cooking</span>
-              <span class="search-icon-category-text">Photography</span>
-              <span class="search-icon-category-text">DIY</span>
-              <span class="search-icon-category-text">Pets</span>
-              <span class="search-icon-category-text">Fitness</span>
+            <div id="category_type_title"
+              style="display: grid; border-right: 1px solid var(--gray-lighter); padding-right: 20px;">
+              <!-- <span class="search-icon-category-text">Travel</span> -->
+              <!-- <span class="search-icon-category-text">Fashion</span> -->
+              <!-- <span class="search-icon-category-text">Food</span> -->
+              <!-- <span class="search-icon-category-text">Books</span> -->
+              <!-- <span class="search-icon-category-text">Health</span> -->
+              <!-- <span class="search-icon-category-text">Sports</span> -->
+              <!-- <span class="search-icon-category-text">Art</span> -->
+              <!-- <span class="search-icon-category-text">Music</span> -->
+              <!-- <span class="search-icon-category-text">Technology</span> -->
+              <!-- <span class="search-icon-category-text">Science</span> -->
+              <!-- <span class="search-icon-category-text">Gaming</span> -->
+              <!-- <span class="search-icon-category-text">Nature</span> -->
+              <!-- <span class="search-icon-category-text">History</span> -->
+              <!-- <span class="search-icon-category-text">Movies</span> -->
+              <!-- <span class="search-icon-category-text">Cooking</span> -->
+              <!-- <span class="search-icon-category-text">Photography</span> -->
+              <!-- <span class="search-icon-category-text">DIY</span> -->
+              <!-- <span class="search-icon-category-text">Pets</span> -->
+              <!-- <span class="search-icon-category-text">Fitness</span> -->
             </div>
             <div>
-              <div id="close-btn" style="position: absolute; right: 14px; top: 10px;"><i class="fa-solid fa-close"
+              <div id="close-btn" style="position: absolute; right: 14px; top: px;"><i class="fa-solid fa-close"
                   style=" font-size: 20px;"></i></div>
               <input placeholder="Search Icons" type="text" id="icon-search-input" class="input-main">
               <i class="fa-solid fa-magnifying-glass"
@@ -366,9 +369,9 @@
             <span id="solid_color" class="color-picker solid_color_section" style="background-color: #fff2e9;"></span>
           </div>
           <div style="display: flex;">
-            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #8a6e10;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #8a6e;"></span>
             <span id="solid_color" class="color-picker solid_color_section" style="background-color: #b89e1e;"></span>
-            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #e5c100;"></span>
+            <span id="solid_color" class="color-picker solid_color_section" style="background-color: #e5c0;"></span>
             <span id="solid_color" class="color-picker solid_color_section" style="background-color: #ffdd00;"></span>
             <span id="solid_color" class="color-picker solid_color_section" style="background-color: #ffea66;"></span>
             <span id="solid_color" class="color-picker solid_color_section" style="background-color: #fff59d;"></span>
@@ -420,7 +423,7 @@
             </label>
           </div>
           <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Layer Colors</h4>
-          <div id="logo_colors_pallete" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+          <div id="logo_colors_pallete" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: px;">
           </div>
           <pallete-component id="logo-pallete" data-list="['Linear']"></pallete-component>
         </div>
@@ -434,7 +437,7 @@
             <span id="RGB_mode" class="color_mode_title">RGB</span>
             <span id="HEX_mode" class="color_mode_title">HEX</span>
           </div>
-          <div style="display: grid; gap: 10px; margin: 20px 18px;">
+          <div style="display: grid; gap: px; margin: 20px 18px;">
             <div id="HSL_view" style="display: flex;">
               <input id="H" class="hslPalette" type="text" placeholder="H">
               <input id="S" class="hslPalette" type="text" placeholder="S">
@@ -463,19 +466,19 @@
         <div id="logo-shadow-blur" class="setting-item" style="display: none;">
           <span>Shadow Blur</span><span id="logo-shadow_blur_title"> :1px</span>
           <div class="slider-container">
-            <input class="slider" id="logo-shadow-blur-slider" type="range" value="0" min="0" max="100">
+            <input class="slider" id="logo-shadow-blur-slider" type="range" value="0" min="0" max="0">
           </div>
         </div>
         <div id="logo-shadow-offsetX" class="setting-item" style="display: none;">
           <span>Shadow OffsetX</span><span id="logo-shadow_offsetX"> :0px</span>
           <div class="slider-container">
-            <input class="slider" id="logo-shadow-offsetX-slider" type="range" value="0" min="-100" max="100">
+            <input class="slider" id="logo-shadow-offsetX-slider" type="range" value="0" min="-0" max="100">
           </div>
         </div>
         <div id="logo-shadow-offsetY" class="setting-item" style="display: none;">
           <span>Shadow OffsetY</span><span id="logo-shadow_offsetY"> :0px</span>
           <div class="slider-container">
-            <input class="slider" id="logo-shadow-offsetY-slider" type="range" value="0" min="-100" max="100">
+            <input class="slider" id="logo-shadow-offsetY-slider" type="range" value="0" min="-0" max="100">
           </div>
         </div>
         <div id="logo-shadow-border" style="border-bottom: 1px solid rgb(226, 226, 226); padding-bottom: 14px;">
@@ -487,7 +490,7 @@
             </div>
           </div>
           <div class="slider-container">
-            <input class="slider" id="progress-bar" type="range" value="10" min="0" max="20">
+            <input class="slider" id="progress-bar" type="range" value="" min="0" max="20">
           </div>
         </div>
 
@@ -593,11 +596,11 @@
 
             <div style="display: flex;">
               <span id="solid_color-bg" class="color-picker solid_color_section"
-                style="background-color: #8a6e10;"></span>
+                style="background-color: #8a6e;"></span>
               <span id="solid_color-bg" class="color-picker solid_color_section"
                 style="background-color: #b89e1e;"></span>
               <span id="solid_color-bg" class="color-picker solid_color_section"
-                style="background-color: #e5c100;"></span>
+                style="background-color: #e5c0;"></span>
               <span id="solid_color-bg" class="color-picker solid_color_section"
                 style="background-color: #ffdd00;"></span>
               <span id="solid_color-bg" class="color-picker solid_color_section"
@@ -698,7 +701,7 @@
               <span id="RGB_mode_BG" class="color_mode_title">RGB</span>
               <span id="HEX_mode_BG" class="color_mode_title">HEX</span>
             </div>
-            <div style="display: grid; gap: 10px; margin: 20px 0;">
+            <div style="display: grid; gap: px; margin: 20px 0;">
               <div id="HSL_view_BG" style="display: flex; width: 200px;">
                 <input id="H_BG" class="hslPalette" type="text" placeholder="H">
                 <input id="S_BG" class="hslPalette" type="text" placeholder="S">
@@ -799,15 +802,13 @@
             <span id="solid_color_text" class="color-picker solid_color_section"
               style="background-color: #ffeded;"></span>
           </div>
-          >>>>>>> 1420ceb17e7469c8502f04e20fe4ecb9590e3bb6
-
           <div style="display: flex;">
             <span id="solid_color_text" class="color-picker solid_color_section"
-              style="background-color: #8a6e10;"></span>
+              style="background-color: #8a6e;"></span>
             <span id="solid_color_text" class="color-picker solid_color_section"
               style="background-color: #b89e1e;"></span>
             <span id="solid_color_text" class="color-picker solid_color_section"
-              style="background-color: #e5c100;"></span>
+              style="background-color: #e5c0;"></span>
             <span id="solid_color_text" class="color-picker solid_color_section"
               style="background-color: #ffdd00;"></span>
             <span id="solid_color_text" class="color-picker solid_color_section"
@@ -893,11 +894,11 @@
           <!-- 
                     <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Layer</h4>
                     <div id="logo_colors_pallete"
-                        style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                        style="display: grid; grid-template-columns: repeat(4, 1fr); gap: px;">
                     </div>
                     <h4 style="font-weight: 500; font-size: 14px; color: var(--gray-light);">Text</h4>
                     <div id="logo_text_colors_pallete"
-                        style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div> -->
+                        style="display: grid; grid-template-columns: repeat(4, 1fr); gap: px;"></div> -->
 
           <pallete-component id="text-pallete" data-list="['Linear', 'Solid', 'Web 2.0', 'None']"></pallete-component>
         </div>
@@ -911,7 +912,7 @@
             <span id="RGB2_mode" class="color_mode_title">RGB</span>
             <span id="HEX2_mode" class="color_mode_title">HEX</span>
           </div>
-          <div style="display: grid; gap: 10px; margin: 20px 0;">
+          <div style="display: grid; gap: px; margin: 20px 0;">
             <div id="HSL2_view" style="display: flex; width: 200px;">
               <input id="H2" class="hslPalette" type="text" placeholder="H">
               <input id="S2" class="hslPalette" type="text" placeholder="S">
@@ -928,7 +929,7 @@
           </div>
         </div>
 
-        <span style="font-weight: 600; color: var(--gray); margin-left: 5px; margin-bottom: -10px; font-size: 14px">
+        <span style="font-weight: 600; color: var(--gray); margin-left: 5px; margin-bottom: -px; font-size: 14px">
           Font Family
         </span>
         <div id="font-selector" class="font-selector">
@@ -942,8 +943,7 @@
           </div>
         </div>
 
-        <span
-          style="font-weight: 600; color: var(--gray); margin-left: 5px; margin-bottom: -10px; font-size: 14px">Letter
+        <span style="font-weight: 600; color: var(--gray); margin-left: 5px; margin-bottom: -px; font-size: 14px">Letter
           Case</span>
         <div id="case_arrow" class='case-list-item'>
           <span id="case-list-item__title" class="case-list-item__title">Uppercase
@@ -958,7 +958,7 @@
         </div>
 
         <!-- <span
-                    style="font-weight: 600; color: #555; margin-left: 5px; margin-bottom: -10px; font-size: 14px">Font
+                    style="font-weight: 600; color: #555; margin-left: 5px; margin-bottom: -px; font-size: 14px">Font
                     Size</span>
                 <div class='font_size-list-item'>
                     <span class="font_size-list-item__title">16 px
@@ -969,23 +969,23 @@
                 </div> -->
         <div class="setting-item">
           <div style="display: flex; align-items: center;">
-            <span style="font-weight: 600; color: #555; margin-left: 5px; margin-bottom: -10px; font-size: 14px">Font
+            <span style="font-weight: 600; color: #555; margin-left: 5px; margin-bottom: -px; font-size: 14px">Font
               Size</span>
             <div
               style="display: flex; align-items: center; justify-content: space-between; background-color: #eeeeee; margin-left: 43px; border-radius: 5px; height: 36px;">
               <input class="font_size" id="font_size_title"></input>
-              <div style="display: grid; gap: 2px; padding-right: 10px;">
+              <div style="display: grid; gap: 2px; padding-right: px;">
                 <span id="font_size_up" class="fa-solid fa-chevron-up arrow_icons"></span>
                 <span id="font_size_down" class="fa-solid fa-chevron-down arrow_icons"></span>
               </div>
             </div>
           </div>
           <div class="slider-container">
-            <input class="slider" id="font_size_range" type="range" value="10" min="1" max="130">
+            <input class="slider" id="font_size_range" type="range" value="" min="1" max="130">
           </div>
         </div>
 
-        <span style="font-weight: 600; color: #555; margin-left: 5px; margin-bottom: -10px; font-size: 14px">Font
+        <span style="font-weight: 600; color: #555; margin-left: 5px; margin-bottom: -px; font-size: 14px">Font
           Style</span>
         <div class='font_style-list-item'>
           <span class="font_style-list-item__title">Normal
@@ -1000,7 +1000,7 @@
         <div class="setting-item">
           <span>Letter Spacing</span><span id="l_spacing_value">: 1.0</span>
           <div class="slider-container">
-            <input class="slider" id="letter-spacing-slider" type="range" value="10" min="-200" max="600">
+            <input class="slider" id="letter-spacing-slider" type="range" value="" min="-200" max="600">
           </div>
         </div>
         <div class="setting-switch">
@@ -1015,29 +1015,29 @@
         <div id="shadow-blur" class="setting-item" style="display: none;">
           <span>Shadow Blur</span><span id="shadow_blur_title"> :1px</span>
           <div class="slider-container">
-            <input class="slider" id="shadow-blur-slider" type="range" value="0" min="0" max="100">
+            <input class="slider" id="shadow-blur-slider" type="range" value="0" min="0" max="0">
           </div>
         </div>
         <div id="shadow-offsetX" class="setting-item" style="display: none;">
           <span>Shadow OffsetX</span><span id="offset_x_title"> :0px</span>
           <div class="slider-container">
-            <input class="slider" id="shadow-offsetX-slider" type="range" value="0" min="-100" max="100">
+            <input class="slider" id="shadow-offsetX-slider" type="range" value="0" min="-0" max="100">
           </div>
         </div>
         <div id="shadow-offsetY" class="setting-item" style="display: none;">
           <span>Shadow OffsetY</span><span id="offset_y_title"> :0px</span>
           <div class="slider-container">
-            <input class="slider" id="shadow-offsetY-slider" type="range" value="0" min="-100" max="100">
+            <input class="slider" id="shadow-offsetY-slider" type="range" value="0" min="-0" max="100">
           </div>
         </div>
       </div>
 
       <div class="uploads-settings-container">
-        <div style="margin-top: 100px; display: grid; justify-content: center;">
+        <div style="margin-top: 0px; display: grid; justify-content: center;">
           <label for="upload-file" class="btn-main"
             style="display: flex; align-items: center; justify-content: center; height: 25px; width: 160px;">
             <span>
-              <i class="fa-solid fa-upload" style="margin-inline: 10px;"></i>
+              <i class="fa-solid fa-upload" style="margin-inline: px;"></i>
             </span>Upload a file
           </label>
         </div>
@@ -1065,7 +1065,7 @@
         <div class="setting-item">
           <span>Scale: </span> <span id="scale-value"></span>
           <div class="slider-container">
-            <input class="slider" id="progress-bar" type="range" value="5" min="1" max="100">
+            <input class="slider" id="progress-bar" type="range" value="5" min="1" max="0">
           </div>
         </div>
         <div class="setting-item">
@@ -1110,13 +1110,13 @@
       </div>
       <div id="canvas-container" tabindex="0">
         <canvas id="c" height="600vh" width="980vw"></canvas>
-        <!-- <canvas id="c" height="1000vh" width="1580vw"></canvas> -->
+        <!-- <canvas id="c" height="00vh" width="1580vw"></canvas> -->
       </div>
 
     </div>
 
     <div class="right-bar" style="display: none;">
-      <div style="margin-top: 100px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+      <div style="margin-top: 0px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
         <div id="top_bottom_1" data-align-id="1" class="svg__icon">
           <svg fill="currentColor" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' role='graphics-symbol'
             aria-labelledby='title' aria-describedby='desc' class='tw-fill-current tw-w-14 tw-h-14'>
@@ -1329,7 +1329,7 @@
     </div>
 
     <div class="preview-modal-bg" id="preview-modal-bg">
-      <div id="overlay" class="overlay" style="position: absolute; width: 100vw;">
+      <div id="overlay" class="overlay" style="position: absolute; width: 0vw;">
         <div style="color: #ccc; display: flex; 
                 align-items: center; height: 95vh; justify-content: space-between; margin-inline: 150px;">
           <span class="icon-container" style="font-size: 50px;">
@@ -1357,10 +1357,10 @@
 
   <div id="details_view">
     <header class="header">
-      <div style="display: flex; justify-content: space-between; margin-inline: 10px; align-items: center;">
+      <div style="display: flex; justify-content: space-between; margin-inline: px; align-items: center;">
         <div>
           <img src="./assets/Logo Gold.svg" alt="" loading="eager"
-            style="width: 170px; object-fit: contain; margin-top: 10px;">
+            style="width: 170px; object-fit: contain; margin-top: px;">
         </div>
       </div>
     </header>
@@ -1369,16 +1369,16 @@
         <div style="margin: 70px 0; display: flex; flex-direction: column; align-items: flex-end;">
           <div style="position: fixed; z-index: -1; opacity: 0.1;">
             <img src="./assets/abs.png" alt="" width="1200px" height="1200px"
-              style="object-fit: contain; filter: invert(); margin-left: 100px;">
+              style="object-fit: contain; filter: invert(); margin-left: 0px;">
           </div>
           <div class="elements__card">
             <h4>Graphical Elements</h4>
             <p>What graphic elements appear in your logo? Add relevant tags separated with commas</p>
             <div id="tag_list_wrapper" class="container" style="display: none;">
-              <ul id="tag_list" style="display: flex; flex-wrap: wrap; gap: 10px;"></ul>
+              <ul id="tag_list" style="display: flex; flex-wrap: wrap; gap: px;"></ul>
             </div>
             <input type="text" id="tag_name" placeholder="Type a Tag Name..."
-              style="width: 100%; border: none; border-radius: 10px; background: none; padding-inline: 10px;">
+              style="width: 0%; border: none; border-radius: 10px; background: none; padding-inline: 10px;">
           </div>
           <div class="elements__card">
             <h4>Industry</h4>
@@ -1441,9 +1441,9 @@
   </div>
 
   <script src="scripts/drag_drop.js" type="module"></script>
-  <script src="scripts/details.js" type="module"></script>
-  <script src="scripts/editor.script.js" type="module"></script>
-  <script src="scripts/color-container.js" type="module"></script>
+  <script src="scripts/details_page.js" type="module"></script>
+  <script src="scripts/editor_page.script.js" type="module"></script>
+  <script src="scripts/color_container.js" type="module"></script>
 </body>
 
 </html>

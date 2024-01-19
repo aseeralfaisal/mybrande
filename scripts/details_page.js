@@ -289,7 +289,7 @@ logostyle.forEach((logo) => {
   div.innerText = logo;
   div.className = 'round__chip';
   div.setAttribute('id', 'logostyle');
-  document.setElementById('logo-style').append(div);
+  document.getElementById('logo-style').append(div);
 });
 
 document.querySelectorAll('#logostyle').forEach((item) => {
