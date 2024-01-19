@@ -1878,7 +1878,8 @@ class EditorScreen {
     querySelect('#icon-search-input').addEventListener('input', (event) => {
       const textInput = event.target.value;
       querySelectAll('#clip-icon').forEach((icon) => {
-        if (!icon['name'].toLowerCase().includes(textInput.toLowerCase())) {
+        const iconCategoryTitle = icon.getAttribute('data-name');
+        if (!iconCategoryTitle.toLowerCase().includes(textInput.toLowerCase())) {
           icon.style.display = 'none';
         } else {
           icon.style.display = 'grid';
@@ -1910,45 +1911,54 @@ class EditorScreen {
 
     const iconUrl = "https://www.mybrande.com/api/all/icons";
 
+    function svgCreator(icon, name = '') {
+      const img = new Image();
+      img.classList.add('clip-icon');
+      img.setAttribute('id', 'clip-icon');
+      img.setAttribute('data-name', name);
+      const blob = new Blob([icon], { type: 'image/svg+xml' });
+      const svgDataUrl = URL.createObjectURL(blob);
+      img.src = svgDataUrl;
+      img.style.width = '80px';
+      img.style.height = '80px'
+      img.style.objectFit = 'cover'
+      return img;
+    }
+
+    let currIconIndex = 0, iconList;
     axios.get(iconUrl)
       .then(resp => {
-        const iconList = resp.data.CategoryWiseIcon;
+        iconList = resp.data.CategoryWiseIcon;
 
         iconList.forEach((icon, index) => {
-          const iconItem = icon.Icons[0].icon_svg;
+          let iconItem = icon.Icons[currIconIndex].icon_svg;
           const name = icon.category.iconcategory_name;
-
-          if (!iconItem) {
-            console.error(`Invalid SVG content for ${name}`);
-            return;
-          }
-
-          const img = new Image();
-          img.setAttribute('id', 'clip-icon');
-          img.classList.add('clip-icon');
-          img.setAttribute('name', name);
-
+          console.log(icon.Icons[currIconIndex])
           const categoryTitle = querySelect("#category_type_title")
           const span = document.createElement('span');
+          span.setAttribute('index', index);
           span.classList.add('search-icon-category-text');
           span.innerText = name;
           categoryTitle.append(span);
-
-          try {
-            const blob = new Blob([iconItem], { type: 'image/svg+xml' });
-            const svgDataUrl = URL.createObjectURL(blob);
-            img.src = svgDataUrl;
-            img.style.width = '80px';
-            img.style.height = '80px'
-            querySelect('#clip-icons').appendChild(img);
-          } catch (error) {
-            console.error(`Error creating image for ${name}:`, error);
-          }
+          const svgImg = svgCreator(iconItem, name);
+          querySelect('#clip-icons').appendChild(svgImg);
         });
       })
       .catch(error => {
         console.error("Error fetching icons:", error);
       });
+
+    querySelect("#category_type_title")
+      .addEventListener('click', (e) => {
+        querySelect('#clip-icons').innerHTML = null;
+        const index = e.target.getAttribute('index');
+        const currIndexIcons = iconList[index].Icons;
+        currIndexIcons.forEach(icon => {
+          const name = icon.iconcategory_name;
+          const svgImg = svgCreator(icon.icon_svg, name);
+          querySelect('#clip-icons').appendChild(svgImg);
+        })
+      })
 
     document.getElementById('clip-icons').addEventListener('click', (e) => {
       const targetSrc = e.target.src;
