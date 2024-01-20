@@ -1,8 +1,10 @@
+import { hexToHsl, hexToRgb } from "./color_converter";
 import { CreateLayerSection } from "./create_layer";
 
+const querySelect = (element) => document.querySelector(element);
 export function logoRenderer(canvas, logoFile, logoNameElement, sloganNameElement,
   logoLayerGroup, layers, initRotate, activeNavbarSetting, updateActiveNavbar,
-  logoSettingsContainer, textSettingsContainer, backgroundSettingsContainer, isFlipX, isFlipY) {
+  logoSettingsContainer, textSettingsContainer, backgroundSettingsContainer, isFlipX, isFlipY, isLogoShadowAdjust, rgbaToHex, colorPicker) {
 
   fabric.loadSVGFromString(logoFile, (objects, options) => {
     logoLayerGroup = new fabric.Group(objects, options);

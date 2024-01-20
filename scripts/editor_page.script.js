@@ -1,18 +1,16 @@
 import { fabric } from 'fabric';
-import { CreateLayerSection } from './create_layer';
-import clipIcons from '../assets/icons/clipIcons';
 import { DeleteLayer } from './layer_remover';
 import 'alwan/dist/css/alwan.min.css';
 import iro from '@jaames/iro';
 import WebFont from 'webfontloader';
-import axios, { getAdapter } from 'axios';
+import axios from 'axios';
 import { rgbToHex, convertRGBtoHex, hexToHsl, hexToRgb, rgbaToHex } from './color_converter';
 import { rotateReset } from './rotate_reset';
 import { saveCanvas } from './save_canvas';
-import { centerAndResizeElements } from "./center_resize";
 import { logoRenderer } from './logo_renderer';
 import { onSelect } from './on_select';
 import { scaleLogo, setlogoPosition } from './set_logo_position';
+import { handleCaseListClick } from './case_list_event';
 
 const querySelect = (element) => document.querySelector(element);
 const querySelectAll = (element) => document.querySelectorAll(element);
@@ -250,67 +248,7 @@ class EditorScreen {
       [fontList, fontStyleList].forEach((i) => i.classList.remove('show'));
     });
 
-    const toTitleCase = (str) => {
-      return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-    };
-
-    const toSentenceCase = (str) => {
-      const stack = [];
-      stack.push(str[0].toUpperCase());
-      for (let i = 1; i < str.length; i++) {
-        stack.push(str[i].toLowerCase());
-      }
-      return stack.join('');
-    };
-
-    this.caseList.addEventListener('click', (event) => {
-      const selectedTextElement = event.target.innerText;
-      const active = this.canvas.getActiveObject();
-      const currCoordinate = active.getCenterPoint();
-
-      const existingFont = active.get('fontFamily');
-      const existingFill = active.get('fill');
-      const existingSelectable = active.get('selectable');
-      const HasRotatingPoint = active.get('hasRotatingPoint');
-      const existingDiameter = active.get('diameter');
-      const existingLeft = active.get('left');
-      const existingTop = active.get('top');
-      const existingFlipped = active.get('flipped');
-      const existingFontSize = active.get('fontSize');
-      active.set('fontSize', 40);
-
-      const text = active?.text;
-      if (selectedTextElement === 'Uppercase') {
-        active.text = text.toUpperCase();
-      } else if (selectedTextElement === 'Lowercase') {
-        active.text = text.toLowerCase();
-      } else if (selectedTextElement === 'Title Case') {
-        active.text = toTitleCase(text);
-      } else if (selectedTextElement === 'Sentence Case') {
-        active.text = toSentenceCase(text);
-      }
-
-      active.set('fontFamily', existingFont);
-      active.set('fill', existingFill);
-      active.set('selectable', existingSelectable);
-      active.set('hasRotatingPoint', HasRotatingPoint);
-      active.set('diameter', existingDiameter);
-      active.set('left', existingLeft);
-      active.set('top', existingTop);
-      active.set('flipped', existingFlipped);
-      active.set('fontSize', existingFontSize);
-
-      active.setPositionByOrigin(new fabric.Point(currCoordinate.x, currCoordinate.y), 'center', 'center');
-      active.setCoords();
-
-      this.canvas.renderAll();
-
-      this.caseListTitle.innerText = selectedTextElement;
-      const icon = document.createElement('i');
-      icon.className = 'fa-solid fa-angle-down';
-      this.caseListTitle.append(icon);
-      this.caseList.classList.remove('show');
-    });
+    this.caseList.addEventListener('click', (event) => handleCaseListClick.call(this, event));
 
     this.fontStyleList.addEventListener('click', (ev) => {
       const selectedTextElement = ev.target.innerText;
@@ -484,7 +422,7 @@ class EditorScreen {
     if (this.logoFile) {
       logoRenderer(this.canvas, this.logoFile, logoNameElement, sloganNameElement, logoLayerGroup,
         this.layers, this.initialRotation, this.activeNavbarSetting, this.updateActiveNavbar,
-        this.logoSettingsContainer, this.textSettingsContainer, this.backgroundSettingsContainer, this.isFlipX, this.isFlipY)
+        this.logoSettingsContainer, this.textSettingsContainer, this.backgroundSettingsContainer, this.isFlipX, this.isFlipY, isLogoShadowAdjust, rgbToHex, colorPicker)
     }
 
     const getTextCase = (text) => {
@@ -1757,7 +1695,7 @@ class EditorScreen {
       querySelect('#popup-parent-icons').style.display = 'none';
     });
 
-    let isLogoShadowAdjust = false;
+    var isLogoShadowAdjust = false;
     querySelect('#logo-drop-shadow').addEventListener('change', () => {
       const active = this.canvas.getActiveObject();
       isLogoShadowAdjust = !isLogoShadowAdjust;
@@ -1926,7 +1864,7 @@ class EditorScreen {
     const updateColorPickers = () => {
       let colorSet = new Set();
 
-      canvasObjects.forEach((item, idx) => {
+      canvasObjects.forEach((item) => {
         let itemFill = item.get('fill');
         const colPicker = document.createElement('div');
 
@@ -2652,7 +2590,6 @@ class EditorScreen {
     setlogoPosition(1, this.canvas, logoNameElement, sloganNameElement);
     scaleLogo(200, this.canvas)
 
-    var logoFileResponse = null;
     async function fetchData(canvas) {
       querySelect("#loader2").style.display = "flex";
       const logoId = 41;
@@ -2663,10 +2600,7 @@ class EditorScreen {
       const svgData = response.data.AllData.svg_data;
       if (svgData) {
         localStorage.setItem('logo-file', svgData);
-        logoFileResponse = svgData;
-        if (logoPosition === "10") {
-          centerAndResizeElements('rightLeft', 32, 25, 'center', 1.32, 1.5, false, canvas, logoNameElement, sloganNameElement);
-        }
+        setlogoPosition(logoPosition, canvas, logoNameElement, sloganNameElement);
       }
       return bg
     }
@@ -2679,110 +2613,18 @@ class EditorScreen {
       querySelect("#loader2").style.display = "none";
     });
 
-    querySelect('#top_bottom_1').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#top_bottom_1', 'data-align-id');
-      // scaleLogo(200);
-      // centerAndResizeElements('topBottom', 46, 22, 'center', 1.32, 1.5, this.canvas);
-    });
-
-    querySelect('#top_bottom_2').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#top_bottom_2', 'data-align-id');
-      // scaleLogo(200);
-      // centerAndResizeElements('topBottom', 40, 20, 'center', 1.35, 1.52, this.canvas);
-    });
-
-    querySelect('#top_bottom_3').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#top_bottom_3', 'data-align-id');
-      // scaleLogo(160);
-      // centerAndResizeElements('topBottom', 46, 22, 'center', 1.42, 1.6, this.canvas);
-    });
-
-    querySelect('#bottom_top_1').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#bottom_top_1', 'data-align-id');
-      // scaleLogo(200);
-      // centerAndResizeElements('bottomTop', 46, 22, 'center', 3.8, 5.5, this.canvas);
-    });
-
-    querySelect('#bottom_top_2').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#bottom_top_2', 'data-align-id');
-      // scaleLogo(200);
-      // centerAndResizeElements('bottomTop', 40, 18, 'center', 3.5, 5, false, this.canvas);
-    });
-
-    querySelect('#bottom_top_3').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#bottom_top_3', 'data-align-id');
-      // scaleLogo(160);
-      // centerAndResizeElements('bottomTop', 46, 22, 'center', 3.3, 4.5, false, this.canvas);
-    });
-
-    querySelect('#left_right_1').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#left_right_1', 'data-align-id');
-      // scaleLogo(200);
-      // centerAndResizeElements('leftRight', 32, 25, 'center', 1.32, 1.5, false, this.canvas);
-    });
-
-    querySelect('#left_right_2').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#left_right_2', 'data-align-id');
-      // scaleLogo(200);
-      // centerAndResizeElements('leftRight', 32, 25, 'left', 1.32, 1.5, false,this.canvas);
-    });
-
-    querySelect('#left_right_3').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#left_right_3', 'data-align-id');
-      // scaleLogo(160);
-      // centerAndResizeElements('leftRight', 32, 25, 'left', 1.32, 1.5,  false, this.canvas);
-    });
-
-    querySelect('#right_left_1').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#right_left_1', 'data-align-id');
-      // scaleLogo(200);
-      // centerAndResizeElements('rightLeft', 32, 25, 'center', 1.32, 1.5, false, this.canvas);
-    });
-
-    querySelect('#right_left_2').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#right_left_2', 'data-align-id');
-      // scaleLogo(160);
-      // centerAndResizeElements('rightLeft', 32, 25, 'left', 1.32, 1.5, false, this.canvas);
-    });
-
-    querySelect('#right_left_3').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#right_left_3', 'data-align-id');
-      // scaleLogo(200);
-      // centerAndResizeElements('rightLeft', 32, 25, 'left', 1.32, 1.5, false, this.canvas);
-    });
-
-    querySelect('#top_bottom_4').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#top_bottom_4', 'data-align-id');
-      // scaleLogo(200);
-      // centerAndResizeElements('topBottom', 46, 22, 'center', 1.32, 1.5, true, this.canvas);
-    });
-
-    querySelect('#left_right_4').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#left_right_4', 'data-align-id');
-      // scaleLogo(200);
-      // centerAndResizeElements('leftRight', 32, 25, 'center', 1.32, 1.5, true, this.canvas);
-    });
-
-    querySelect('#right_left_4').addEventListener('click', () => {
-      discardSelectionForAlignments();
-      this.alignId = getAttr('#right_left_4', 'data-align-id');
-      // scaleLogo(200);
-      // // centerAndResizeElements('rightLeft', 32, 25, 'left', 1.32, 1.5, true, this.canvas);
-    });
+    ['top_bottom_1', 'top_bottom_2', 'top_bottom_3', 'top_bottom_4',
+      'bottom_top_1', 'bottom_top_2', 'bottom_top_3',
+      'left_right_1', "left_right_2", 'left_right_3',
+      'left_right_4', 'right_left_1', 'right_left_2',
+      'right_left_3', 'right_left_4'].forEach(item => {
+        querySelect(`#${item}`).addEventListener('click', () => {
+          discardSelectionForAlignments();
+          this.alignId = getAttr(item, 'data-align-id');
+          // scaleLogo(200);
+          // centerAndResizeElements('topBottom', 46, 22, 'center', 1.32, 1.5, this.canvas);
+        });
+      })
   }
 }
 
