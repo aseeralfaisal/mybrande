@@ -1,6 +1,6 @@
-import { toastNotification } from "./toast_notification";
+import { querySelect } from "./editor_page.script";
 
-export async function saveCanvas(canvas, loader) {
+export async function saveCanvas(logoId, canvas, loader, logo_backgroundcolor, logoNameElement, sloganNameElement) {
   loader(true);
   const bgColor = canvas.get('backgroundColor');
   canvas.setBackgroundImage(null);
@@ -9,14 +9,6 @@ export async function saveCanvas(canvas, loader) {
 
   const currentCanvasData = JSON.stringify(canvas);
   const sellerLogoInfoId = localStorage.getItem('seller_logoinfo_id');
-
-  const getFormattedBgColor = (bgColor) => {
-    if (typeof bgColor === 'object') {
-      const color = bgColor?.colorStops.map((i) => i.color);
-      return color?.join(',');
-    }
-    return bgColor;
-  };
 
   if (currentCanvasData && sellerLogoInfoId) {
     const getDropShadowValue = (element) => {
@@ -34,38 +26,15 @@ export async function saveCanvas(canvas, loader) {
       return resultString
     };
 
-    //                 'buyer_id' => $request->buyer_id, 2 -> // hidden
-    //                 'logo_id' => $request->logo_id, 0 -> // hidden input-field
-    //                 'brand_name' => $request->brand_name,
-    //                 'slogan' => $request->slogan,
-    //                 'svg_data' => $request->svg_data,
-    //                 'logo_position' => $request->logo_position,
-    //                 'logo_backgroundcolor' => $request->logo_backgroundcolor,
-    //
-    //                 'brandName_color' => $request->brandName_color,
-    //                 'brandName_fontFamely' => $request->brandName_fontFamely,
-    //                 'brandName_fontSize' => $request->brandName_fontSize,
-    //                 'brandName_letterCase' => $request->brandName_letterCase,
-    //                 'brandName_fontStyle' => $request->brandName_fontStyle,
-    //                 'brandName_letterSpace' => $request->brandName_letterSpace,
-    //                 'brandName_droupShadow' => $request->brandName_droupShadow,
-    //
-    //                 'slogan_color' => $request->slogan_color,
-    //                 'slogan_fontFamely' => $request->slogan_fontFamely,
-    //                 'slogan_fontSize' => $request->slogan_fontSize,
-    //                 'slogan_letterCase' => $request->slogan_letterCase,
-    //                 'slogan_fontStyle' => $request->slogan_fontStyle,
-    //                 'slogan_letterSpace' => $request->slogan_letterSpace,
-    //                 'slogan_droupShadow' => $request->slogan_droupShadow,
     const postData = {
-      buyer_logo_id: 0, // from response hidden input field
-      buyer_id: 2, // hidden input field
-      logo_id: 0, // svg data id
-      brand_name: "",
-      slogan: "",
+      buyer_logo_id: querySelect("#buyer_logo_id").value, // from response hidden input field
+      buyer_id: querySelect("#buyer_Id").value, // hidden input field
+      logo_id: logoId, // svg data id
+      brand_name: querySelect("#logoMainField").value,
+      slogan: querySelect("#sloganNameField").value,
       svg_data: currentCanvasSVG,
       logo_position: this.alignId,
-      logo_backgroundcolor: bgColor === canvasBG ? 'transparent' : getFormattedBgColor(bgColor),
+      logo_backgroundcolor,
 
       brandName_color: logoNameElement.get('fill'),
       brandName_fontFamely: logoNameElement.get('fontFamily'),
@@ -83,28 +52,11 @@ export async function saveCanvas(canvas, loader) {
       slogan_letterSpace: sloganNameElement.get('charSpacing') / 10,
       slogan_droupShadow: getDropShadowValue(sloganNameElement.get('shadow')),
     };
-    const response = await axios.post(`https://www.mybrande.com/api/seller/logo/store`, postData);
+    const response = await axios.post(`https://www.mybrande.com/api/buyer/logo/store`, postData);
 
     canvas.setBackgroundColor(bgColor, canvas.renderAll.bind(canvas));
     setCanvasBackground();
 
-    const { logoSavedCount } = response.data;
-
-    if (response.status === 200) {
-      toastNotification(
-        `You have saved ${logoSavedCount} ${logoSavedCount === 1 ? 'time' : 'times'
-        }. Save at least three variants to move on to the next page`
-      );
-      loader(false);
-      if (logoSavedCount >= 3) {
-        querySelect('#third_page_btn').style.display = 'flex';
-      }
-      if (logoSavedCount >= 8) {
-        querySelect('#save-btn').style.display = 'none';
-      }
-    } else {
-      return toastNotification("Server Error")
-    }
+    console.log(response.data);
   }
-
 }

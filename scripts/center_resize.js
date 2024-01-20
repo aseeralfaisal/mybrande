@@ -166,6 +166,7 @@ export const centerAndResizeElements = (
         const sloganNameElement = objects.find(
           (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here'
         );
+
         logoNameElement.center();
         sloganNameElement.center();
 
