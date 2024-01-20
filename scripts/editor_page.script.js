@@ -2537,39 +2537,34 @@ class EditorScreen {
     colorPickerText.on('input:change', changeColorPickerText);
     colorPickerText.on('input:move', changeColorPickerText);
 
+
     const handleColorModeClick = (activeElement, element1, element2) => {
-      querySelect(element1 + '_view').classList.remove('color_mode_title-active');
-      querySelect(element1 + '_view').style.display = 'none';
+      const updateElement = (element) => {
+        const view = querySelect(element + '_view');
+        view.classList.remove('color_mode_title-active');
+        view.style.display = 'none';
+      };
 
-      querySelect(element2 + '_view').classList.remove('color_mode_title-active');
-      querySelect(element2 + '_view').style.display = 'none';
+      [element1, element2].forEach(updateElement);
 
-      querySelect(activeElement + '_view').classList.add('color_mode_title-active');
-      querySelect(activeElement + '_view').style.display = 'flex';
+      const activeView = querySelect(activeElement + '_view');
+      activeView.classList.add('color_mode_title-active');
+      activeView.style.display = 'flex';
     };
 
-    querySelect('#HSL_mode').addEventListener('click', () => {
-      handleColorModeClick('#HSL', '#RGB', '#HEX');
+    const colorModes = ['HSL', 'RGB', 'HEX'];
+    const colorModes2 = ['HSL2', 'RGB2', 'HEX2'];
+
+    colorModes.forEach((mode) => {
+      querySelect(`#${mode}_mode`).addEventListener('click', () => {
+        handleColorModeClick(`#${mode}`, ...colorModes.filter((m) => m !== mode));
+      });
     });
 
-    querySelect('#RGB_mode').addEventListener('click', () => {
-      handleColorModeClick('#RGB', '#HSL', '#HEX');
-    });
-
-    querySelect('#HEX_mode').addEventListener('click', () => {
-      handleColorModeClick('#HEX', '#RGB', '#HSL');
-    });
-
-    querySelect('#HSL2_mode').addEventListener('click', () => {
-      handleColorModeClick('#HSL2', '#RGB2', '#HEX2');
-    });
-
-    querySelect('#RGB2_mode').addEventListener('click', () => {
-      handleColorModeClick('#RGB2', '#HSL2', '#HEX2');
-    });
-
-    querySelect('#HEX2_mode').addEventListener('click', () => {
-      handleColorModeClick('#HEX2', '#RGB2', '#HSL2');
+    colorModes2.forEach((mode) => {
+      querySelect(`#${mode}_mode`).addEventListener('click', () => {
+        handleColorModeClick(`#${mode}`, ...colorModes2.filter((m) => m !== mode));
+      });
     });
 
     handleColorModeClick('#HEX', '#RGB', '#HSL');
