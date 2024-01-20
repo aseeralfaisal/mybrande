@@ -34,12 +34,39 @@ export async function saveCanvas(canvas, loader) {
       return resultString
     };
 
+    //                 'buyer_id' => $request->buyer_id, 2 -> // hidden
+    //                 'logo_id' => $request->logo_id, 0 -> // hidden input-field
+    //                 'brand_name' => $request->brand_name,
+    //                 'slogan' => $request->slogan,
+    //                 'svg_data' => $request->svg_data,
+    //                 'logo_position' => $request->logo_position,
+    //                 'logo_backgroundcolor' => $request->logo_backgroundcolor,
+    //
+    //                 'brandName_color' => $request->brandName_color,
+    //                 'brandName_fontFamely' => $request->brandName_fontFamely,
+    //                 'brandName_fontSize' => $request->brandName_fontSize,
+    //                 'brandName_letterCase' => $request->brandName_letterCase,
+    //                 'brandName_fontStyle' => $request->brandName_fontStyle,
+    //                 'brandName_letterSpace' => $request->brandName_letterSpace,
+    //                 'brandName_droupShadow' => $request->brandName_droupShadow,
+    //
+    //                 'slogan_color' => $request->slogan_color,
+    //                 'slogan_fontFamely' => $request->slogan_fontFamely,
+    //                 'slogan_fontSize' => $request->slogan_fontSize,
+    //                 'slogan_letterCase' => $request->slogan_letterCase,
+    //                 'slogan_fontStyle' => $request->slogan_fontStyle,
+    //                 'slogan_letterSpace' => $request->slogan_letterSpace,
+    //                 'slogan_droupShadow' => $request->slogan_droupShadow,
     const postData = {
-      seller_logoinfo_id: sellerLogoInfoId,
-      json_data: currentCanvasData,
+      buyer_logo_id: 0, // from response hidden input field
+      buyer_id: 2, // hidden input field
+      logo_id: 0, // svg data id
+      brand_name: "",
+      slogan: "",
       svg_data: currentCanvasSVG,
       logo_position: this.alignId,
       logo_backgroundcolor: bgColor === canvasBG ? 'transparent' : getFormattedBgColor(bgColor),
+
       brandName_color: logoNameElement.get('fill'),
       brandName_fontFamely: logoNameElement.get('fontFamily'),
       brandName_fontSize: logoNameElement.get('fontSize'),
@@ -47,6 +74,7 @@ export async function saveCanvas(canvas, loader) {
       brandName_fontStyle: logoNameElement.get('fontStyle'),
       brandName_letterSpace: logoNameElement.get('charSpacing') / 10,
       brandName_droupShadow: getDropShadowValue(logoNameElement.get('shadow')),
+
       slogan_color: sloganNameElement.get('fill'),
       slogan_fontFamely: sloganNameElement.get('fontFamily'),
       slogan_fontSize: sloganNameElement.get('fontSize'),

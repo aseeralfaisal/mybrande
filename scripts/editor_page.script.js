@@ -10,6 +10,9 @@ import { rgbToHex, convertRGBtoHex, hexToHsl, hexToRgb, rgbaToHex } from './colo
 import { rotateReset } from './rotate_reset';
 import { saveCanvas } from './save_canvas';
 import { centerAndResizeElements } from "./center_resize";
+import { logoRenderer } from './logo_renderer';
+import { onSelect } from './on_select';
+import { scaleLogo, setlogoPosition } from './set_logo_position';
 
 const querySelect = (element) => document.querySelector(element);
 const querySelectAll = (element) => document.querySelectorAll(element);
@@ -331,6 +334,7 @@ class EditorScreen {
       this.fontStyleList.classList.remove('show');
       this.canvas.requestRenderAll();
     });
+
     this.rotateRange.addEventListener('input', (e) => {
       this.isRotating = true;
       this.rotateValue = parseInt(e.target.value, 10);
@@ -456,78 +460,8 @@ class EditorScreen {
       ],
     });
 
-    const changePickerColors = (element) => {
-      const color = Array.isArray(element.get('fill').colorStops)
-        ? rgbToHex(element.get('fill').colorStops[0].color)
-        : element.get('fill');
-      colorPicker.color.set(color);
-      captureCanvasState();
-    };
-
-    const updatePickerHandler = (element) => {
-      return () => changePickerColors(element);
-    };
-
-    const onSelect = () => {
-      const activeObject = this.canvas.getActiveObject();
-      this.activeLayerIndex = this.canvas.getObjects().indexOf(activeObject);
-
-      !activeObject.text && activeObject.on('mousedown', updatePickerHandler(activeObject));
-
-      if (activeObject) {
-        const layers = querySelectAll('.layer-container');
-        layers.forEach((layer, idx) => {
-          const layerImg = layer.querySelector('.layer-img');
-          const layerSpan = layer.querySelector('.layer-span');
-
-          let fillColor;
-          const color = activeObject.get('fill');
-
-          if (typeof color === 'object') {
-            fillColor = color.colorStops[0].color;
-          } else if (color && color.includes('#')) {
-            fillColor = color;
-          } else {
-            const newColor = rgbaToHex(color);
-            fillColor = newColor;
-          }
-
-          colorPicker.color.set(fillColor);
-          querySelect('#HEX').value = fillColor;
-
-          let rgbValue = hexToRgb(fillColor);
-          let rgbValues = rgbValue.match(/\d+/g);
-
-          if (rgbValues && rgbValues.length === 3) {
-            querySelect('#R').value = rgbValues[0];
-            querySelect('#G').value = rgbValues[1];
-            querySelect('#B').value = rgbValues[2];
-          }
-
-          let hslValue = hexToHsl(fillColor);
-          let hslValues = hslValue.match(/\d+/g);
-
-          if (hslValues && hslValues.length === 3) {
-            querySelect('#H').value = hslValues[0];
-            querySelect('#S').value = hslValues[1];
-            querySelect('#L').value = hslValues[2];
-          }
-
-          if (idx == this.activeLayerIndex) {
-            layerSpan.scrollIntoView({ block: 'center', behavior: 'smooth' });
-            layerImg.classList.add('selected');
-            layerSpan.classList.add('selected');
-          } else {
-            layerImg.classList.remove('selected');
-            layerSpan.classList.remove('selected');
-          }
-        });
-      }
-      this.canvas.requestRenderAll();
-    };
-
-    this.canvas.on('selection:created', onSelect);
-    this.canvas.on('selection:updated', onSelect);
+    this.canvas.on('selection:created', onSelect(this.canvas, this.activeLayerIndex));
+    this.canvas.on('selection:updated', onSelect(this.canvas, this.activeLayerIndex));
     var logoLayerGroup;
 
     const textMain = ({ text, fontFamily = 'Poppins', fontSize = 32, fill = '#000000' }) => {
@@ -548,151 +482,9 @@ class EditorScreen {
     var sloganNameElement = textMain({ text: this.sloganName });
 
     if (this.logoFile) {
-      fabric.loadSVGFromString(this.logoFile, (objects, options) => {
-        logoLayerGroup = new fabric.Group(objects, options);
-
-        this.canvas.on('selection:created', () => {
-          const selectedObjects = this.canvas.getActiveObjects();
-          selectedObjects.forEach(() => {
-            this.activeNavbarSetting = 'logo';
-            this.updateActiveNavbar();
-            this.logoSettingsContainer.style.display = 'grid';
-            this.textSettingsContainer.style.display = 'none';
-            this.backgroundSettingsContainer.style.display = 'none';
-          });
-        });
-
-        objects.forEach((obj, idx) => {
-          const sloganIdx = objects.length - 1;
-          const logoIdx = objects.length - 2;
-          if (sloganIdx === idx) {
-            obj.scale(800)
-            sloganNameElement = obj;
-          } else if (logoIdx === idx) {
-            obj.scale(800)
-            logoNameElement = obj;
-          }
-          this.canvas.requestRenderAll();
-
-          this.canvas.add(obj);
-          const layerSection = new CreateLayerSection(this.layers);
-          layerSection.create(obj, idx);
-
-          obj.on('mousedown', (e) => {
-            this.isFlipY = obj.get('flipY');
-            this.isFlipX = obj.get('flipX');
-            querySelect('#flip-y').checked = this.isFlipY;
-            querySelect('#flip-x').checked = this.isFlipX;
-
-            const hasShadow = !!obj?.shadow?.blur;
-            querySelect('#logo-drop-shadow').checked = hasShadow;
-            isLogoShadowAdjust = hasShadow;
-            if (!hasShadow) {
-              querySelect('#logo-shadow-adjust').style.display = 'none';
-              querySelect('#logo-shadow-blur').style.display = 'none';
-              querySelect('#logo-shadow-offsetX').style.display = 'none';
-              querySelect('#logo-shadow-offsetY').style.display = 'none';
-              querySelect('#logo-shadow-border').style.display = 'none';
-            } else {
-              querySelect('#logo-shadow-adjust').style.display = 'block';
-              querySelect('#logo-shadow-blur').style.display = 'block';
-              querySelect('#logo-shadow-offsetX').style.display = 'block';
-              querySelect('#logo-shadow-offsetY').style.display = 'block';
-              querySelect('#logo-shadow-border').style.display = 'block';
-            }
-
-            querySelect('#rotate_info').innerText = `Rotate: ${parseInt(obj.get('angle'))}deg`;
-            querySelect('#rotate-bar').value = obj.get('angle');
-
-            const rotateAngle = obj.get('angle');
-            querySelect('#rotate-bar').value = rotateAngle;
-
-            const scale = obj.getTotalObjectScaling().scaleX;
-            querySelect('#progress-bar').value = scale * 10;
-            querySelect('#scale-value').innerText = ` ${scale.toFixed(2)}`;
-
-            let fillColor;
-            const color = e.target.fill;
-
-            if (typeof color === 'object') {
-              fillColor = color.colorStops[0].color;
-            } else if (color && color.includes('#')) {
-              fillColor = color;
-            } else {
-              const newColor = rgbaToHex(color);
-              fillColor = newColor;
-            }
-
-            colorPicker.color.set(fillColor);
-            querySelect('#HEX').value = fillColor;
-
-            let rgbValue = hexToRgb(fillColor);
-            let rgbValues = rgbValue.match(/\d+/g);
-
-            if (rgbValues && rgbValues.length === 3) {
-              querySelect('#R').value = rgbValues[0];
-              querySelect('#G').value = rgbValues[1];
-              querySelect('#B').value = rgbValues[2];
-            }
-
-            let hslValue = hexToHsl(fillColor);
-            let hslValues = hslValue.match(/\d+/g);
-
-            if (hslValues && hslValues.length === 3) {
-              querySelect('#H').value = hslValues[0];
-              querySelect('#S').value = hslValues[1];
-              querySelect('#L').value = hslValues[2];
-            }
-
-            this.activeNavbarSetting = 'logo';
-            this.updateActiveNavbar();
-            this.logoSettingsContainer.style.display = 'grid';
-            this.textSettingsContainer.style.display = 'none';
-            this.backgroundSettingsContainer.style.display = 'none';
-            this.canvas.requestRenderAll();
-          });
-        });
-
-        var originalWidth = logoLayerGroup.width;
-        var originalHeight = logoLayerGroup.height;
-
-        const fixedWidth = 200;
-        const fixedHeight = 200;
-
-        const widthScaleFactor = fixedWidth / originalWidth;
-        const heightScaleFactor = fixedHeight / originalHeight;
-
-        logoLayerGroup.set({
-          scaleX: widthScaleFactor,
-          scaleY: heightScaleFactor,
-          width: fixedWidth,
-          height: fixedHeight,
-        });
-
-        logoLayerGroup.setCoords();
-        this.canvas.viewportCenterObject(logoLayerGroup);
-        this.initialRotation = {
-          centerPoint: logoLayerGroup.getCenterPoint(),
-          coords: logoLayerGroup.getCoords(),
-        };
-
-        logoLayerGroup.scaleToWidth(widthScaleFactor)
-
-        logoLayerGroup.ungroupOnCanvas();
-        this.canvas.renderAll();
-      });
-
-      // this.canvas.add(logoNameElement);
-      // this.canvas.add(sloganNameElement);
-      logoNameElement.viewportCenter();
-      sloganNameElement.viewportCenter();
-
-      const selection = new fabric.ActiveSelection(this.canvas.getObjects(), {
-        canvas: this.canvas,
-      });
-      this.canvas.setActiveObject(selection);
-      this.canvas.discardActiveObject(selection);
-      this.canvas.requestRenderAll();
+      logoRenderer(this.canvas, this.logoFile, logoNameElement, sloganNameElement, logoLayerGroup,
+        this.layers, this.initialRotation, this.activeNavbarSetting, this.updateActiveNavbar,
+        this.logoSettingsContainer, this.textSettingsContainer, this.backgroundSettingsContainer, this.isFlipX, this.isFlipY)
     }
 
     const getTextCase = (text) => {
@@ -1563,25 +1355,6 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     });
 
-    const convertFabricColorsToRGB = (canvasObj) => {
-      if (!canvasObj || canvasObj.type !== 'radial' || !canvasObj.colorStops) {
-        console.error('Invalid canvas object or missing color information.');
-        return [];
-      }
-
-      const colors = canvasObj.colorStops.map((colorStop) => {
-        const { color } = colorStop;
-        const rgbValues = color.match(/\d+/g);
-        if (rgbValues.length !== 3) {
-          console.error('Invalid color format:', color);
-          return null;
-        }
-        return `rgb(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]})`;
-      });
-
-      return colors.filter((color) => color !== null);
-    };
-
     this.zoomSlider.addEventListener('input', () => {
       let imgZoom = this.zoomSlider.value * 2;
       if (imgZoom <= 2) {
@@ -1898,19 +1671,6 @@ class EditorScreen {
       querySelect('#popup-parent-icons').style.display = 'none';
     });
 
-    // clipIcons.map((icon) => {
-    //   const svgDataUrl = `data:image/svg+xml;charset=utf-8, ${encodeURIComponent(icon.svg)}`;
-    //   const img = document.createElement('img');
-    //   img.setAttribute('id', 'clip-icon');
-    //   img.classList.add('clip-icon');
-    //   img.setAttribute('name', icon.name);
-    //   img.src = svgDataUrl;
-    //   querySelect('#clip-icons').append(img);
-    // });
-
-
-    const iconUrl = "https://www.mybrande.com/api/all/icons";
-
     function svgCreator(icon, name = '') {
       const img = new Image();
       img.classList.add('clip-icon');
@@ -1925,6 +1685,7 @@ class EditorScreen {
       return img;
     }
 
+    const iconUrl = "https://www.mybrande.com/api/all/icons";
     let currIconIndex = 0, iconList;
     axios.get(iconUrl)
       .then(resp => {
@@ -1933,7 +1694,6 @@ class EditorScreen {
         iconList.forEach((icon, index) => {
           let iconItem = icon.Icons[currIconIndex].icon_svg;
           const name = icon.category.iconcategory_name;
-          console.log(icon.Icons[currIconIndex])
           const categoryTitle = querySelect("#category_type_title")
           const span = document.createElement('span');
           span.setAttribute('index', index);
@@ -1960,12 +1720,10 @@ class EditorScreen {
         })
       })
 
-    document.getElementById('clip-icons').addEventListener('click', (e) => {
+    querySelect('#clip-icons').addEventListener('click', (e) => {
       const targetSrc = e.target.src;
       const decodedSrc = decodeURIComponent(targetSrc);
-
       const canvas = this.canvas;
-
       fabric.loadSVGFromURL(decodedSrc, (objects, options) => {
         const img = fabric.util.groupSVGElements(objects, options);
         img.scaleToWidth(50);
@@ -1974,8 +1732,7 @@ class EditorScreen {
         canvas.viewportCenterObjectV(img);
         canvas.requestRenderAll();
       });
-
-      document.getElementById('popup-parent-icons').style.display = 'none';
+      querySelect('#popup-parent-icons').style.display = 'none';
     });
 
     querySelect('#add-clip-text').addEventListener('click', (e) => {
@@ -2880,25 +2637,6 @@ class EditorScreen {
     handleColorModeClick('#HEX', '#RGB', '#HSL');
     handleColorModeClick('#HEX2', '#RGB2', '#HSL2');
 
-
-    const scaleLogo = (scaleSize) => {
-      const selection = new fabric.ActiveSelection(
-        this.canvas.getObjects().filter((i) => !i.text),
-        {
-          canvas: this.canvas,
-        }
-      );
-
-      const { width, height } = selection;
-      const scaleFactor = Math.min(scaleSize / width, scaleSize / height);
-      selection.scale(scaleFactor);
-
-      selection.center();
-      this.canvas.setActiveObject(selection);
-      this.canvas.discardActiveObject(selection);
-      this.canvas.requestRenderAll();
-    };
-
     querySelect('#canvas-bg-none').addEventListener('click', () => {
       this.canvas.setBackgroundColor(this.canvasBG);
       updatePreview();
@@ -2911,67 +2649,14 @@ class EditorScreen {
       this.canvas.requestRenderAll();
     };
 
-    function setlogoPosition(position, canvas) {
-      switch (position) {
-        case "1":
-          centerAndResizeElements('topBottom', 46, 22, 'center', 1.32, 1.5, false, canvas, logoNameElement, sloganNameElement);
-          break;
-        case "2":
-          centerAndResizeElements('topBottom', 40, 20, 'center', 1.35, 1.52, false, canvas, logoNameElement, sloganNameElement);
-          break;
-        case "3":
-          centerAndResizeElements('topBottom', 46, 22, 'center', 1.42, 1.6, false, canvas, logoNameElement, sloganNameElement);
-          break;
-        case "4":
-          centerAndResizeElements('bottomTop', 46, 22, 'center', 3.8, 5.5, false, canvas, logoNameElement, sloganNameElement);
-          break;
-        case "5":
-          centerAndResizeElements('bottomTop', 40, 18, 'center', 3.5, 5, false, canvas, logoNameElement, sloganNameElement);
-          break;
-        case "6":
-          centerAndResizeElements('bottomTop', 46, 22, 'center', 3.3, 4.5, false, canvas, logoNameElement, sloganNameElement);
-          break;
-        case "7":
-          centerAndResizeElements('leftRight', 32, 25, 'center', 1.32, 1.5, false, canvas, logoNameElement, sloganNameElement);
-          break;
-        case "8":
-          centerAndResizeElements('leftRight', 32, 25, 'left', 1.32, 1.5, false, canvas, logoNameElement, sloganNameElement);
-          break;
-        case "9":
-          centerAndResizeElements('leftRight', 32, 25, 'left', 1.32, 1.5, false, canvas, logoNameElement, sloganNameElement);
-          break;
-        case "10":
-          centerAndResizeElements('rightLeft', 32, 25, 'center', 1.32, 1.5, false, canvas, logoNameElement, sloganNameElement);
-          break;
-        case "11":
-          centerAndResizeElements('rightLeft', 32, 25, 'center', 1.32, 1.5, false, canvas, logoNameElement, sloganNameElement);
-          break;
-        case "12":
-          centerAndResizeElements('rightLeft', 32, 25, 'center', 1.32, 1.5, false, canvas, logoNameElement, sloganNameElement);
-          break;
-        case "13":
-          centerAndResizeElements('rightLeft', 32, 25, 'center', 1.32, 1.5, false, canvas, logoNameElement, sloganNameElement);
-          break;
-        case "14":
-          centerAndResizeElements('rightLeft', 32, 25, 'center', 1.32, 1.5, false, canvas, logoNameElement, sloganNameElement);
-          break;
-        case "15":
-          centerAndResizeElements('rightLeft', 32, 25, 'center', 1.32, 1.5, false, canvas, logoNameElement, sloganNameElement);
-          break;
-
-        default:
-          scaleLogo(200);
-          centerAndResizeElements('topBottom', 46, 22, 'center', 1.32, 1.5, false, canvas, logoNameElement, sloganNameElement);
-          break;
-      }
-    }
-
-    setlogoPosition(1, this.canvas);
+    setlogoPosition(1, this.canvas, logoNameElement, sloganNameElement);
+    scaleLogo(200, this.canvas)
 
     var logoFileResponse = null;
     async function fetchData(canvas) {
       querySelect("#loader2").style.display = "flex";
-      const response = await axios.get(`https://www.mybrande.com/api/find/logo/41`);
+      const logoId = 41;
+      const response = await axios.get(`https://www.mybrande.com/api/find/logo/${logoId}`);
 
       const bg = response.data.AllData.logo_backgroundcolor;
       const logoPosition = response.data.AllData.logo_position;
