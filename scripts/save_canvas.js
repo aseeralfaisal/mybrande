@@ -3,17 +3,14 @@ import { querySelect } from "./editor_page.script";
 import { getTextCase, setCanvasBackground } from "./miscellaneous";
 import { toastNotification } from "./toast_notification";
 
-export async function saveCanvas(logoId, canvas, loader, logo_backgroundcolor, logoNameElement, sloganNameElement, alignId) {
-  loader(true);
-  const bgColor = canvas.get('backgroundColor');
-  canvas.setBackgroundImage(null);
-  canvas.setBackgroundColor(null, canvas.renderAll.bind(canvas));
+export async function saveCanvas(logoId, canvas, backgroundcolor, logoNameElement, sloganNameElement, alignId) {
+  // const bgColor = canvas.get('backgroundColor');
+  // canvas.setBackgroundImage(null);
+  // canvas.setBackgroundColor(null, canvas.renderAll.bind(canvas));
+  console.log("Save function triggered");
   const currentCanvasSVG = canvas.toSVG();
 
-  const currentCanvasData = JSON.stringify(canvas);
-  const sellerLogoInfoId = localStorage.getItem('seller_logoinfo_id');
-
-  if (currentCanvasData && sellerLogoInfoId) {
+  if (currentCanvasSVG) {
     const getDropShadowValue = (element) => {
       if (!element) return null;
       const { blur, offsetX, offsetY } = element;
@@ -37,7 +34,7 @@ export async function saveCanvas(logoId, canvas, loader, logo_backgroundcolor, l
       slogan: querySelect("#sloganNameField").value,
       svg_data: currentCanvasSVG,
       logo_position: alignId,
-      logo_backgroundcolor,
+      logo_backgroundcolor: backgroundcolor,
 
       brandName_color: logoNameElement.get('fill'),
       brandName_fontFamely: logoNameElement.get('fontFamily'),
@@ -55,16 +52,21 @@ export async function saveCanvas(logoId, canvas, loader, logo_backgroundcolor, l
       slogan_letterSpace: sloganNameElement.get('charSpacing') / 10,
       slogan_droupShadow: getDropShadowValue(sloganNameElement.get('shadow')),
     };
-    const response = await axios.post(`https://www.mybrande.com/api/buyer/logo/store`, postData);
+    try {
+      const response = await axios.post(`https://www.mybrande.com/api/buyer/logo/store`, postData);
+      console.log(response.data)
 
-    canvas.setBackgroundColor(bgColor, canvas.renderAll.bind(canvas));
-    setCanvasBackground(canvas);
+      //canvas.setBackgroundColor(bgColor, canvas.renderAll.bind(canvas));
+      //setCanvasBackground(canvas)
 
-    if (response.status === 200) {
-      const { buyer_logo_id } = response.data;
-      if (!buyer_logo_id) return toastNotification("Error encountered with buyer logo ID")
-      querySelect("#buyer_logo_id").value = buyer_logo_id
-      toastNotification("Logo Saved Successfully");
+      if (response.status === 200) {
+        const { buyer_logo_id } = response.data;
+        if (!buyer_logo_id) return toastNotification("Error encountered with buyer logo ID")
+        querySelect("#buyer_logo_id").value = buyer_logo_id
+        toastNotification("Logo Saved Successfully");
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 }

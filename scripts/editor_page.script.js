@@ -19,6 +19,7 @@ import { logoPalleteEvent } from './logo_pallete_event';
 import { bgPalleteEvent } from './bg_pallete_event';
 import { solidColorMainEvent } from './solid_main_event';
 import { setCanvasBackground } from './miscellaneous';
+import { toastNotification } from './toast_notification';
 
 export const querySelect = (element) => document.querySelector(element);
 export const querySelectAll = (element) => document.querySelectorAll(element);
@@ -276,16 +277,22 @@ class EditorScreen {
     });
 
     this.saveBtn.addEventListener('click', async () => {
-      const getFormattedBgColor = (bgColor) => {
-        if (typeof bgColor === 'object') {
-          const color = bgColor?.colorStops.map((i) => i.color);
-          return color?.join(',');
-        }
-        return bgColor;
-      };
-      const bgColor = this.canvasBG
-      const logo_backgroundcolor = bgColor === "#efefef" ? 'transparent' : getFormattedBgColor(bgColor);
-      saveCanvas(querySelect("#logo_id").value, this.canvas, this.transparentLoader, logo_backgroundcolor, logoNameElement, sloganNameElement, this.alignId)
+      // const getFormattedBgColor = (bgColor) => {
+      //   if (typeof bgColor === 'object') {
+      //     const color = bgColor?.colorStops.map((i) => i.color);
+      //     return color?.join(',');
+      //   }
+      //   return bgColor;
+      // };
+      // const bgColor = this.canvasBG
+      // const logo_backgroundcolor = bgColor === "#efefef" ? 'transparent' : getFormattedBgColor(bgColor);
+
+      if (!this.canvasBG || !logoNameElement || !sloganNameElement || !this.alignId) {
+        return toastNotification("Data Error")
+      }
+
+      const logoId = querySelect("#logo_id")?.value;
+      saveCanvas(logoId, this.canvas, this.canvasBG, logoNameElement, sloganNameElement, this.alignId)
     });
 
     querySelect('#third_page_btn').addEventListener('click', () => {
@@ -1783,8 +1790,10 @@ class EditorScreen {
     setlogoPosition(1, this.canvas, logoNameElement, sloganNameElement);
     scaleLogo(200, this.canvas)
 
-    let logoId = querySelect("#logo_id").value;
     async function fetchData(canvas) {
+      const logoId = querySelect("#logo_id").value;
+
+      if (!logoId) return toastNotification("Error!! Logo ID Not Found")
       querySelect("#loader2").style.display = "flex";
       const response = await axios.get(`https://www.mybrande.com/api/find/logo/${logoId}`);
 
