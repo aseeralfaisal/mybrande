@@ -1,4 +1,3 @@
-
 export const undo = (currIndex, canvas, captureCanvasState, undoHistory, logoNameElement, sloganNameElement) => {
   console.log(logoNameElement, sloganNameElement)
   if (currIndex > 0) {

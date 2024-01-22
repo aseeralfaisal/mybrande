@@ -20,3 +20,21 @@ export function putAngleDownIcon(className, additionalFunction) {
     icon.addEventListener('click', additionalFunction);
   }
 };
+
+
+export const setCanvasBackground = (canvas) => {
+  canvas.setBackgroundImage('/static/pattern.png', canvas.renderAll.bind(canvas), {
+    opacity: 0.6,
+    originX: 'left',
+    originY: 'top',
+    top: 0,
+    left: 0,
+    scaleX: 0.3,
+    scaleY: 0.3,
+  });
+};
+
+
+
+
+

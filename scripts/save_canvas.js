@@ -1,6 +1,9 @@
+import axios from "axios";
 import { querySelect } from "./editor_page.script";
+import { getTextCase, setCanvasBackground } from "./miscellaneous";
+import { toastNotification } from "./toast_notification";
 
-export async function saveCanvas(logoId, canvas, loader, logo_backgroundcolor, logoNameElement, sloganNameElement) {
+export async function saveCanvas(logoId, canvas, loader, logo_backgroundcolor, logoNameElement, sloganNameElement, alignId) {
   loader(true);
   const bgColor = canvas.get('backgroundColor');
   canvas.setBackgroundImage(null);
@@ -27,13 +30,13 @@ export async function saveCanvas(logoId, canvas, loader, logo_backgroundcolor, l
     };
 
     const postData = {
-      buyer_logo_id: querySelect("#buyer_logo_id").value, // from response hidden input field
-      buyer_id: querySelect("#buyer_Id").value, // hidden input field
+      buyer_logo_id: querySelect("#buyer_logo_id")?.value, // from response hidden input field
+      buyer_id: querySelect("#buyer_Id")?.value, // hidden input field
       logo_id: logoId, // svg data id
       brand_name: querySelect("#logoMainField").value,
       slogan: querySelect("#sloganNameField").value,
       svg_data: currentCanvasSVG,
-      logo_position: this.alignId,
+      logo_position: alignId,
       logo_backgroundcolor,
 
       brandName_color: logoNameElement.get('fill'),
@@ -55,8 +58,13 @@ export async function saveCanvas(logoId, canvas, loader, logo_backgroundcolor, l
     const response = await axios.post(`https://www.mybrande.com/api/buyer/logo/store`, postData);
 
     canvas.setBackgroundColor(bgColor, canvas.renderAll.bind(canvas));
-    setCanvasBackground();
+    setCanvasBackground(canvas);
 
-    console.log(response.data);
+    if (response.status === 200) {
+      const { buyer_logo_id } = response.data;
+      if (!buyer_logo_id) return toastNotification("Error encountered with buyer logo ID")
+      querySelect("#buyer_logo_id").value = buyer_logo_id
+      toastNotification("Logo Saved Successfully");
+    }
   }
 }

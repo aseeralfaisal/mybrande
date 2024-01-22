@@ -18,6 +18,7 @@ import { generateCustomColor } from './generate_custom_color';
 import { logoPalleteEvent } from './logo_pallete_event';
 import { bgPalleteEvent } from './bg_pallete_event';
 import { solidColorMainEvent } from './solid_main_event';
+import { setCanvasBackground } from './miscellaneous';
 
 export const querySelect = (element) => document.querySelector(element);
 export const querySelectAll = (element) => document.querySelectorAll(element);
@@ -111,15 +112,6 @@ class EditorScreen {
     this.logoOrientation = null;
     this.alignId = 1;
 
-
-    const url = new URL(location);
-    const params = new URLSearchParams(url.search);
-    // params.set('logo', 'logo');
-    // params.set('slogan', 'slogan');
-    const key = 32;
-    const updatedURL = url.origin + url.pathname + key.toString() + params.toString();
-    history.pushState({}, '', updatedURL);
-
     querySelect("#logoMainField").addEventListener('input', (e) => {
       const val = e.target.value;
       params.set('logo', val);
@@ -203,19 +195,7 @@ class EditorScreen {
       querySelect('#magnifier_img').src = imageURL;
     };
 
-    const setCanvasBackground = () => {
-      this.canvas.setBackgroundImage('/static/pattern.png', this.canvas.renderAll.bind(this.canvas), {
-        opacity: 0.6,
-        originX: 'left',
-        originY: 'top',
-        top: 0,
-        left: 0,
-        scaleX: 0.3,
-        scaleY: 0.3,
-      });
-    };
-
-    setCanvasBackground();
+    setCanvasBackground(this.canvas);
 
     updatePreview();
 
@@ -303,8 +283,9 @@ class EditorScreen {
         }
         return bgColor;
       };
-      const logo_backgroundcolor = bgColor === canvasBG ? 'transparent' : getFormattedBgColor(bgColor);
-      saveCanvas(logoId, this.canvas, this.transparentLoader, logo_backgroundcolor, logoNameElement, sloganNameElement)
+      const bgColor = this.canvasBG
+      const logo_backgroundcolor = bgColor === "#efefef" ? 'transparent' : getFormattedBgColor(bgColor);
+      saveCanvas(querySelect("#logo_id").value, this.canvas, this.transparentLoader, logo_backgroundcolor, logoNameElement, sloganNameElement, this.alignId)
     });
 
     querySelect('#third_page_btn').addEventListener('click', () => {
@@ -338,36 +319,32 @@ class EditorScreen {
 
     this.scaleRange.addEventListener('change', updatePreview);
 
-    this.flipHorizontal.addEventListener('change', () => {
+    function handleFlipChange(isHorizontal) {
       const active = this.canvas.getActiveObject();
-      if (!active) return
-      const currCoordinate = active.getCenterPoint();
+      if (!active) return;
 
-      this.isFlipX = !this.isFlipX;
-      active.set('flipX', this.isFlipX);
+      const currCoordinate = active.getCenterPoint();
+      const flipProperty = isHorizontal ? 'flipX' : 'flipY';
+      const isFlip = isHorizontal ? 'isFlipX' : 'isFlipY';
+
+      this[isFlip] = !this[isFlip];
+      active.set(flipProperty, this[isFlip]);
 
       active.setPositionByOrigin(new fabric.Point(currCoordinate.x, currCoordinate.y), 'center', 'center');
       active.setCoords();
 
       this.canvas.renderAll();
-
       updatePreview();
+    }
+
+    this.flipHorizontal.addEventListener('change', () => {
+      handleFlipChange.call(this, true);
     });
 
     this.flipVertical.addEventListener('change', () => {
-      const active = this.canvas.getActiveObject();
-      if (!active) return
-      const currCoordinate = active.getCenterPoint();
-
-      this.isFlipY = !this.isFlipY;
-      active.set('flipY', this.isFlipY);
-
-      active.setPositionByOrigin(new fabric.Point(currCoordinate.x, currCoordinate.y), 'center', 'center');
-      active.setCoords();
-
-      this.canvas.renderAll();
-      updatePreview();
+      handleFlipChange.call(this, false);
     });
+
 
     this.layers.addEventListener('click', (e) => {
       const target = e.target;
@@ -990,14 +967,14 @@ class EditorScreen {
     });
 
     querySelect('#close_modal').addEventListener('click', () => {
-      setCanvasBackground();
+      setCanvasBackground(this.canvas);
       this.canvas.setBackgroundColor(this.canvasBG, this.canvas.renderAll.bind(this.canvas));
       querySelect('.preview-modal-bg').style.display = 'none';
     });
 
     querySelect('#overlay').addEventListener('click', (e) => {
       if (e.target.classList.contains('overlay')) {
-        setCanvasBackground();
+        setCanvasBackground(this.canvas);
         this.canvas.setBackgroundColor('#eee', this.canvas.renderAll.bind(this.canvas));
         querySelect('.preview-modal-bg').style.display = 'none';
       }
@@ -1806,7 +1783,7 @@ class EditorScreen {
     setlogoPosition(1, this.canvas, logoNameElement, sloganNameElement);
     scaleLogo(200, this.canvas)
 
-    let logoId = 41;
+    let logoId = querySelect("#logo_id").value;
     async function fetchData(canvas) {
       querySelect("#loader2").style.display = "flex";
       const response = await axios.get(`https://www.mybrande.com/api/find/logo/${logoId}`);
