@@ -1322,8 +1322,10 @@ class EditorScreen {
     });
 
     let colorChanging = false;
-    colorPicker.on('input:change', (color) =>
-      iroColorChange(color, colorChanging, pickerDefaultColor, this.canvas, updateColorPickers));
+    colorPicker.on('input:change', (color) => {
+      iroColorChange(color, colorChanging, pickerDefaultColor, this.canvas);
+      updateColorPickers();
+    });
 
     function changeColorOnInput(items, mode = 'rgb') {
       return items.forEach((id) => {
@@ -1661,9 +1663,9 @@ class EditorScreen {
       updatePreview();
     });
 
-    querySelectAll('#solid_color').forEach((item) => solidColorMainEvent(item, 'solid', colorPicker, this.canvas));
-    querySelectAll('#solid_color_text').forEach((item) => solidColorMainEvent(item, 'text', colorPickerText, this.canvas));
-    querySelectAll('#solid_color_bg').forEach((item) => solidColorMainEvent(item, 'bg', null, this.canvas));
+    querySelectAll('#solid_color').forEach((item) => solidColorMainEvent(item, 'solid', colorPicker, this.canvas, updateColorPickers));
+    querySelectAll('#solid_color_text').forEach((item) => solidColorMainEvent(item, 'text', colorPickerText, this.canvas, updateColorPickers));
+    querySelectAll('#solid_color_bg').forEach((item) => solidColorMainEvent(item, 'bg', null, this.canvas, updateColorPickers));
 
     const updateColorTextPickers = () => {
       let itemFill, colPicker;

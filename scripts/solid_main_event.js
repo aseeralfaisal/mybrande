@@ -1,7 +1,10 @@
-export function solidColorMainEvent(item, mode, picker, canvas) {
+import { convertRGBtoHex } from "./color_converter";
+import { querySelectAll } from "./editor_page.script";
+
+export function solidColorMainEvent(item, mode, picker, canvas, updateColorPickers) {
   return item.addEventListener('click', (event) => {
     if (!canvas) return
-    const activeObj = this.canvas.getActiveObject();
+    const activeObj = canvas.getActiveObject();
     if (!activeObj) return
     const bgColor = event.target.style.backgroundColor;
     const match = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/.exec(bgColor);
