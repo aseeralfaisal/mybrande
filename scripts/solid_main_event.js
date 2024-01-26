@@ -1,7 +1,7 @@
 import { convertRGBtoHex } from "./color_converter";
 import { querySelectAll } from "./editor_page.script";
 
-export function solidColorMainEvent(item, mode, picker, canvas, updateColorPickers) {
+export function solidColorMainEvent(item, mode, picker, canvas, updateColorPickers, updatePreview, captureCanvasState) {
   return item.addEventListener('click', (event) => {
     if (!canvas) return
     const activeObj = canvas.getActiveObject();

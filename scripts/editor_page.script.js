@@ -113,21 +113,6 @@ class EditorScreen {
     this.logoOrientation = null;
     this.alignId = 1;
 
-    querySelect("#logoMainField").addEventListener('input', (e) => {
-      const val = e.target.value;
-      params.set('logo', val);
-      const updatedURL = url.origin + url.pathname + "?" + params.toString();
-      history.pushState({}, '', updatedURL);
-    })
-
-    querySelect("#sloganNameField").addEventListener('input', (e) => {
-      const val = e.target.value;
-      params.set('slogan', val);
-      const updatedURL = url.origin + url.pathname + "?" + params.toString();
-      history.pushState({}, '', updatedURL);
-    });
-
-
     this.transparentLoader = (isOn = true) => {
       querySelect('#loader').style.display = isOn ? 'flex' : 'none';
       querySelect('#loader').style.background = '#ffffffbb';
@@ -392,6 +377,25 @@ class EditorScreen {
 
     var logoNameElement = textMain({ text: this.logoName });
     var sloganNameElement = textMain({ text: this.sloganName });
+
+    querySelect("#logoMainField").addEventListener('input', (e) => {
+      const val = e.target.value;
+      this.logoName = val;
+
+      const o = this.canvas.getObjects().map(o => o)
+      logoNameElement = o[o.length - 2]
+      logoNameElement.set("text", val);
+      this.canvas.renderAll();
+    })
+
+    querySelect("#sloganNameField").addEventListener('input', (e) => {
+      const val = e.target.value;
+
+      const o = this.canvas.getObjects().map(o => o)
+      sloganNameElement = o[o.length - 1]
+      sloganNameElement.set("text", val);
+      this.canvas.renderAll();
+    });
 
     if (this.logoFile) {
       logoRenderer(this.canvas, this.logoFile, logoNameElement, sloganNameElement, logoLayerGroup,
@@ -1663,9 +1667,9 @@ class EditorScreen {
       updatePreview();
     });
 
-    querySelectAll('#solid_color').forEach((item) => solidColorMainEvent(item, 'solid', colorPicker, this.canvas, updateColorPickers));
-    querySelectAll('#solid_color_text').forEach((item) => solidColorMainEvent(item, 'text', colorPickerText, this.canvas, updateColorPickers));
-    querySelectAll('#solid_color_bg').forEach((item) => solidColorMainEvent(item, 'bg', null, this.canvas, updateColorPickers));
+    querySelectAll('#solid_color').forEach((item) => solidColorMainEvent(item, 'solid', colorPicker, this.canvas, updateColorPickers, updatePreview, captureCanvasState));
+    querySelectAll('#solid_color_text').forEach((item) => solidColorMainEvent(item, 'text', colorPickerText, this.canvas, updateColorPickers, updatePreview, captureCanvasState));
+    querySelectAll('#solid_color_bg').forEach((item) => solidColorMainEvent(item, 'bg', null, this.canvas, updateColorPickers, updatePreview, captureCanvasState));
 
     const updateColorTextPickers = () => {
       let itemFill, colPicker;
@@ -1799,10 +1803,9 @@ class EditorScreen {
       querySelect("#loader2").style.display = "flex";
       const response = await axios.get(`https://www.mybrande.com/api/find/logo/${logoId}`);
 
-
-      const bg = response.data.AllData.logo_backgroundcolor;
-      const logoPosition = response.data.AllData.logo_position;
-      const svgData = response.data.AllData.svg_data;
+      const bg = response.data?.AllData?.logo_backgroundcolor;
+      const logoPosition = response.data?.AllData?.logo_position;
+      const svgData = response.data?.AllData?.svg_data;
       if (svgData) {
         localStorage.setItem('logo-file', svgData);
         setlogoPosition(logoPosition, canvas, logoNameElement, sloganNameElement);

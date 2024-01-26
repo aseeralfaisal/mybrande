@@ -1,3 +1,4 @@
+import { querySelect } from "./editor_page.script";
 
 
 export const centerAndResizeElements = (
@@ -19,15 +20,18 @@ export const centerAndResizeElements = (
 
   const timeout = 5;
 
+  const logoMainFieldVal = querySelect("#logoMainField").value
+  const sloganNameFieldVal = querySelect("#sloganNameField").value
+
   switch (type) {
     case 'topBottom':
       setTimeout(() => {
         const logoNameElement = objects.find(
-          (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
+          (obj) => obj.type === 'text' && obj.text.toLowerCase() === logoMainFieldVal.toLowerCase()
         );
 
         const sloganNameElement = objects.find(
-          (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here'
+          (obj) => obj.type === 'text' && obj.text.toLowerCase() === sloganNameFieldVal.toLowerCase()
         );
 
         logoNameElement?.set('fontSize', logoSize);
@@ -69,11 +73,11 @@ export const centerAndResizeElements = (
     case 'bottomTop':
       setTimeout(() => {
         const logoNameElement = objects.find(
-          (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
+          (obj) => obj.type === 'text' && obj.text.toLowerCase() === logoMainFieldVal.toLowerCase()
         );
 
         const sloganNameElement = objects.find(
-          (obj) => obj.type === 'text' && obj.text === 'Slogan goes here'
+          (obj) => obj.type === 'text' && obj.text.toLowerCase() === sloganNameFieldVal.toLowerCase()
         );
 
         logoNameElement.set('fontSize', logoSize);
@@ -95,12 +99,13 @@ export const centerAndResizeElements = (
     case 'leftRight':
       setTimeout(() => {
         const logoNameElement = objects.find(
-          (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
+          (obj) => obj.type === 'text' && obj.text.toLowerCase() === logoMainFieldVal.toLowerCase()
         );
 
         const sloganNameElement = objects.find(
-          (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here'
+          (obj) => obj.type === 'text' && obj.text.toLowerCase() === sloganNameFieldVal.toLowerCase()
         );
+
         logoNameElement.center();
         sloganNameElement.center();
 
@@ -160,11 +165,11 @@ export const centerAndResizeElements = (
     case 'rightLeft':
       setTimeout(() => {
         const logoNameElement = objects.find(
-          (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'my brand name'
+          (obj) => obj.type === 'text' && obj.text.toLowerCase() === logoMainFieldVal.toLowerCase()
         );
 
         const sloganNameElement = objects.find(
-          (obj) => obj.type === 'text' && obj.text.toLowerCase() === 'slogan goes here'
+          (obj) => obj.type === 'text' && obj.text.toLowerCase() === sloganNameFieldVal.toLowerCase()
         );
 
         logoNameElement.center();
